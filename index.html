@@ -283,6 +283,22 @@
   .nav { grid-template-columns:repeat(4,minmax(0,1fr)) !important; border-top:none !important; box-shadow:0 -4px 16px rgba(26,29,78,.06); }
   .nav button { color:#888888 !important; font-size:11.5px !important; }
   .nav button.on { color:#292D6A !important; }
+
+  /* ===== bienvenida ===== */
+  .ob { position:fixed; inset:0; z-index:300; background:#F4F6FF; display:flex; flex-direction:column; }
+  .ob-skip { position:absolute; top:calc(14px + env(safe-area-inset-top,0px)); right:14px; z-index:3; background:rgba(255,255,255,.18); color:#fff; border:none; border-radius:20px; padding:8px 14px; font-family:inherit; font-weight:700; font-size:14px; }
+  .ob-track { flex:1; display:flex; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+  .ob-track::-webkit-scrollbar { display:none; }
+  .ob-slide { flex:0 0 100%; scroll-snap-align:start; display:flex; flex-direction:column; }
+  .ob-img { flex:1; min-height:0; background:#292D6A center/cover no-repeat; margin-bottom:-20px; }
+  .ob-body { position:relative; margin-top:-46px; background:#F4F6FF; border-radius:50% 50% 0 0 / 46px 46px 0 0; padding:40px 26px 6px; text-align:center; }
+  .ob-body h1 { font-family:'Nunito',sans-serif; font-weight:900; font-size:32px; color:#1A1D4E; margin-bottom:8px; }
+  .ob-body p { font-size:16.5px; color:#2E325C; line-height:1.45; max-width:300px; margin:0 auto; }
+  .ob-foot { padding:16px 26px calc(24px + env(safe-area-inset-bottom,0px)); background:#F4F6FF; }
+  .ob-dots { display:flex; justify-content:center; gap:8px; margin-bottom:18px; }
+  .ob-dots i { width:8px; height:8px; border-radius:4px; background:#C9CEEA; transition:width .25s, background .25s; }
+  .ob-dots i.on { width:22px; background:#292D6A; }
+  .ob-btn { width:100%; height:54px; border-radius:27px; border:none; background:#292D6A; color:#fff; font-family:inherit; font-weight:800; font-size:17px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -350,6 +366,15 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
     <button class="btn check" id="ex-check" disabled>Comprobar</button>
   </div>
   <div id="result" class="hidden"></div>
+</div>
+<div id="ob" class="ob hidden" role="dialog" aria-modal="true" aria-label="Bienvenida">
+  <button class="ob-skip" id="ob-skip">Saltar</button>
+  <div class="ob-track" id="ob-track">
+    <section class="ob-slide"><div class="ob-img" style="background-image:url(img/ob1.jpg);background-size:contain;background-position:center bottom"></div><div class="ob-body"><h1>Inglesdux</h1><p>Aprende inglés de forma fácil y rápida</p></div></section>
+    <section class="ob-slide"><div class="ob-img" style="background-image:url(img/ob2.jpg)"></div><div class="ob-body"><h1>Escucha y repite</h1><p>Cada palabra con su pronunciación y su audio en inglés</p></div></section>
+    <section class="ob-slide"><div class="ob-img" style="background-image:url(img/ob3.jpg)"></div><div class="ob-body"><h1>Avanza a tu ritmo</h1><p>Lecciones del libro, exámenes y premios por tu constancia</p></div></section>
+  </div>
+  <div class="ob-foot"><div class="ob-dots" id="ob-dots"><i class="on"></i><i></i><i></i></div><button class="ob-btn" id="ob-btn">Siguiente</button></div>
 </div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
 <div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
@@ -830,6 +855,19 @@ window.addEventListener("popstate", function (e) {
   if (!el("leccion").classList.contains("hidden")) closeLesson();
   tab(st.t || "inicio", true);
 });
+
+// ---------- bienvenida (solo la primera vez) ----------
+(function () {
+  var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) return; } catch (e) { return; }
+  var ob = el("ob"), tr = el("ob-track"), dots = el("ob-dots").children, btn = el("ob-btn"), n = 3;
+  function idx() { return Math.round(tr.scrollLeft / Math.max(1, tr.clientWidth)); }
+  function upd() { var i = idx(); for (var k = 0; k < n; k++) dots[k].classList.toggle("on", k === i); btn.textContent = i === n - 1 ? "Comenzar" : "Siguiente"; }
+  function close() { try { localStorage.setItem(KEYOB, "1"); } catch (e) {} ob.classList.add("hidden"); }
+  tr.addEventListener("scroll", function () { requestAnimationFrame(upd); });
+  btn.onclick = function () { var i = idx(); if (i < n - 1) tr.scrollTo({ left: (i + 1) * tr.clientWidth, behavior: "smooth" }); else close(); };
+  el("ob-skip").onclick = close;
+  ob.classList.remove("hidden");
+})();
 history.replaceState({ v: "tab", t: "inicio" }, "");
 render("inicio");
 checkPrizes();
