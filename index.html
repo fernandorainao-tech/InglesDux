@@ -296,6 +296,26 @@
   .ob-dots i { width:8px; height:8px; border-radius:50%; background:#C5CAE3; }
   .ob-dots i.on { background:#292D6A; }
   .ob-btn { width:100%; height:56px; border-radius:28px; border:none; background:#292D6A; color:#fff; font-family:inherit; font-weight:800; font-size:17px; box-shadow:0 8px 20px rgba(41,45,106,.25); }
+
+  /* ===== logros y premios (claro) ===== */
+  #p-logros { background:#FFFFFF; }
+  .lg-h { font-family:'Nunito',system-ui,sans-serif; font-size:22px; font-weight:800; color:#1A1D4E; margin:8px 0 14px; }
+  .lp-scroll { display:flex; gap:12px; overflow-x:auto; margin:0 -18px 22px; padding:4px 18px 14px; scroll-snap-type:x mandatory; scroll-padding:0 18px; scrollbar-width:none; }
+  .lp-scroll::-webkit-scrollbar { display:none; }
+  .lp-card { flex:0 0 150px; scroll-snap-align:start; background:#FFFFFF; border:1px solid #EAEFFF; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,.05); padding:14px 10px 14px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .lp-img { position:relative; width:104px; height:104px; margin-bottom:14px; }
+  .lp-img img { width:100%; height:100%; object-fit:contain; }
+  .lp-pill { position:absolute; left:50%; bottom:-10px; transform:translateX(-50%); min-width:52px; padding:3px 12px; border-radius:20px; color:#FFFFFF; font-weight:900; font-size:17px; box-shadow:0 3px 8px rgba(0,0,0,.15); border:2px solid #fff; }
+  .lp-card b { font-size:14px; font-weight:800; color:#2E325C; } .lp-card > span { font-size:12px; color:#888888; }
+  .pz-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .pz { text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .pz-badge { position:relative; width:96px; height:104px; margin-bottom:14px; }
+  .pz-shield { position:absolute; inset:0; width:100%; height:100%; filter:drop-shadow(0 4px 8px rgba(0,0,0,.12)); }
+  .pz-badge img { position:absolute; left:10%; top:4%; width:80%; height:80%; object-fit:contain; }
+  .pz-num { position:absolute; left:50%; bottom:-10px; transform:translateX(-50%); min-width:50px; padding:2px 10px; border-radius:20px; color:#FFFFFF; font-weight:900; font-size:18px; border:2px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.15); }
+  .pz b { font-size:13px; font-weight:800; color:#2E325C; line-height:1.25; } .pz > span { font-size:11px; color:#888888; }
+  .pz:not(.won) .pz-badge { filter:saturate(.75); }
+  .pz.won > span { color:#1FAE6B; font-weight:800; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -725,14 +745,35 @@ function prizes(s) {
     p("r3", IC.flame, "coral", "Constancia", "Estudia 3 días seguidos", rm, 3), p("r7", IC.flame, "coral", "Una semana en inglés", "Estudia 7 días seguidos", rm, 7)
   ];
 }
+// personajes de fieltro: uno por lección aprobada (se mostrarán en cada lección cuando estén listas)
+var LESSON_CHAR = ["nino", "poodle", "gato", "nina", "perro", "gatoblanco", "nino", "poodle", "gato", "nina", "perro"];
+var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"];
+function fFecha(d) { if (!d) return "Aún sin récord"; var x = new Date(d + "T12:00:00"); return x.getDate() + " " + MESES[x.getMonth()] + " " + x.getFullYear(); }
+function shieldSVG(c1, c2) {
+  return '<svg class="pz-shield" viewBox="0 0 100 112" aria-hidden="true"><defs><linearGradient id="g' + c1.slice(1) + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c1 + '"/><stop offset="1" stop-color="' + c2 + '"/></linearGradient></defs>' +
+    '<path d="M50 4 L92 18 V54 C92 80 74 98 50 108 C26 98 8 80 8 54 V18 Z" fill="url(#g' + c1.slice(1) + ')" stroke="#FFFFFF" stroke-width="4"/>' +
+    '<path d="M50 14 L83 25 V54 C83 74 69 89 50 97 C31 89 17 74 17 54 V25 Z" fill="rgba(255,255,255,.22)"/></svg>';
+}
 function rLogros() {
-  var s = load(), pr = prizes(s);
-  var med = ''; for (var i = 0; i < NUM_LESSONS; i++) { var L = DATA.lecciones[i], on = L && s.les[L.id] && s.les[L.id].done; med += '<div class="md' + (on ? ' on' : '') + '"><i>' + (i + 1) + '</i>Lección ' + (i + 1) + '</div>'; }
-  var cols = { sun: ["var(--sun-s)", "var(--sun-t)"], ok: ["var(--ok-s)", "var(--ok-t)"], pri: ["var(--pri-s)", "var(--pri)"], coral: ["var(--coral-s)", "var(--coral)"] };
-  el("logros").innerHTML = '<div class="lg2"><div class="card lgs"><span class="qi" style="background:var(--sun-s);color:#FF9F1C">' + IC.flame + '</span><span><b>' + racha(s.days) + '</b><span>días de racha</span></span></div>' +
-    '<div class="card lgs"><span class="qi" style="background:var(--pri-s);color:var(--pri)">' + IC.cards + '</span><span><b>' + mastered(s) + '</b><span>palabras dominadas</span></span></div></div>' +
-    '<h3 class="h2s">Medallas por lección</h3><div class="card"><div class="medals">' + med + '</div></div><h3 class="h2s">Premios</h3>' +
-    pr.map(function (p) { var c = cols[p.col], pct = Math.min(100, Math.round(p.a * 100 / p.meta)); return '<div class="card prz' + (p.won ? ' won' : '') + '"><span class="qi" style="background:' + c[0] + ';color:' + c[1] + '">' + p.ic + '</span><div class="pb"><div class="ph"><b>' + p.n + '</b><span>' + (p.won ? '✓ Ganado' : Math.min(p.a, p.meta) + '/' + p.meta) + '</span></div><div class="pd">' + p.d + '</div><div class="pbar"><i style="width:' + pct + '%"></i></div></div></div>'; }).join("");
+  var s = load(), hoy = hoyStr(), st = 0;
+  s.rec = s.rec || {};
+  var bestEx = 0; DATA.lecciones.forEach(function (L) { var e = (s.les[L.id] || {}).exam || 0; if (e > bestEx) bestEx = e; });
+  var recs = [
+    { id: "racha", t: "Racha suprema", v: rachaMax(s.days), show: function (v) { return v; }, pill: "#F97316", ch: "nino" },
+    { id: "pal", t: "Palabras dominadas", v: mastered(s), show: function (v) { return v; }, pill: "#38BDF8", ch: "poodle" },
+    { id: "exam", t: "Mejor examen", v: bestEx, show: function (v) { return v + "%"; }, pill: "#F5B83D", ch: "gato" },
+    { id: "ok", t: "Respuestas correctas", v: s.correct, show: function (v) { return v; }, pill: "#8B5CF6", ch: "nina" }
+  ];
+  recs.forEach(function (r) { var o = s.rec[r.id]; if (r.v > 0 && (!o || r.v > o.v)) { s.rec[r.id] = { v: r.v, d: hoy }; st = 1; } });
+  if (st) save(s);
+  var lp = recs.map(function (r) { var o = s.rec[r.id];
+    return '<div class="lp-card"><div class="lp-img"><img src="img/char/' + r.ch + '.webp" alt="" loading="lazy"><span class="lp-pill" style="background:' + r.pill + '">' + r.show(o ? o.v : 0) + '</span></div><b>' + r.t + '</b><span>' + fFecha(o && o.d) + '</span></div>'; }).join("");
+  var CH = { w25: "poodle", w100: "gatoblanco", w850: "nina", c50: "gato", c300: "perro", l1: "nino", l11: "nina", r3: "perro", r7: "gato" };
+  var SH = { sun: ["#FBBF24", "#D97706", "#F59E0B"], ok: ["#A78BFA", "#7C3AED", "#8B5CF6"], pri: ["#F87171", "#DC2626", "#EF4444"], coral: ["#FB923C", "#EA580C", "#F97316"] };
+  var pz = prizes(s).map(function (p) { var c = SH[p.col] || SH.sun;
+    return '<div class="pz' + (p.won ? ' won' : '') + '"><div class="pz-badge">' + shieldSVG(c[0], c[1]) + '<img src="img/char/' + (CH[p.id] || "nino") + '.webp" alt="" loading="lazy"><span class="pz-num" style="background:' + c[2] + '">' + p.meta + '</span></div>' +
+      '<b>' + p.n + '</b><span>' + (p.won ? '✓ Ganado' : Math.min(p.a, p.meta) + ' de ' + p.meta) + '</span></div>'; }).join("");
+  el("logros").innerHTML = '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
 }
 var toastT = null;
 function checkPrizes() {
