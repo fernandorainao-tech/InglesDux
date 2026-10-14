@@ -190,7 +190,8 @@
   .exlink p { font-size:15px; line-height:1.5; color:var(--muted); margin-bottom:10px; }
   .exlink .exbest { color:var(--ink); }
   .segs button:disabled { opacity:.55; cursor:not-allowed; }
-  #exam { padding-bottom:260px; }
+  #exam { padding-bottom:32px; }
+  #exam.sh-open { padding-bottom:260px; }
   .ex-in { width:100%; height:58px; margin-top:16px; border-radius:18px; border:2px solid var(--line); background:#fff; padding:0 16px; font-family:'Nunito',sans-serif; font-size:18px; font-weight:700; color:var(--ink); outline:none; }
   .ex-in:focus { border-color:var(--pri); }
   .ex-msg { min-height:22px; margin-top:10px; font-size:14.5px; font-weight:700; }
@@ -802,7 +803,8 @@ function rEx() {
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
   el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show");
   if (dir === "en") setTimeout(function () { speak(it.q); }, 250);
-  setTimeout(function () { el("ex-in").focus(); }, 50);
+  el("exam").classList.remove("sh-open"); window.scrollTo(0, 0);
+  setTimeout(function () { try { el("ex-in").focus({ preventScroll: true }); } catch (e) { el("ex-in").focus(); } window.scrollTo(0, 0); }, 60);
 }
 el && document.addEventListener("input", function (e) { if (e.target.id === "ex-in") el("ex-check").disabled = !e.target.value.trim(); });
 document.addEventListener("keydown", function (e) { if (e.target && e.target.id === "ex-in" && e.key === "Enter" && !el("ex-check").disabled) { e.preventDefault(); el("ex-check").click(); } });
@@ -830,7 +832,7 @@ function exResolve(ok, u, viaOpts, typo) {
   EX.done = true; var x = EX.items[EX.i], s = load(), en = (x.it.dir || x.p.dir) === "en" ? x.it.q : x.it.ans;
   if (ok) { EX.ok++; s.correct++; } var k = wkey(en), r = s.w[k] || {}; if (ok) r.ok = (r.ok || 0) + 1; else r.bad = (r.bad || 0) + 1; s.w[k] = r; markDay(s); save(s);
   EX.res.push({ ok: ok ? 1 : 0, u: ok ? "" : (EX.lastU || u), op: viaOpts ? 1 : 0 });
-  var sh = el("sheet"); sh.className = "sheet show " + (ok ? "good" : "wrong"); el("sh-ic").innerHTML = ok ? IC.check : IC.x;
+  var sh = el("sheet"); sh.className = "sheet show " + (ok ? "good" : "wrong"); el("sh-ic").innerHTML = ok ? IC.check : IC.x; el("exam").classList.add("sh-open");
   el("sh-t").textContent = ok ? (typo ? "¡Correcto! (revisa la ortografía)" : viaOpts ? "¡Correcto, con ayuda!" : "¡Correcto!") : "La respuesta correcta es «" + x.it.ans + "»";
   el("sh-p").innerHTML = '<b>' + esc(x.it.q) + '</b> = ' + esc(x.it.ans) + (ok ? '' : '. Repásala en la lección: volverá a aparecer en tus prácticas.');
   el("sh-btn").textContent = EX.i < EX.items.length - 1 ? "Siguiente" : "Terminar el bloque";
