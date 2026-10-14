@@ -462,6 +462,27 @@
   .bub-tip { display:block; font-size:11.5px; color:#A0A6BF; margin-top:4px; }
   .bub.es .bub-q { color:#2E325C; }
   #exam .qprompt { display:none; }
+
+  /* ===== vocabulario estilo referencia (sin tarjeta) ===== */
+  body:has(#app:not(.hidden) #p-vocab.on) { background:#F5F3F0 !important; }
+  .vs-tag { text-align:center; margin:18px 0 6px; } .vs-tag span { font-size:12.5px; font-weight:900; letter-spacing:.08em; color:#7C5CFA; background:#fff; border-radius:20px; padding:5px 12px; }
+  .vs { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:16px; min-height:300px; margin:10px 0 6px; }
+  .vs-av { height:140px; width:auto; max-width:40%; object-fit:contain; flex-shrink:0; filter:drop-shadow(0 10px 10px rgba(0,0,0,.12)); animation:avIn .45s cubic-bezier(.2,.9,.3,1.3); }
+  .vs-bub { position:relative; background:#FFFFFF; border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,.05); padding:18px 20px; min-width:0; max-width:62%; cursor:pointer; animation:bubIn .45s .08s both cubic-bezier(.2,.9,.3,1.2); transform-origin:left center; }
+  .vs-bub::before { content:""; position:absolute; left:-14px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:12px solid transparent; border-bottom:12px solid transparent; border-right:16px solid #FFFFFF; filter:drop-shadow(-3px 2px 2px rgba(0,0,0,.03)); }
+  .vs-row { display:flex; flex-direction:row; align-items:center; gap:10px; }
+  .vs-w { font-family:'Nunito',system-ui,sans-serif; font-weight:900; font-size:30px; color:#1A1D4E; line-height:1.15; overflow-wrap:anywhere; }
+  .vs-spk { color:#3A60BA; display:flex; flex-shrink:0; } .vs-spk svg { width:26px; height:26px; }
+  .vs-p { display:block; font-size:13.5px; color:#8A8F9E; margin-top:4px; }
+  .vs-es { display:block; margin-top:10px; padding-top:10px; border-top:1px dashed #E3E0DA; font-size:18px; font-weight:800; color:#2B7A2E; }
+  .vs-show { display:block; margin:0 auto 26px; background:none; border:none; color:#5A6185; font-family:inherit; font-weight:800; font-size:14.5px; padding:10px 14px; }
+  .vc-btns button { border-radius:30px !important; height:60px !important; color:#FFFFFF !important; font-size:19px !important; text-shadow:0 1px 0 rgba(0,0,0,.12); transition:transform .06s, box-shadow .06s !important; }
+  #p-vocab .vc-btns { position:fixed; left:18px; right:18px; bottom:calc(92px + env(safe-area-inset-bottom,0px)); max-width:604px; margin:0 auto; z-index:30; }
+  #p-vocab .vs-show { margin-bottom:120px; }
+  .vc-rep { background:#F28C88 !important; box-shadow:0px 6px 0px #D96A66 !important; }
+  .vc-ok { background:#8CD496 !important; box-shadow:0px 6px 0px #6BB576 !important; }
+  .vc-rep:active { transform:translateY(4px) !important; box-shadow:0px 2px 0px #D96A66 !important; }
+  .vc-ok:active { transform:translateY(4px) !important; box-shadow:0px 2px 0px #6BB576 !important; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -973,14 +994,13 @@ function rVocab() {
   el("vocab").innerHTML =
     '<div class="vc-top"><button class="vc-x" id="vc-x" aria-label="Salir"><svg viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
       '<div class="vc-bar" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + pct + '%"></i></div><button class="vc-gem gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div>' +
-    '<div class="vc-card" id="vc-card"><div class="vc-in"><div class="vc-f">' +
-      '<span class="vc-k">' + (nueva ? 'PALABRA NUEVA' : 'REPASO') + '</span>' +
-      '<img class="vc-img" src="img/char/' + VOC_CH[h % VOC_CH.length] + '.webp" alt="" width="120" height="120">' +
-      '<div class="vc-w">' + esc(w.en) + '</div>' + (w.pr ? '<div class="vc-p">(' + esc(w.pr) + ')</div>' : '') +
-      '<button class="vc-spk" data-say="' + esc(w.en) + '" aria-label="Escuchar ' + esc(w.en) + '">' + IC.spk + '</button></div>' +
-      '<div class="vc-b"><span class="vc-k" style="color:#C9D2FF">SIGNIFICA</span><div class="vc-w" style="color:#fff">' + esc(w.es) + '</div><div class="vc-p" style="color:#DDE3FF">' + esc(w.en) + (w.pr ? ' · (' + esc(w.pr) + ')' : '') + '</div></div></div></div>' +
+    '<div class="vs-tag"><span>' + (nueva ? 'PALABRA NUEVA' : 'REPASO') + '</span></div>' +
+    '<div class="vs" id="vc-card"><img class="vs-av" src="img/char/' + VOC_CH[h % VOC_CH.length] + '.webp" alt="">' +
+      '<div class="vs-bub" data-say="' + esc(w.en) + '" role="button" tabindex="0" aria-label="Escuchar ' + esc(w.en) + '"><div class="vs-row"><span class="vs-w">' + esc(w.en) + '</span><span class="vs-spk">' + IC.spk + '</span></div>' +
+      '<span class="vs-p">' + (w.pr ? '(' + esc(w.pr) + ')' : 'Toca para escuchar') + '</span><span class="vs-es hidden" id="vs-es">' + esc(w.es) + '</span></div></div>' +
+    '<button class="vs-show" id="vs-show">👁 Ver significado</button>' +
     '<div class="vc-btns"><button class="vc-rep" id="v-rep">Repasar</button><button class="vc-ok" id="v-ok">Me la sé</button></div>';
-  el("vc-card").onclick = function (e) { if (e.target.closest("[data-say]")) return; el("vc-card").classList.toggle("flip"); };
+  el("vs-show").onclick = function () { var e = el("vs-es"), on = e.classList.toggle("hidden"); el("vs-show").textContent = on ? "👁 Ver significado" : "🙈 Ocultar significado"; };
   el("vc-x").onclick = function () { vocDone = 0; tab("inicio"); };
   function next(knownFlag) { var s2 = load(), k = wkey(w.en), rr = s2.w[k] || {}; rr.known = knownFlag; if (!knownFlag) rr.bad = (rr.bad || 0) + 1; s2.w[k] = rr; markDay(s2);
     vocDone++; if (vocDone >= VOC_SES) { vocDone = 0; s2.gems += 10; gemFx(10); el("toast-t").textContent = "¡Sesión de vocabulario completada!"; el("toast-s").textContent = "+10 💎 sumados a tu saldo"; el("toast").classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(function () { el("toast").classList.add("hidden"); }, 4000); }
