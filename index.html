@@ -443,6 +443,25 @@
   .cal-body b { font-size:14px; font-weight:900; color:var(--c); letter-spacing:.04em; text-transform:uppercase; }
   .ref-pic { width:132px; height:132px; border-radius:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 22px rgba(26,29,78,.10); animation:calIn .35s ease; }
   .ref-pic span { font-size:70px; line-height:1; } .ref-pic img { width:110px; height:110px; object-fit:contain; }
+
+  /* escena: avatar + globo de diálogo */
+  .scene { display:flex; align-items:center; gap:6px; margin:6px 0 18px; min-height:150px; }
+  .sc-av { width:112px; height:132px; object-fit:contain; flex-shrink:0; filter:drop-shadow(0 8px 10px rgba(26,29,78,.15)); }
+  .scene.pop .sc-av { animation:avIn .45s cubic-bezier(.2,.9,.3,1.3); } .scene.pop .bub { animation:bubIn .45s .08s both cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes avIn { from { transform:translateX(-14px) scale(.9); opacity:0; } to { transform:none; opacity:1; } }
+  @keyframes bubIn { from { transform:scale(.85); opacity:0; } to { transform:none; opacity:1; } }
+  .bub { position:relative; flex:1; min-width:0; background:#fff; border-radius:16px; padding:12px 14px 10px; box-shadow:0 6px 18px rgba(26,29,78,.10); border:1px solid #EEF0F8; transform-origin:left center; }
+  .bub::before { content:""; position:absolute; left:-10px; bottom:26px; width:20px; height:20px; background:#fff; border-left:1px solid #EEF0F8; border-bottom:1px solid #EEF0F8; transform:rotate(45deg); border-radius:0 0 0 4px; }
+  .bub-n { font-size:12px; font-weight:800; color:#8A90B0; }
+  .bub-row { display:flex; align-items:center; gap:8px; }
+  .bub-q { font-family:'Fredoka','Nunito',system-ui,sans-serif; font-weight:600; font-size:25px; color:#1A1D4E; line-height:1.2; overflow-wrap:anywhere; }
+  .bub-em { font-size:30px; line-height:1; }
+  .bub-spk { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:#DCE4FF; color:#3A60BA; display:flex; align-items:center; justify-content:center; margin-left:auto; }
+  .bub-spk svg { width:20px; height:20px; }
+  .bub-pr { display:block; font-size:14px; color:#8A90B0; margin-top:2px; }
+  .bub-tip { display:block; font-size:11.5px; color:#A0A6BF; margin-top:4px; }
+  .bub.es .bub-q { color:#2E325C; }
+  #exam .qprompt { display:none; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -502,8 +521,9 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
       <div class="qbar"><i id="ex-bar"></i></div><span class="qn" id="ex-n"></span></div>
     <div class="qk" id="ex-k"></div>
     <div class="tip" id="ex-intro">✍️ Escribe la traducción de cada una y toca <b>Comprobar</b>. Tienes 2 intentos; después te mostraremos alternativas.</div>
-    <div class="ex-pic hidden" id="ex-pic"></div>
-    <div class="card qprompt"><button class="spk" id="ex-say" data-say="" aria-label="Escuchar"></button><div><div class="qp" id="ex-num"></div><div class="qw" id="ex-q"></div></div></div>
+    <div class="scene" id="ex-scene"><img class="sc-av" id="ex-av" src="img/char/nina.webp" alt="">
+      <div class="bub" id="ex-bub"><span class="bub-n" id="ex-num"></span><div class="bub-row"><span class="bub-em hidden" id="ex-em"></span><span class="bub-q" id="ex-q"></span><button class="bub-spk" id="ex-say" data-say="" aria-label="Escuchar"></button></div>
+        <span class="bub-pr" id="ex-pr"></span><span class="bub-tip" id="ex-tip">Toca para escuchar</span></div></div>
     <label for="ex-in" class="sr">Tu respuesta</label>
     <input id="ex-in" class="ex-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
     <div class="ex-msg" id="ex-msg"></div>
@@ -802,6 +822,24 @@ function picFor(it, dir) {
   }
   return { ch: PIC_CH[h % PIC_CH.length], bg: bg };
 }
+// ---------- avatares reutilizables (poses) ----------
+// Cada pregunta puede traer "avatarPose"; si no, se deduce. Para usar poses nuevas basta con
+// agregar el archivo en img/char/ y apuntarlo aquí (ej.: caminando: "nina_caminando").
+var AVATARS = { hablando: "nina", pensando: "gato", caminando: "chico", objeto: "senor", feliz: "gatoteamo", saludando: "nino", tierno: "poodle", bebe: "bebe" };
+var POSE_WORDS = { caminando: ["go","goes","going","come","comes","coming","walk","walking","walks","river","road","train"], pensando: ["seem","seems","say","says","saying","idea","opinion","see","sees","news","think"],
+  objeto: ["put","puts","take","takes","give","gives","giving","send","sends","get","gets","keep","keeps","keeping","make","makes","have","has","letter","book","plate","fork","hat","dress","apple","paint","painting"],
+  feliz: ["smiling","good","sweet","peace","summer","flower","garden","love"] };
+function poseFor(it, dir) {
+  if (it.avatarPose) return it.avatarPose;
+  var en = ((dir === "en" ? it.q : it.ans) || "").toLowerCase().replace(/[^a-z\- ]/g, " ").split(/\s+/);
+  for (var k in POSE_WORDS) { if (en.some(function (w) { return POSE_WORDS[k].indexOf(w) !== -1; })) return k; }
+  var h = 0, t = en.join(""); for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 97; return ["hablando", "saludando", "tierno", "hablando"][h % 4];
+}
+var PR_MAP = null;
+function prFor(en) {
+  if (!PR_MAP) { PR_MAP = {}; DATA.lecciones.forEach(function (L) { L.blocks.forEach(function (b) { (b.items || []).forEach(function (w) { if (w.pr && w.en) PR_MAP[w.en.toLowerCase()] = w.pr; }); (b.tables || []).forEach(function (t) { t.rows.forEach(function (r) { if (r.pr) PR_MAP[r.en.toLowerCase()] = r.pr; }); }); }); }); }
+  return PR_MAP[String(en).toLowerCase().trim()] || "";
+}
 function startPractice(lid, exid) {
   var L = findLesson(lid), b = L.blocks.filter(function (x) { return x.id === exid; })[0]; curLesson = L;
   var p = { k: "", t: b.titulo, dir: "mix", items: b.items, practice: exid };
@@ -821,12 +859,15 @@ function rEx() {
   el("ex-bar").style.width = Math.round(EX.i * 100 / EX.items.length) + "%"; el("ex-n").textContent = (EX.i + 1) + "/" + EX.items.length;
   el("ex-intro").classList.toggle("hidden", EX.i !== 0);
   el("ex-k").textContent = (p.k ? p.k + ") " : "") + p.t; el("ex-num").textContent = (x.j + 1) + ".";
-  el("ex-q").textContent = it.q;
-  var pic = el("ex-pic");
-  var cf = (it.em || it.ch) ? it : calFor(it, dir);
-  if (cf) { pic.classList.remove("hidden"); pic.style.setProperty("--c", cf.c || "#3D5AFE");
-    pic.innerHTML = '<div class="cal"><div class="cal-top"><i></i><i></i></div><div class="cal-body">' + (cf.ch ? '<img src="img/char/' + cf.ch + '.webp" alt="">' : '<span class="cal-em">' + cf.em + '</span>') + (dir === "es" ? '<b>' + esc(it.q) + '</b>' : '') + '</div></div>';
-  } else { var pf = picFor(it, dir); if (pf) { pic.classList.remove("hidden"); pic.innerHTML = '<div class="ref-pic" style="background:' + pf.bg + '">' + (pf.ch ? '<img src="img/char/' + pf.ch + '.webp" alt="">' : '<span>' + pf.em + '</span>') + '</div>'; } else { pic.classList.add("hidden"); pic.innerHTML = ""; } } el("ex-say").classList.toggle("hidden", dir !== "en"); el("ex-say").dataset.say = it.q;
+  el("ex-q").textContent = it.q; el("ex-say").dataset.say = it.q;
+  var pose = poseFor(it, dir), av = AVATARS[pose] || AVATARS.hablando, cf = (it.em || it.ch) ? it : calFor(it, dir);
+  el("ex-av").src = "img/char/" + (cf && cf.ch ? cf.ch : av) + ".webp"; el("ex-av").dataset.pose = pose;
+  var em = cf && cf.em ? cf.em : (dir === "es" ? (function () { var pf = picFor(it, dir); return pf && pf.em; })() : null);
+  el("ex-em").textContent = em || ""; el("ex-em").classList.toggle("hidden", !em);
+  var pr = dir === "en" ? prFor(it.q) : ""; el("ex-pr").textContent = pr ? "(" + pr + ")" : ""; el("ex-pr").classList.toggle("hidden", !pr);
+  el("ex-say").classList.toggle("hidden", dir !== "en"); el("ex-tip").classList.toggle("hidden", dir !== "en");
+  el("ex-bub").classList.toggle("es", dir !== "en");
+  el("ex-scene").classList.remove("pop"); void el("ex-scene").offsetWidth; el("ex-scene").classList.add("pop");
   el("ex-in").value = ""; el("ex-in").placeholder = it.kw ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
   el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show");
@@ -835,6 +876,7 @@ function rEx() {
   setTimeout(function () { try { el("ex-in").focus({ preventScroll: true }); } catch (e) { el("ex-in").focus(); } window.scrollTo(0, 0); }, 60);
 }
 el && document.addEventListener("input", function (e) { if (e.target.id === "ex-in") el("ex-check").disabled = !e.target.value.trim(); });
+document.addEventListener("click", function (e) { var bb = e.target.closest("#ex-bub"); if (bb && !bb.classList.contains("es") && !e.target.closest("#ex-say")) speak(el("ex-say").dataset.say); });
 document.addEventListener("keydown", function (e) { if (e.target && e.target.id === "ex-in" && e.key === "Enter" && !el("ex-check").disabled) { e.preventDefault(); el("ex-check").click(); } });
 function exOptions() {
   var x = EX.items[EX.i], pool = x.it.kw ? ["Agregando ing al final del verbo.", "Anteponiendo la palabra to al verbo."] : x.p.items.filter(function (it) { return (it.dir || x.p.dir) === (x.it.dir || x.p.dir); }).map(function (it) { return it.ans; }).filter(function (a) { return norm(a) !== norm(x.it.ans); });
