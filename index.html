@@ -316,6 +316,29 @@
   .pz b { font-size:13px; font-weight:800; color:#2E325C; line-height:1.25; } .pz > span { font-size:11px; color:#888888; }
   .pz:not(.won) .pz-badge { filter:saturate(.75); }
   .pz.won > span { color:#1FAE6B; font-weight:800; }
+  /* ===== racha y recompensas ===== */
+  .rw { margin-bottom:26px; }
+  .rw-top { text-align:center; margin:6px 0 16px; }
+  .rw-fire { font-size:54px; line-height:1; filter:drop-shadow(0 6px 10px rgba(255,149,0,.35)); }
+  .rw-num { font-family:'Nunito',system-ui,sans-serif; font-size:64px; font-weight:900; color:#FF9500; line-height:1; margin-top:4px; }
+  .rw-lbl { font-size:16px; font-weight:700; color:#555555; margin-top:2px; }
+  .rw-cal { background:#FFFFFF; border:1px solid #FFE4B5; border-radius:16px; box-shadow:0 4px 12px rgba(255,149,0,.08); padding:14px 14px 12px; }
+  .rw-heads, .rw-bar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); text-align:center; }
+  .rw-heads span { font-size:13px; font-weight:800; color:#888888; } .rw-heads span.hoy { color:#FF9500; }
+  .rw-bar { margin-top:8px; background:#FFF1DA; border-radius:22px; padding:5px 4px; }
+  .rw-d { width:32px; height:32px; margin:0 auto; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; }
+  .rw-d svg { width:16px; height:16px; }
+  .rw-d.on { background:#FF9500; } .rw-d.pr { background:#3B82F6; } .rw-d.hoy:not(.on):not(.pr) { border:2px dashed #FFB648; }
+  .rw-cal p { text-align:center; font-size:13.5px; font-weight:700; color:#B45F00; margin-top:10px; }
+  .rw-eco { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .rw-gems { background:#F4F7FF; border-radius:16px; padding:12px; }
+  .rw-bal { font-size:22px; } .rw-bal b { font-family:'Nunito',sans-serif; font-weight:900; color:#1A1D4E; }
+  .rw-gems p { font-size:11.5px; color:#555555; line-height:1.4; margin-top:4px; }
+  .rw-prot { display:inline-block; margin-top:6px; font-size:11.5px; font-weight:800; color:#1A51A4; }
+  .rw-buy { border:none; border-radius:16px; background:#1A51A4; color:#fff; font-family:inherit; font-weight:800; font-size:13.5px; line-height:1.3; padding:12px 10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+  .rw-buy span { background:rgba(255,255,255,.2); border-radius:12px; padding:3px 10px; font-size:14px; }
+  .rw-buy:disabled { background:#C9CDD8; color:#F4F5F8; cursor:not-allowed; }
+  .rw-claim { width:100%; height:54px; margin-top:12px; border:none; border-radius:27px; background:#292D6A; color:#fff; font-family:inherit; font-weight:800; font-size:16.5px; box-shadow:0 8px 20px rgba(41,45,106,.22); }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -438,10 +461,18 @@ document.addEventListener("click", function (e) { var b = e.target.closest("[dat
 // ---------- progreso ----------
 var KEY = "duxlingo_v1";
 function load() { var s; try { s = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { s = {}; }
-  s.w = s.w || {}; s.les = s.les || {}; s.days = s.days || []; s.correct = s.correct || 0; s.seen = s.seen || []; return s; }
+  s.w = s.w || {}; s.les = s.les || {}; s.days = s.days || []; s.correct = s.correct || 0; s.seen = s.seen || []; s.gems = s.gems || 0; s.pend = s.pend || 0; s.prot = s.prot || 0; s.protDays = s.protDays || []; return s; }
 function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
 function wkey(en) { return en.toLowerCase().trim(); }
-function markDay(s) { var h = hoyStr(); if (s.days.indexOf(h) === -1) s.days.push(h); }
+function markDay(s) { var h = hoyStr(); if (s.days.indexOf(h) === -1) { usarProtector(s); s.days.push(h); s.pend += 15; } }
+function allDays(s) { return s.days.concat(s.protDays || []); }
+function usarProtector(s) {
+  if (!s.prot || !s.days.length) return;
+  var set = {}; allDays(s).forEach(function (d) { set[d] = 1; });
+  var d = new Date(); d.setDate(d.getDate() - 1); var falt = [];
+  while (!set[hoyStr(d)] && falt.length <= s.prot) { falt.push(hoyStr(d)); d.setDate(d.getDate() - 1); }
+  if (falt.length && falt.length <= s.prot && set[hoyStr(d)]) { s.protDays = s.protDays.concat(falt); s.prot -= falt.length; }
+}
 function racha(days) { var set = {}; days.forEach(function (d) { set[d] = 1; }); var d = new Date(), n = 0; if (!set[hoyStr(d)]) d.setDate(d.getDate() - 1);
   while (set[hoyStr(d)]) { n++; d.setDate(d.getDate() - 1); } return n; }
 function rachaMax(days) { var s = days.slice().sort(), m = 0, r = 0, p = null; s.forEach(function (x) { var t = new Date(x + "T12:00:00"); r = (p && Math.round((t - p) / 864e5) === 1) ? r + 1 : 1; m = Math.max(m, r); p = t; }); return m; }
@@ -469,7 +500,7 @@ function tab(t, fromPop) {
 }
 document.querySelectorAll("#nav button").forEach(function (b) { b.onclick = function () { tab(b.dataset.tab); }; });
 el("ava").onclick = function () { tab("logros"); };
-function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, logros: rLogros })[t](); el("racha").textContent = racha(load().days); }
+function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, logros: rLogros })[t](); el("racha").textContent = racha(allDays(load())); }
 // ---------- inicio ----------
 function nextLesson(s) { for (var i = 0; i < DATA.lecciones.length; i++) { var L = DATA.lecciones[i]; if (!(s.les[L.id] && s.les[L.id].done)) return L; } return DATA.lecciones[DATA.lecciones.length - 1]; }
 function lessonPct(L, s) { var st = s.les[L.id] || {}; if (st.done) return 100; var ws = lessonWords(L), n = 0;
@@ -485,7 +516,7 @@ function rInicio() {
   }
   el("inicio").innerHTML =
     '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="40" height="40"><div><span>Hola,</span><b>Constanza</b></div></div>' +
-      '<span class="hm-streak">🔥 ' + racha(s.days) + '</span></div>' +
+      '<span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span></div>' +
       '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
       '<div class="hm-res hidden" id="hm-res"></div></div>' +
     '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div><img src="img/gatito.jpg" alt="" width="64" height="64"></div>' +
@@ -673,7 +704,7 @@ function exResolve(ok, u, viaOpts, typo) {
   speak(en);
 }
 function finishBlock() {
-  var L = EX.L, att = getAtt(L); att[EX.k] = { ok: EX.ok, res: EX.res }; setAtt(L, att);
+  var L = EX.L, att = getAtt(L); att[EX.k] = { ok: EX.ok, res: EX.res }; setAtt(L, att); (function () { var s9 = load(); s9.pend += 10; save(s9); })();
   var parts = L.examen.partes, idx = parts.indexOf(EX.p), nx = parts[idx + 1];
   el("exam").classList.add("hidden");
   el("result").innerHTML = '<div class="res"><div class="blk-done">' + IC.check + '</div><h2>¡Bloque ' + EX.k + ') completado!</h2><p><b>' + EX.ok + ' de ' + EX.items.length + '</b> correctas.' +
@@ -736,7 +767,7 @@ function rVocab() {
 }
 // ---------- logros ----------
 function prizes(s) {
-  var m = mastered(s), done = DATA.lecciones.filter(function (L) { return s.les[L.id] && s.les[L.id].done; }).length, rm = rachaMax(s.days);
+  var m = mastered(s), done = DATA.lecciones.filter(function (L) { return s.les[L.id] && s.les[L.id].done; }).length, rm = rachaMax(allDays(s));
   function p(id, ic, col, n, d, a, meta) { return { id: id, ic: ic, col: col, n: n, d: d, a: a, meta: meta, won: a >= meta }; }
   return [
     p("w25", IC.cards, "sun", "Primeras palabras", "Domina 25 palabras", m, 25), p("w100", IC.cards, "sun", "Vocabulario en marcha", "Domina 100 palabras", m, 100), p("w850", IC.star, "sun", "Inglés básico completo", "Domina las 850 palabras", m, 850),
@@ -750,6 +781,26 @@ function prizes(s) {
 }
 // personajes de fieltro: uno por lección aprobada (se mostrarán en cada lección cuando estén listas)
 var LESSON_CHAR = ["nino", "poodle", "gato", "nina", "perro", "gatoblanco", "nino", "poodle", "gato", "nina", "perro"];
+function rachaHTML(s) {
+  var r = racha(allDays(s)), set = {}, pset = {}; s.days.forEach(function (d) { set[d] = 1; }); (s.protDays || []).forEach(function (d) { pset[d] = 1; });
+  var hoy = new Date(), dow = (hoy.getDay() + 6) % 7, lun = new Date(hoy); lun.setDate(hoy.getDate() - dow);
+  var L = ["L", "Ma", "Mi", "J", "V", "S", "D"], heads = "", dots = "", n = 0;
+  L.forEach(function (l, i) { var d = new Date(lun); d.setDate(lun.getDate() + i); var k = hoyStr(d), on = set[k], pr = pset[k]; if (on || pr) n++;
+    heads += '<span' + (i === dow ? ' class="hoy"' : '') + '>' + l + '</span>';
+    dots += '<span class="rw-d' + (on ? ' on' : pr ? ' pr' : '') + (i === dow ? ' hoy' : '') + '">' + (on ? IC.check : pr ? '🛡️' : '') + '</span>'; });
+  var msg = n === 7 ? "¡Felicidades por alcanzar una semana perfecta!" : n === 0 ? "Estudia hoy para empezar tu semana." : "¡Llevas " + n + " de 7 días esta semana! Sigue así para lograr una semana perfecta.";
+  var can = s.gems >= 35;
+  return '<section class="rw"><div class="rw-top"><div class="rw-fire">🔥</div><div class="rw-num">' + r + '</div><div class="rw-lbl">' + (r === 1 ? 'día de racha' : 'días de racha') + '</div></div>' +
+    '<div class="rw-cal"><div class="rw-heads">' + heads + '</div><div class="rw-bar">' + dots + '</div><p>' + msg + '</p></div>' +
+    '<div class="rw-eco"><div class="rw-gems"><div class="rw-bal">💎 <b>' + s.gems + '</b></div><p>Gana diamantes: +15 por racha diaria, +10 por ejercicio, +30 por logro</p>' + (s.prot ? '<span class="rw-prot">🛡️ Protector activo: ' + s.prot + (s.prot === 1 ? ' día' : ' días') + '</span>' : '') + '</div>' +
+      '<button class="rw-buy" id="rw-buy"' + (can ? '' : ' disabled') + '>Comprar Protector de Racha (2 días)<span>35 💎</span></button></div>' +
+    '<button class="rw-claim" id="rw-claim">' + (s.pend ? 'Reclamar recompensas · +' + s.pend + ' 💎' : 'Continuar') + '</button></section>';
+}
+function bindRacha() {
+  var b = el("rw-buy"), c = el("rw-claim");
+  if (b) b.onclick = function () { var s = load(); if (s.gems < 35) return; s.gems -= 35; s.prot += 2; save(s); rLogros(); };
+  if (c) c.onclick = function () { var s = load(); if (s.pend) { s.gems += s.pend; s.pend = 0; save(s); rLogros(); } else tab("inicio"); };
+}
 var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"];
 function fFecha(d) { if (!d) return "Aún sin récord"; var x = new Date(d + "T12:00:00"); return x.getDate() + " " + MESES[x.getMonth()] + " " + x.getFullYear(); }
 function shieldSVG(c1, c2) {
@@ -762,7 +813,7 @@ function rLogros() {
   s.rec = s.rec || {};
   var bestEx = 0; DATA.lecciones.forEach(function (L) { var e = (s.les[L.id] || {}).exam || 0; if (e > bestEx) bestEx = e; });
   var recs = [
-    { id: "racha", t: "Racha suprema", v: rachaMax(s.days), show: function (v) { return v; }, pill: "#F97316", ch: "nino" },
+    { id: "racha", t: "Racha suprema", v: rachaMax(allDays(s)), show: function (v) { return v; }, pill: "#F97316", ch: "nino" },
     { id: "pal", t: "Palabras dominadas", v: mastered(s), show: function (v) { return v; }, pill: "#38BDF8", ch: "poodle" },
     { id: "exam", t: "Mejor examen", v: bestEx, show: function (v) { return v + "%"; }, pill: "#F5B83D", ch: "gato" },
     { id: "ok", t: "Respuestas correctas", v: s.correct, show: function (v) { return v; }, pill: "#8B5CF6", ch: "nina" },
@@ -778,12 +829,13 @@ function rLogros() {
   var pz = prizes(s).map(function (p) { var c = SH[p.col] || SH.sun;
     return '<div class="pz' + (p.won ? ' won' : '') + '"><div class="pz-badge">' + shieldSVG(c[0], c[1]) + '<img src="img/char/' + (CH[p.id] || "nino") + '.webp" alt="" loading="lazy"><span class="pz-num" style="background:' + c[2] + '">' + p.meta + '</span></div>' +
       '<b>' + p.n + '</b><span>' + (p.won ? '✓ Ganado' : Math.min(p.a, p.meta) + ' de ' + p.meta) + '</span></div>'; }).join("");
-  el("logros").innerHTML = '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
+  el("logros").innerHTML = rachaHTML(s) + '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
+  bindRacha();
 }
 var toastT = null;
 function checkPrizes() {
   var s = load(), won = prizes(s).filter(function (p) { return p.won && s.seen.indexOf(p.id) === -1; });
-  if (!won.length) return; s.seen = s.seen.concat(won.map(function (p) { return p.id; })); save(s);
+  if (!won.length) return; s.seen = s.seen.concat(won.map(function (p) { return p.id; })); s.pend += 30 * won.length; save(s);
   el("toast-t").textContent = "¡Ganaste «" + won[0].n + "»!"; el("toast-s").textContent = won[0].d + (won.length > 1 ? " · y " + (won.length - 1) + " más" : "");
   el("toast").classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(function () { el("toast").classList.add("hidden"); }, 5000);
 }
@@ -847,7 +899,7 @@ el("sh-btn").onclick = function () { el("sheet").classList.remove("show");
   if (el("sh-btn").dataset.ctx === "exam") { if (EX.i < EX.items.length - 1) { EX.i++; rEx(); } else finishBlock(); return; }
   if (Q.i < Q.qs.length - 1) { Q.i++; rQ(); } else finishQuiz(); };
 function finishQuiz() {
-  var pct = Math.round(Q.ok * 100 / Q.qs.length), s = load();
+  var pct = Math.round(Q.ok * 100 / Q.qs.length), s = load(); s.pend += 10;
   if (Q.id) { var st = s.les[Q.id] || {}; if (Q.mode === "examen") { st.exam = Math.max(st.exam || 0, pct); if (pct >= 80) st.done = true; } else st.best = Math.max(st.best || 0, pct); s.les[Q.id] = st; }
   save(s);
   el("quiz").classList.add("hidden");
