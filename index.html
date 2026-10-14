@@ -378,6 +378,40 @@
   .vc-ok { background:#D7FFD8; color:#2B7A2E; box-shadow:0 5px 0 #97D89A; }
   .vc-rep:active { transform:translateY(4px); box-shadow:0 1px 0 #E5A1A1; }
   .vc-ok:active { transform:translateY(4px); box-shadow:0 1px 0 #97D89A; }
+
+  /* ===== diamantes y tienda ===== */
+  .chip-g { height:44px; padding:0 12px; border-radius:14px; background:#E8F0FF; border:none; color:#1A51A4; font-family:inherit; font-weight:800; font-size:15px; display:flex; align-items:center; gap:5px; cursor:pointer; }
+  .hm-chips { display:flex; gap:8px; align-items:center; }
+  button.hm-streak { border:none; font-family:inherit; cursor:pointer; }
+  .vc-gem { background:none; border:none; font-family:inherit; cursor:pointer; padding:6px 2px; }
+  .gem-chip.pop { animation:gemPop .5s ease; }
+  @keyframes gemPop { 0% { transform:scale(1); } 40% { transform:scale(1.25); } 100% { transform:scale(1); } }
+  .shop { position:fixed; inset:0; z-index:250; background:rgba(26,29,78,.45); display:flex; align-items:flex-end; justify-content:center; }
+  .shop-box { width:100%; max-width:520px; background:#fff; border-radius:26px 26px 0 0; padding:12px 20px calc(22px + env(safe-area-inset-bottom,0px)); text-align:center; animation:shopUp .25s ease-out; }
+  @keyframes shopUp { from { transform:translateY(40px); opacity:0; } to { transform:none; opacity:1; } }
+  .shop-grip { width:40px; height:5px; border-radius:3px; background:#DCE0EE; margin:0 auto 14px; }
+  .shop-bal { font-size:34px; } .shop-bal b { font-family:'Nunito',sans-serif; font-weight:900; color:#1A1D4E; }
+  .shop-box h3 { font-family:'Nunito',sans-serif; font-weight:800; font-size:18px; color:#1A1D4E; margin:2px 0 6px; }
+  .shop-box > p { font-size:14px; color:#555; line-height:1.45; margin-bottom:14px; }
+  .shop-item { display:flex; gap:12px; align-items:center; text-align:left; background:#F4F7FF; border-radius:16px; padding:12px; margin-bottom:14px; }
+  .shop-ic { font-size:30px; } .shop-item b { display:block; color:#1A1D4E; font-size:15.5px; } .shop-item span { display:block; font-size:13px; color:#555; }
+  .shop-item em { display:block; font-style:normal; font-size:12.5px; font-weight:800; color:#1A51A4; margin-top:2px; }
+  .shop-buy { width:100%; height:54px; border:none; border-radius:16px; background:#1A51A4; color:#fff; font-family:inherit; font-weight:900; font-size:16.5px; box-shadow:0 5px 0 #123A78; }
+  .shop-buy:active { transform:translateY(4px); box-shadow:0 1px 0 #123A78; }
+  .shop-buy:disabled { background:#C9CDD8; box-shadow:0 5px 0 #AEB3C0; color:#F4F5F8; }
+  .shop-close { width:100%; height:46px; margin-top:10px; border:none; background:none; color:#555; font-family:inherit; font-weight:700; font-size:15px; }
+  /* saludo horizontal con mano animada */
+  .hm-hi { font-family:'Nunito',system-ui,sans-serif; font-size:22px; font-weight:800; color:#FFFFFF; display:flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap; line-height:1.2; min-width:0; }
+  .hm-prof { min-width:0; } .hm-row { flex-direction:column-reverse; align-items:stretch !important; gap:12px; }
+  .hm-chips { justify-content:flex-end; }
+  .hm-hi { font-size:25px !important; overflow:hidden; text-overflow:ellipsis; }
+  .hm-streak { white-space:nowrap; padding:6px 10px !important; font-size:14px !important; }
+  .hm-chips { gap:6px !important; flex-shrink:0; }
+  .hm-prof img { width:44px !important; height:44px !important; }
+  .wave { display:inline-block; font-size:1.1em; transform-origin:70% 75%; animation:wave 2.2s ease-in-out infinite; }
+  @keyframes wave { 0%,60%,100% { transform:rotate(0); } 10% { transform:rotate(16deg); } 20% { transform:rotate(-10deg); } 30% { transform:rotate(16deg); } 40% { transform:rotate(-6deg); } 50% { transform:rotate(10deg); } }
+  @media (prefers-reduced-motion: reduce) { .wave { animation:none; } }
+  .rw-share.wide { flex:1; height:52px; gap:8px; font-family:inherit; font-weight:800; font-size:15.5px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -411,7 +445,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   <div id="app">
     <div class="top">
       <div><div class="eye" id="eye">Inglés básico</div><h1 class="ttl" id="ttl">Hello, Constanza!</h1></div>
-      <div class="acts"><span class="chip-r" title="Días seguidos estudiando"><svg viewBox="0 0 24 24" fill="#FF9F1C"><path d="M12 2c2.5 3.5 6 5.3 6 10.3a6 6 0 0 1-12 0c0-3 1.8-4.8 3-6.5.6 2.3 1.8 3.5 3 3.5 0-2.3-1.2-4.7 0-7.3z"/></svg><span id="racha">0</span></span>
+      <div class="acts"><span class="chip-r" title="Días seguidos estudiando"><svg viewBox="0 0 24 24" fill="#FF9F1C"><path d="M12 2c2.5 3.5 6 5.3 6 10.3a6 6 0 0 1-12 0c0-3 1.8-4.8 3-6.5.6 2.3 1.8 3.5 3 3.5 0-2.3-1.2-4.7 0-7.3z"/></svg><span id="racha">0</span></span><button class="chip-g gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">0</span></button>
         <button class="ava" id="ava" aria-label="Tus logros">C</button></div>
     </div>
     <div class="panel on" id="p-inicio"><div class="stack" id="inicio"></div></div>
@@ -452,6 +486,11 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
     <div class="ob-dots" aria-hidden="true"><i></i><i class="on"></i><i></i></div>
     <button class="ob-btn" id="ob-btn">Comenzar</button></div>
 </div>
+<div class="shop hidden" id="shop" role="dialog" aria-modal="true" aria-labelledby="shop-t"><div class="shop-box">
+  <div class="shop-grip"></div><div class="shop-bal">💎 <b id="shop-bal">0</b></div><h3 id="shop-t">Tus diamantes</h3>
+  <p>Gana diamantes: <b>+15</b> por racha diaria, <b>+10</b> por ejercicio, <b>+30</b> por logro. Se suman solos a tu saldo.</p>
+  <div class="shop-item"><span class="shop-ic">🛡️</span><div><b>Protector de Racha</b><span>Cuida tu racha hasta 2 días sin estudiar.</span><em id="shop-prot"></em></div></div>
+  <button class="shop-buy" id="shop-buy">Comprar · 35 💎</button><button class="shop-close" id="shop-close">Cerrar</button></div></div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
 <div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
 <nav class="nav" id="nav" aria-label="Navegación principal">
@@ -500,10 +539,10 @@ document.addEventListener("click", function (e) { var b = e.target.closest("[dat
 // ---------- progreso ----------
 var KEY = "duxlingo_v1";
 function load() { var s; try { s = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { s = {}; }
-  s.w = s.w || {}; s.les = s.les || {}; s.days = s.days || []; s.correct = s.correct || 0; s.seen = s.seen || []; s.gems = s.gems || 0; s.pend = s.pend || 0; s.prot = s.prot || 0; s.protDays = s.protDays || []; return s; }
+  s.w = s.w || {}; s.les = s.les || {}; s.days = s.days || []; s.correct = s.correct || 0; s.seen = s.seen || []; s.gems = (s.gems || 0) + (s.pend || 0); s.pend = 0; s.prot = s.prot || 0; s.protDays = s.protDays || []; return s; }
 function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
 function wkey(en) { return en.toLowerCase().trim(); }
-function markDay(s) { var h = hoyStr(); if (s.days.indexOf(h) === -1) { usarProtector(s); s.days.push(h); s.pend += 15; } }
+function markDay(s) { var h = hoyStr(); if (s.days.indexOf(h) === -1) { usarProtector(s); s.days.push(h); s.gems += 15; gemFx(15); } }
 function allDays(s) { return s.days.concat(s.protDays || []); }
 function usarProtector(s) {
   if (!s.prot || !s.days.length) return;
@@ -540,7 +579,7 @@ function tab(t, fromPop) {
 }
 document.querySelectorAll("#nav button").forEach(function (b) { b.onclick = function () { tab(b.dataset.tab); }; });
 el("ava").onclick = function () { tab("logros"); };
-function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, logros: rLogros })[t](); el("racha").textContent = racha(allDays(load())); }
+function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, logros: rLogros })[t](); el("racha").textContent = racha(allDays(load())); updGems(); }
 // ---------- inicio ----------
 function nextLesson(s) { for (var i = 0; i < DATA.lecciones.length; i++) { var L = DATA.lecciones[i]; if (!(s.les[L.id] && s.les[L.id].done)) return L; } return DATA.lecciones[DATA.lecciones.length - 1]; }
 function lessonPct(L, s) { var st = s.les[L.id] || {}; if (st.done) return 100; var ws = lessonWords(L), n = 0;
@@ -555,8 +594,8 @@ function rInicio() {
       '<b>Lección ' + (i + 1) + '</b><span class="hm-lc-s">' + esc(X ? X.titulo : TITULOS[i]) + '</span><span class="hm-bar"><i style="width:' + p + '%"></i></span><span class="hm-lc-p">' + (X ? p + '%' : 'Próximamente') + '</span></button>';
   }
   el("inicio").innerHTML =
-    '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="40" height="40"><div><span>Hola,</span><b>Constanza</b></div></div>' +
-      '<span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span></div>' +
+    '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="44" height="44"><h1 class="hm-hi">Hola! <span class="wave" aria-hidden="true">👋</span> Constanza</h1></div>' +
+      '<div class="hm-chips"><span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span><button class="hm-streak gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div></div>' +
       '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
       '<div class="hm-res hidden" id="hm-res"></div></div>' +
     '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div><img src="img/gatito.jpg" alt="" width="64" height="64"></div>' +
@@ -744,7 +783,7 @@ function exResolve(ok, u, viaOpts, typo) {
   speak(en);
 }
 function finishBlock() {
-  var L = EX.L, att = getAtt(L); att[EX.k] = { ok: EX.ok, res: EX.res }; setAtt(L, att); (function () { var s9 = load(); s9.pend += 10; save(s9); })();
+  var L = EX.L, att = getAtt(L); att[EX.k] = { ok: EX.ok, res: EX.res }; setAtt(L, att); (function () { var s9 = load(); s9.gems += 10; save(s9); gemFx(10); })();
   var parts = L.examen.partes, idx = parts.indexOf(EX.p), nx = parts[idx + 1];
   el("exam").classList.add("hidden");
   el("result").innerHTML = '<div class="res"><div class="blk-done">' + IC.check + '</div><h2>¡Bloque ' + EX.k + ') completado!</h2><p><b>' + EX.ok + ' de ' + EX.items.length + '</b> correctas.' +
@@ -801,7 +840,7 @@ function rVocab() {
   var pct = Math.round(vocDone * 100 / VOC_SES);
   el("vocab").innerHTML =
     '<div class="vc-top"><button class="vc-x" id="vc-x" aria-label="Salir"><svg viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
-      '<div class="vc-bar" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + pct + '%"></i></div><span class="vc-gem">💎 ' + s.gems + '</span></div>' +
+      '<div class="vc-bar" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + pct + '%"></i></div><button class="vc-gem gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div>' +
     '<div class="vc-card" id="vc-card"><div class="vc-in"><div class="vc-f">' +
       '<span class="vc-k">' + (nueva ? 'PALABRA NUEVA' : 'REPASO') + '</span>' +
       '<img class="vc-img" src="img/char/' + VOC_CH[h % VOC_CH.length] + '.webp" alt="" width="120" height="120">' +
@@ -812,7 +851,7 @@ function rVocab() {
   el("vc-card").onclick = function (e) { if (e.target.closest("[data-say]")) return; el("vc-card").classList.toggle("flip"); };
   el("vc-x").onclick = function () { vocDone = 0; tab("inicio"); };
   function next(knownFlag) { var s2 = load(), k = wkey(w.en), rr = s2.w[k] || {}; rr.known = knownFlag; if (!knownFlag) rr.bad = (rr.bad || 0) + 1; s2.w[k] = rr; markDay(s2);
-    vocDone++; if (vocDone >= VOC_SES) { vocDone = 0; s2.pend += 10; el("toast-t").textContent = "¡Sesión de vocabulario completada!"; el("toast-s").textContent = "+10 💎 por reclamar en tu Perfil"; el("toast").classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(function () { el("toast").classList.add("hidden"); }, 4000); }
+    vocDone++; if (vocDone >= VOC_SES) { vocDone = 0; s2.gems += 10; gemFx(10); el("toast-t").textContent = "¡Sesión de vocabulario completada!"; el("toast-s").textContent = "+10 💎 sumados a tu saldo"; el("toast").classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(function () { el("toast").classList.add("hidden"); }, 4000); }
     save(s2); vocIdx = (vocIdx + 1) % vocList.length; rVocab(); checkPrizes(); }
   el("v-rep").onclick = function () { next(false); }; el("v-ok").onclick = function () { next(true); };
 }
@@ -843,21 +882,16 @@ function rachaHTML(s) {
     cells += '<span class="rw-c' + (on ? ' ' + on : '') + (left ? ' jl' : '') + (right ? ' jr' : '') + (i === dow && !on ? ' hoy' : '') + '">' + (on === "on" ? IC.check : on === "pr" ? '🛡️' : '') + '</span>';
   });
   var msg = n === 7 ? "¡Felicidades por alcanzar una semana perfecta! ¿Crees que puedes repetirlo la próxima semana?" : n === 0 ? "Estudia hoy para encender tu racha de esta semana." : "¡Llevas " + n + " de 7 días esta semana! Completa los 7 para lograr una semana perfecta.";
-  var can = s.gems >= 35;
   var flame = '<svg class="rw-flame" viewBox="0 0 120 140" aria-hidden="true"><defs><linearGradient id="rwf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB13B"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs>' +
     '<path d="M60 4 C70 30 104 44 104 88 A44 44 0 0 1 16 88 C16 62 30 52 36 36 C42 52 50 58 54 58 C50 38 52 20 60 4 Z" fill="url(#rwf)"/>' +
     '<path d="M60 58 C66 72 82 80 82 100 A22 22 0 0 1 38 100 C38 88 46 82 50 74 C54 82 58 84 60 84 C58 76 58 66 60 58 Z" fill="#FFD34D"/></svg>';
   return '<section class="rw"><div class="rw-top">' + flame + '<div class="rw-num">' + r + '</div><div class="rw-lbl">' + (r === 1 ? 'día de racha' : 'días de racha') + '</div></div>' +
     '<div class="rw-cal"><div class="rw-in"><div class="rw-heads">' + heads + '</div><div class="rw-row">' + cells + '</div></div><p>' + msg + '</p></div>' +
-    '<div class="rw-eco"><div class="rw-gems"><div class="rw-bal">💎 <b>' + s.gems + '</b></div><p>Gana diamantes: +15 por racha diaria, +10 por ejercicio, +30 por logro</p>' + (s.prot ? '<span class="rw-prot">🛡️ Protector activo: ' + s.prot + (s.prot === 1 ? ' día' : ' días') + '</span>' : '') + '</div>' +
-      '<button class="rw-buy" id="rw-buy"' + (can ? '' : ' disabled') + '>Comprar Protector de Racha (2 días)<span>35 💎</span></button></div>' +
-    '<div class="rw-act"><button class="rw-share" id="rw-share" aria-label="Compartir mi racha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button>' +
-      '<button class="rw-claim" id="rw-claim">' + (s.pend ? 'Reclamar recompensas · +' + s.pend + ' 💎' : 'Continuar') + '</button></div></section>';
+    '<div class="rw-act"><button class="rw-share wide" id="rw-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Compartir mi racha</button></div></section>';
 }
 function bindRacha() {
   var b = el("rw-buy"), c = el("rw-claim");
-  if (b) b.onclick = function () { var s = load(); if (s.gems < 35) return; s.gems -= 35; s.prot += 2; save(s); rLogros(); };
-  if (c) c.onclick = function () { var s = load(); if (s.pend) { s.gems += s.pend; s.pend = 0; save(s); rLogros(); } else tab("inicio"); };
+
   var sh = el("rw-share");
   if (sh) sh.onclick = function () { var r = racha(allDays(load())), t = "¡Llevo " + r + (r === 1 ? " día" : " días") + " de racha aprendiendo inglés en Inglesdux! 🔥";
     if (navigator.share) navigator.share({ text: t }).catch(function () {}); else if (navigator.clipboard) { navigator.clipboard.writeText(t); sh.classList.add("ok"); setTimeout(function () { sh.classList.remove("ok"); }, 1200); } };
@@ -896,7 +930,7 @@ function rLogros() {
 var toastT = null;
 function checkPrizes() {
   var s = load(), won = prizes(s).filter(function (p) { return p.won && s.seen.indexOf(p.id) === -1; });
-  if (!won.length) return; s.seen = s.seen.concat(won.map(function (p) { return p.id; })); s.pend += 30 * won.length; save(s);
+  if (!won.length) return; s.seen = s.seen.concat(won.map(function (p) { return p.id; })); s.gems += 30 * won.length; save(s); gemFx(30 * won.length);
   el("toast-t").textContent = "¡Ganaste «" + won[0].n + "»!"; el("toast-s").textContent = won[0].d + (won.length > 1 ? " · y " + (won.length - 1) + " más" : "");
   el("toast").classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(function () { el("toast").classList.add("hidden"); }, 5000);
 }
@@ -960,7 +994,7 @@ el("sh-btn").onclick = function () { el("sheet").classList.remove("show");
   if (el("sh-btn").dataset.ctx === "exam") { if (EX.i < EX.items.length - 1) { EX.i++; rEx(); } else finishBlock(); return; }
   if (Q.i < Q.qs.length - 1) { Q.i++; rQ(); } else finishQuiz(); };
 function finishQuiz() {
-  var pct = Math.round(Q.ok * 100 / Q.qs.length), s = load(); s.pend += 10;
+  var pct = Math.round(Q.ok * 100 / Q.qs.length), s = load(); s.gems += 10; gemFx(10);
   if (Q.id) { var st = s.les[Q.id] || {}; if (Q.mode === "examen") { st.exam = Math.max(st.exam || 0, pct); if (pct >= 80) st.done = true; } else st.best = Math.max(st.best || 0, pct); s.les[Q.id] = st; }
   save(s);
   el("quiz").classList.add("hidden");
@@ -1009,6 +1043,20 @@ window.addEventListener("popstate", function (e) {
   tab(st.t || "inicio", true);
 });
 
+
+// ---------- diamantes: indicador, efecto y tienda ----------
+function gemFx(n) { try { var c = document.querySelectorAll(".gem-chip"); c.forEach(function (x) { x.classList.remove("pop"); void x.offsetWidth; x.classList.add("pop"); }); setTimeout(updGems, 30); } catch (e) {} }
+function updGems() { var g = load().gems; document.querySelectorAll(".gem-n").forEach(function (x) { x.textContent = g; }); }
+function openShop() {
+  var s = load(); el("shop-bal").textContent = s.gems;
+  el("shop-prot").textContent = s.prot ? "Protector activo: " + s.prot + (s.prot === 1 ? " día" : " días") : "";
+  el("shop-buy").disabled = s.gems < 35; el("shop-buy").textContent = s.gems < 35 ? "Te faltan " + (35 - s.gems) + " 💎" : "Comprar · 35 💎";
+  el("shop").classList.remove("hidden");
+}
+el("shop-buy").onclick = function () { var s = load(); if (s.gems < 35) return; s.gems -= 35; s.prot += 2; save(s); updGems(); openShop(); if (curTab === "logros") rLogros(); };
+el("shop-close").onclick = function () { el("shop").classList.add("hidden"); };
+el("shop").addEventListener("click", function (e) { if (e.target.id === "shop") el("shop").classList.add("hidden"); });
+document.addEventListener("click", function (e) { if (e.target.closest(".gem-chip")) openShop(); });
 // ---------- bienvenida (solo la primera vez) ----------
 (function () {
   var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) return; } catch (e) { return; }
