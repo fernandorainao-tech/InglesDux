@@ -502,6 +502,8 @@
   .sc-av { height:118px !important; width:auto !important; margin-top:2px; }
   .bub { padding:14px 16px 12px !important; }
   .scene { margin:4px 0 14px !important; }
+  .scene.cal-mode .sc-av, .scene.cal-mode .vs-dot { display:none !important; }
+  .scene.cal-mode .ex-pic { margin:0 0 14px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -562,6 +564,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
     <div class="qk" id="ex-k"></div>
     <div class="tip" id="ex-intro">✍️ Escribe la traducción de cada una y toca <b>Comprobar</b>. Tienes 2 intentos; después te mostraremos alternativas.</div>
     <div class="scene" id="ex-scene">
+      <div class="ex-pic hidden" id="ex-cal"></div>
       <div class="bub" id="ex-bub"><span class="bub-n" id="ex-num"></span><div class="bub-row"><span class="bub-em hidden" id="ex-em"></span><span class="bub-q" id="ex-q"></span><button class="bub-spk" id="ex-say" data-say="" aria-label="Escuchar"></button></div>
         <span class="bub-pr" id="ex-pr"></span><span class="bub-tip" id="ex-tip">Toca para escuchar</span></div>
       <span class="vs-dot d1"></span><span class="vs-dot d2"></span><img class="sc-av" id="ex-av" src="img/char/nina.webp" alt=""></div>
@@ -903,7 +906,11 @@ function rEx() {
   el("ex-q").textContent = it.q; el("ex-say").dataset.say = it.q;
   var pose = poseFor(it, dir), av = AVATARS[pose] || AVATARS.hablando, cf = (it.em || it.ch) ? it : calFor(it, dir);
   el("ex-av").src = "img/char/" + (cf && cf.ch ? cf.ch : av) + ".webp"; el("ex-av").dataset.pose = pose;
-  var em = cf && cf.em ? cf.em : (dir === "es" ? (function () { var pf = picFor(it, dir); return pf && pf.em; })() : null);
+  var calEl = el("ex-cal"); el("ex-scene").classList.toggle("cal-mode", !!cf);
+  if (cf) { calEl.classList.remove("hidden"); calEl.style.setProperty("--c", cf.c || "#3D5AFE");
+    calEl.innerHTML = '<div class="cal"><div class="cal-top"><i></i><i></i></div><div class="cal-body">' + (cf.ch ? '<img src="img/char/' + cf.ch + '.webp" alt="">' : '<span class="cal-em">' + cf.em + '</span>') + '</div></div>';
+  } else { calEl.classList.add("hidden"); calEl.innerHTML = ""; }
+  var em = cf ? null : (dir === "es" ? (function () { var pf = picFor(it, dir); return pf && pf.em; })() : null);
   el("ex-em").textContent = em || ""; el("ex-em").classList.toggle("hidden", !em);
   var pr = dir === "en" ? prFor(it.q) : ""; el("ex-pr").textContent = pr ? "(" + pr + ")" : ""; el("ex-pr").classList.toggle("hidden", !pr);
   el("ex-say").classList.toggle("hidden", dir !== "en"); el("ex-tip").classList.toggle("hidden", dir !== "en");
