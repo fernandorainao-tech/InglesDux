@@ -318,18 +318,25 @@
   .pz.won > span { color:#1FAE6B; font-weight:800; }
   /* ===== racha y recompensas ===== */
   .rw { margin-bottom:26px; }
-  .rw-top { text-align:center; margin:6px 0 16px; }
-  .rw-fire { font-size:54px; line-height:1; filter:drop-shadow(0 6px 10px rgba(255,149,0,.35)); }
-  .rw-num { font-family:'Nunito',system-ui,sans-serif; font-size:64px; font-weight:900; color:#FF9500; line-height:1; margin-top:4px; }
-  .rw-lbl { font-size:16px; font-weight:700; color:#555555; margin-top:2px; }
-  .rw-cal { background:#FFFFFF; border:1px solid #FFE4B5; border-radius:16px; box-shadow:0 4px 12px rgba(255,149,0,.08); padding:14px 14px 12px; }
-  .rw-heads, .rw-bar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); text-align:center; }
-  .rw-heads span { font-size:13px; font-weight:800; color:#888888; } .rw-heads span.hoy { color:#FF9500; }
-  .rw-bar { margin-top:8px; background:#FFF1DA; border-radius:22px; padding:5px 4px; }
-  .rw-d { width:32px; height:32px; margin:0 auto; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; }
-  .rw-d svg { width:16px; height:16px; }
-  .rw-d.on { background:#FF9500; } .rw-d.pr { background:#3B82F6; } .rw-d.hoy:not(.on):not(.pr) { border:2px dashed #FFB648; }
-  .rw-cal p { text-align:center; font-size:13.5px; font-weight:700; color:#B45F00; margin-top:10px; }
+  .rw-top { position:relative; text-align:center; margin:4px 0 14px; }
+  .rw-flame { width:118px; height:138px; display:block; margin:0 auto; filter:drop-shadow(0 8px 14px rgba(255,122,0,.3)); }
+  .rw-num { font-family:'Nunito',system-ui,sans-serif; font-size:76px; font-weight:900; line-height:1; color:#1A1D4E; margin-top:-62px; position:relative; -webkit-text-stroke:5px #FFFFFF; paint-order:stroke fill; letter-spacing:-.02em; }
+  .rw-lbl { font-size:19px; font-weight:800; color:#FF9500; margin-top:6px; }
+  .rw-cal { background:#FFFFFF; border:1.5px solid #FFE4B5; border-radius:18px; box-shadow:0 4px 12px rgba(255,149,0,.08); overflow:hidden; }
+  .rw-in { padding:12px 12px 14px; }
+  .rw-heads, .rw-row { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); text-align:center; }
+  .rw-heads span { font-size:14px; font-weight:800; color:#9AA0B4; } .rw-heads span.hoy { color:#FF9500; }
+  .rw-row { margin-top:8px; }
+  .rw-c { height:36px; display:flex; align-items:center; justify-content:center; color:#fff; position:relative; }
+  .rw-c::before { content:""; position:absolute; top:3px; bottom:3px; left:4px; right:4px; border-radius:15px; background:#EEF0F6; }
+  .rw-c.on::before { background:#FF9500; } .rw-c.pr::before { background:#3B82F6; }
+  .rw-c.jl::before { left:-1px; border-top-left-radius:0; border-bottom-left-radius:0; }
+  .rw-c.jr::before { right:-1px; border-top-right-radius:0; border-bottom-right-radius:0; }
+  .rw-c.on, .rw-c.pr { box-shadow:none; }
+  .rw-c.hoy::before { background:#FFF4E0; border:2px dashed #FFB648; }
+  .rw-c svg { position:relative; width:18px; height:18px; stroke-width:3.4; }
+  .rw-c { font-size:15px; } .rw-c > * { position:relative; }
+  .rw-cal p { border-top:1.5px solid #FFE4B5; text-align:center; font-size:14.5px; font-weight:700; color:#2E325C; line-height:1.45; padding:12px 16px 14px; }
   .rw-eco { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
   .rw-gems { background:#F4F7FF; border-radius:16px; padding:12px; }
   .rw-bal { font-size:22px; } .rw-bal b { font-family:'Nunito',sans-serif; font-weight:900; color:#1A1D4E; }
@@ -338,7 +345,10 @@
   .rw-buy { border:none; border-radius:16px; background:#1A51A4; color:#fff; font-family:inherit; font-weight:800; font-size:13.5px; line-height:1.3; padding:12px 10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
   .rw-buy span { background:rgba(255,255,255,.2); border-radius:12px; padding:3px 10px; font-size:14px; }
   .rw-buy:disabled { background:#C9CDD8; color:#F4F5F8; cursor:not-allowed; }
-  .rw-claim { width:100%; height:54px; margin-top:12px; border:none; border-radius:27px; background:#292D6A; color:#fff; font-family:inherit; font-weight:800; font-size:16.5px; box-shadow:0 8px 20px rgba(41,45,106,.22); }
+  .rw-act { display:flex; gap:10px; margin-top:12px; }
+  .rw-share { flex:0 0 54px; height:54px; border-radius:16px; border:2px solid #DCE4FF; background:#fff; color:#292D6A; display:flex; align-items:center; justify-content:center; }
+  .rw-share svg { width:22px; height:22px; } .rw-share.ok { border-color:#1FAE6B; color:#1FAE6B; }
+  .rw-claim { flex:1; height:54px; border:none; border-radius:16px; background:#292D6A; color:#fff; font-family:inherit; font-weight:900; font-size:16px; letter-spacing:.02em; box-shadow:0 5px 0 #1A1D4E; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -784,22 +794,32 @@ var LESSON_CHAR = ["nino", "poodle", "gato", "nina", "perro", "gatoblanco", "nin
 function rachaHTML(s) {
   var r = racha(allDays(s)), set = {}, pset = {}; s.days.forEach(function (d) { set[d] = 1; }); (s.protDays || []).forEach(function (d) { pset[d] = 1; });
   var hoy = new Date(), dow = (hoy.getDay() + 6) % 7, lun = new Date(hoy); lun.setDate(hoy.getDate() - dow);
-  var L = ["L", "Ma", "Mi", "J", "V", "S", "D"], heads = "", dots = "", n = 0;
-  L.forEach(function (l, i) { var d = new Date(lun); d.setDate(lun.getDate() + i); var k = hoyStr(d), on = set[k], pr = pset[k]; if (on || pr) n++;
+  var L = ["L", "Ma", "Mi", "J", "V", "S", "D"], heads = "", cells = "", n = 0, st = [];
+  L.forEach(function (l, i) { var d = new Date(lun); d.setDate(lun.getDate() + i); var k = hoyStr(d); st.push(set[k] ? "on" : pset[k] ? "pr" : ""); if (set[k] || pset[k]) n++; });
+  L.forEach(function (l, i) {
     heads += '<span' + (i === dow ? ' class="hoy"' : '') + '>' + l + '</span>';
-    dots += '<span class="rw-d' + (on ? ' on' : pr ? ' pr' : '') + (i === dow ? ' hoy' : '') + '">' + (on ? IC.check : pr ? '🛡️' : '') + '</span>'; });
-  var msg = n === 7 ? "¡Felicidades por alcanzar una semana perfecta!" : n === 0 ? "Estudia hoy para empezar tu semana." : "¡Llevas " + n + " de 7 días esta semana! Sigue así para lograr una semana perfecta.";
+    var on = st[i], left = i > 0 && st[i - 1] && on, right = i < 6 && st[i + 1] && on;
+    cells += '<span class="rw-c' + (on ? ' ' + on : '') + (left ? ' jl' : '') + (right ? ' jr' : '') + (i === dow && !on ? ' hoy' : '') + '">' + (on === "on" ? IC.check : on === "pr" ? '🛡️' : '') + '</span>';
+  });
+  var msg = n === 7 ? "¡Felicidades por alcanzar una semana perfecta! ¿Crees que puedes repetirlo la próxima semana?" : n === 0 ? "Estudia hoy para encender tu racha de esta semana." : "¡Llevas " + n + " de 7 días esta semana! Completa los 7 para lograr una semana perfecta.";
   var can = s.gems >= 35;
-  return '<section class="rw"><div class="rw-top"><div class="rw-fire">🔥</div><div class="rw-num">' + r + '</div><div class="rw-lbl">' + (r === 1 ? 'día de racha' : 'días de racha') + '</div></div>' +
-    '<div class="rw-cal"><div class="rw-heads">' + heads + '</div><div class="rw-bar">' + dots + '</div><p>' + msg + '</p></div>' +
+  var flame = '<svg class="rw-flame" viewBox="0 0 120 140" aria-hidden="true"><defs><linearGradient id="rwf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB13B"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs>' +
+    '<path d="M60 4 C70 30 104 44 104 88 A44 44 0 0 1 16 88 C16 62 30 52 36 36 C42 52 50 58 54 58 C50 38 52 20 60 4 Z" fill="url(#rwf)"/>' +
+    '<path d="M60 58 C66 72 82 80 82 100 A22 22 0 0 1 38 100 C38 88 46 82 50 74 C54 82 58 84 60 84 C58 76 58 66 60 58 Z" fill="#FFD34D"/></svg>';
+  return '<section class="rw"><div class="rw-top">' + flame + '<div class="rw-num">' + r + '</div><div class="rw-lbl">' + (r === 1 ? 'día de racha' : 'días de racha') + '</div></div>' +
+    '<div class="rw-cal"><div class="rw-in"><div class="rw-heads">' + heads + '</div><div class="rw-row">' + cells + '</div></div><p>' + msg + '</p></div>' +
     '<div class="rw-eco"><div class="rw-gems"><div class="rw-bal">💎 <b>' + s.gems + '</b></div><p>Gana diamantes: +15 por racha diaria, +10 por ejercicio, +30 por logro</p>' + (s.prot ? '<span class="rw-prot">🛡️ Protector activo: ' + s.prot + (s.prot === 1 ? ' día' : ' días') + '</span>' : '') + '</div>' +
       '<button class="rw-buy" id="rw-buy"' + (can ? '' : ' disabled') + '>Comprar Protector de Racha (2 días)<span>35 💎</span></button></div>' +
-    '<button class="rw-claim" id="rw-claim">' + (s.pend ? 'Reclamar recompensas · +' + s.pend + ' 💎' : 'Continuar') + '</button></section>';
+    '<div class="rw-act"><button class="rw-share" id="rw-share" aria-label="Compartir mi racha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button>' +
+      '<button class="rw-claim" id="rw-claim">' + (s.pend ? 'Reclamar recompensas · +' + s.pend + ' 💎' : 'Continuar') + '</button></div></section>';
 }
 function bindRacha() {
   var b = el("rw-buy"), c = el("rw-claim");
   if (b) b.onclick = function () { var s = load(); if (s.gems < 35) return; s.gems -= 35; s.prot += 2; save(s); rLogros(); };
   if (c) c.onclick = function () { var s = load(); if (s.pend) { s.gems += s.pend; s.pend = 0; save(s); rLogros(); } else tab("inicio"); };
+  var sh = el("rw-share");
+  if (sh) sh.onclick = function () { var r = racha(allDays(load())), t = "¡Llevo " + r + (r === 1 ? " día" : " días") + " de racha aprendiendo inglés en Inglesdux! 🔥";
+    if (navigator.share) navigator.share({ text: t }).catch(function () {}); else if (navigator.clipboard) { navigator.clipboard.writeText(t); sh.classList.add("ok"); setTimeout(function () { sh.classList.remove("ok"); }, 1200); } };
 }
 var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"];
 function fFecha(d) { if (!d) return "Aún sin récord"; var x = new Date(d + "T12:00:00"); return x.getDate() + " " + MESES[x.getMonth()] + " " + x.getFullYear(); }
