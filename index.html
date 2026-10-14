@@ -402,9 +402,11 @@
   .shop-close { width:100%; height:46px; margin-top:10px; border:none; background:none; color:#555; font-family:inherit; font-weight:700; font-size:15px; }
   /* saludo horizontal con mano animada */
   .hm-hi { font-family:'Nunito',system-ui,sans-serif; font-size:22px; font-weight:800; color:#FFFFFF; display:flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap; line-height:1.2; min-width:0; }
-  .hm-prof { min-width:0; } .hm-row { flex-direction:column-reverse; align-items:stretch !important; gap:12px; }
-  .hm-chips { justify-content:flex-end; }
-  .hm-hi { font-size:25px !important; overflow:hidden; text-overflow:ellipsis; }
+  .hm-prof { min-width:0; flex:1; gap:8px !important; } .hm-row { gap:8px; align-items:center !important; }
+  .hm-prof img { width:40px !important; height:40px !important; flex-shrink:0; }
+  .hm-hi { font-size:22px; overflow:hidden; }
+  .hm-chips { flex-direction:column; align-items:stretch; gap:4px !important; }
+  .hm-chips .hm-streak { padding:3px 9px !important; font-size:13px !important; text-align:left; line-height:1.35; }
   .hm-streak { white-space:nowrap; padding:6px 10px !important; font-size:14px !important; }
   .hm-chips { gap:6px !important; flex-shrink:0; }
   .hm-prof img { width:44px !important; height:44px !important; }
@@ -582,6 +584,12 @@ el("ava").onclick = function () { tab("logros"); };
 function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, logros: rLogros })[t](); el("racha").textContent = racha(allDays(load())); updGems(); }
 // ---------- inicio ----------
 function nextLesson(s) { for (var i = 0; i < DATA.lecciones.length; i++) { var L = DATA.lecciones[i]; if (!(s.les[L.id] && s.les[L.id].done)) return L; } return DATA.lecciones[DATA.lecciones.length - 1]; }
+function fitHi() {   // agranda el saludo todo lo posible sin salir de su fila
+  var h = document.querySelector(".hm-hi"); if (!h) return;
+  var size = 26; h.style.fontSize = size + "px";
+  while (size > 14 && h.scrollWidth > h.clientWidth + 1) { size -= 1; h.style.fontSize = size + "px"; }
+}
+window.addEventListener("resize", fitHi);
 function lessonPct(L, s) { var st = s.les[L.id] || {}; if (st.done) return 100; var ws = lessonWords(L), n = 0;
   ws.forEach(function (w) { var r = s.w[wkey(w.en)]; if (r && ((r.ok || 0) > 0 || r.known)) n++; }); return Math.min(99, Math.round(n * 100 / Math.max(1, ws.length))); }
 var LES_IC = ["🌱", "⚙️", "🔢", "⏳", "🧩", "🕒", "👥", "⚖️", "❓", "🧭", "🗣️"];
@@ -603,6 +611,7 @@ function rInicio() {
       '<div class="hm-pills"><button id="hm-les">Lección</button><button id="hm-ex">Examen</button></div></div>' +
     '<div class="hm-quick"><button data-q="retos"><span>🏆</span>Retos</button><button data-q="pron"><span>🔊</span>Pronunciación</button><button data-q="exam"><span>📝</span>Exámenes</button></div>' +
     '<h3 class="hm-h">Todas las lecciones</h3><div class="hm-scroll">' + cards + '</div>';
+  fitHi();
   el("hm-les").onclick = function () { openLesson(L.id); };
   el("hm-ex").onclick = function () { startExam(L.id); };
   el("inicio").querySelectorAll(".hm-quick button").forEach(function (b) { b.onclick = function () {
