@@ -441,6 +441,8 @@
   .cal-em { font-size:62px; line-height:1.15; }
   .cal-body img { width:96px; height:96px; object-fit:contain; }
   .cal-body b { font-size:14px; font-weight:900; color:var(--c); letter-spacing:.04em; text-transform:uppercase; }
+  .ref-pic { width:132px; height:132px; border-radius:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 22px rgba(26,29,78,.10); animation:calIn .35s ease; }
+  .ref-pic span { font-size:70px; line-height:1; } .ref-pic img { width:110px; height:110px; object-fit:contain; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -775,6 +777,31 @@ function rHub() {
   if (el("hub-final")) el("hub-final").onclick = function () { finishExam(); };
   if (el("hub-reset")) el("hub-reset").onclick = function () { if (confirm("¿Empezar el examen desde cero? Se borrarán los bloques ya hechos de este intento.")) { setAtt(L, {}); rHub(); } };
 }
+
+// ---------- imágenes de referencia para ejercicios ----------
+var PIC = { animal:"🐾", water:"💧", house:"🏠", flower:"🌸", apple:"🍎", sky:"☁️", river:"🏞️", man:"👨", woman:"👩", boy:"👦", girl:"👧", sister:"👧", brother:"👦", son:"👶", father:"👨‍🦳", baby:"👶",
+  hat:"🎩", dress:"👗", light:"💡", dark:"🌑", garden:"🌳", plate:"🍽️", fork:"🍴", oil:"🫒", paint:"🎨", painting:"🖌️", walking:"🚶", blue:"🔵", yellow:"🟡", white:"⚪", black:"⚫",
+  sweet:"🍬", drink:"🥤", clean:"🧼", idea:"💡", news:"📰", "to-day":"📆", today:"📆", tomorrow:"🌅", here:"📍", young:"🧒", old:"👴", offer:"🏷️", offering:"🎁", plant:"🌱", bad:"👎", good:"👍",
+  peace:"🕊️", war:"⚔️", summer:"☀️", winter:"❄️", east:"🌅", west:"🌇", day:"🌞", base:"🧱", is:"🙂", are:"👥", they:"👥", he:"🙋‍♂️", she:"🙋‍♀️", my:"🫵", the:"👉",
+  go:"🚶", goes:"🚶", going:"🚶", come:"🏃", comes:"🏃", coming:"🏃", put:"📥", puts:"📥", take:"✋", takes:"✋", give:"🎁", gives:"🎁", giving:"🎁", get:"🎯", gets:"🎯",
+  keep:"🔒", keeps:"🔒", keeping:"🔒", make:"🔨", makes:"🔨", do:"✅", does:"✅", seem:"🤔", seems:"🤔", say:"💬", says:"💬", saying:"💬", see:"👀", sees:"👀", send:"📤", sends:"📤",
+  have:"🤲", has:"🤲", let:"🚪", lets:"🚪", am:"🙋", smiling:"😊", painting2:"🖌️", late:"⏰", letter:"✉️", angry:"😠", army:"🪖", train:"🚆", book:"📖", word:"🗣️", meal:"🍲", table:"🍽️", work:"💼", time:"⏳", morning:"🌄" };
+var PIC_BG = ["#FFE8D6", "#E3F2FF", "#E8F8EE", "#F3E8FF", "#FFF4D6", "#FFE3EC", "#E0F7F4"];
+var PIC_CH = ["nino", "nina", "perro", "gato", "poodle", "chico", "gatoblanco", "bebe", "gatoteamo", "senor", "poodle2"];
+var CAL_EN = { monday:["ch","nino","#5B8DEF"], tuesday:["ch","nina","#E84393"], wednesday:["ch","perro","#F39C12"], thursday:["ch","gato","#16A085"], friday:["ch","poodle","#9B59B6"], saturday:["ch","chico","#E67E22"], sunday:["ch","gatoteamo","#E74C3C"],
+  january:["em","🏖️","#FF9F43"], february:["em","🍉","#FF6B6B"], march:["em","🎒","#F7B731"], april:["em","🍂","#E17055"], may:["em","🌧️","#74B9FF"], june:["em","❄️","#81ECEC"], july:["em","⛄","#5DADE2"], august:["em","🧣","#A29BFE"], september:["em","🪁","#E84393"], october:["em","🌸","#FD79A8"], november:["em","🌷","#55EFC4"], december:["em","🎄","#2ECC71"] };
+function calFor(it, dir) { var en = ((dir === "en" ? it.q : it.ans) || "").toLowerCase().trim(); var c = CAL_EN[en]; if (!c) return null; var o = { c: c[2] }; o[c[0]] = c[1]; return o; }
+function picFor(it, dir) {
+  if (it.em || it.ch) return null;
+  var en = (dir === "en" ? it.q : it.ans) || "", h = 0; for (var i = 0; i < en.length; i++) h = (h * 31 + en.charCodeAt(i)) % 9973;
+  var bg = PIC_BG[h % PIC_BG.length];
+  if (dir === "es") {   // pregunta en castellano: el dibujo ayuda a recordar sin regalar la respuesta
+    var ws = en.toLowerCase().replace(/[^a-z\- ]/g, " ").split(/\s+/).filter(Boolean), em = null;
+    ws.slice().reverse().forEach(function (w) { if (!em && PIC[w]) em = PIC[w]; });
+    if (em) return { em: em, bg: bg };
+  }
+  return { ch: PIC_CH[h % PIC_CH.length], bg: bg };
+}
 function startPractice(lid, exid) {
   var L = findLesson(lid), b = L.blocks.filter(function (x) { return x.id === exid; })[0]; curLesson = L;
   var p = { k: "", t: b.titulo, dir: "mix", items: b.items, practice: exid };
@@ -796,9 +823,10 @@ function rEx() {
   el("ex-k").textContent = (p.k ? p.k + ") " : "") + p.t; el("ex-num").textContent = (x.j + 1) + ".";
   el("ex-q").textContent = it.q;
   var pic = el("ex-pic");
-  if (it.em || it.ch) { pic.classList.remove("hidden"); pic.style.setProperty("--c", it.c || "#3D5AFE");
-    pic.innerHTML = '<div class="cal"><div class="cal-top"><i></i><i></i></div><div class="cal-body">' + (it.ch ? '<img src="img/char/' + it.ch + '.webp" alt="">' : '<span class="cal-em">' + it.em + '</span>') + '<b>' + esc(it.q) + '</b></div></div>';
-  } else { pic.classList.add("hidden"); pic.innerHTML = ""; } el("ex-say").classList.toggle("hidden", dir !== "en"); el("ex-say").dataset.say = it.q;
+  var cf = (it.em || it.ch) ? it : calFor(it, dir);
+  if (cf) { pic.classList.remove("hidden"); pic.style.setProperty("--c", cf.c || "#3D5AFE");
+    pic.innerHTML = '<div class="cal"><div class="cal-top"><i></i><i></i></div><div class="cal-body">' + (cf.ch ? '<img src="img/char/' + cf.ch + '.webp" alt="">' : '<span class="cal-em">' + cf.em + '</span>') + (dir === "es" ? '<b>' + esc(it.q) + '</b>' : '') + '</div></div>';
+  } else { var pf = picFor(it, dir); if (pf) { pic.classList.remove("hidden"); pic.innerHTML = '<div class="ref-pic" style="background:' + pf.bg + '">' + (pf.ch ? '<img src="img/char/' + pf.ch + '.webp" alt="">' : '<span>' + pf.em + '</span>') + '</div>'; } else { pic.classList.add("hidden"); pic.innerHTML = ""; } } el("ex-say").classList.toggle("hidden", dir !== "en"); el("ex-say").dataset.say = it.q;
   el("ex-in").value = ""; el("ex-in").placeholder = it.kw ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
   el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show");
