@@ -508,6 +508,38 @@
   .exin.done b { color:#0E6B42; } .exin.done span { color:#2B7A4B; font-weight:700; }
   .exin.done .btn { background:#1FAE6B; box-shadow:0 4px 0 #168A54; }
   .exin.done .btn:active { transform:translateY(3px); box-shadow:0 1px 0 #168A54; }
+
+  /* ===== lecciones (3D con personajes) ===== */
+  body:has(#app:not(.hidden) #p-lecciones.on) { background:#F4F6FB; }
+  #app:has(#p-lecciones.on) .top { background:#FFFFFF; margin:0 -18px 6px; padding:20px 18px 16px; }
+  .top .eye { color:#3A60BA; } .top .ttl { font-family:'Nunito',system-ui,sans-serif; font-size:28px; font-weight:800; color:#1A1D4E; }
+  .chip-r { background:#FFD166 !important; color:#7A4A00 !important; box-shadow:0 4px 0 #E5B751; border-radius:16px !important; }
+  .chip-g { background:#BDE0FE !important; color:#123A78 !important; box-shadow:0 4px 0 #93C6F9; border-radius:16px !important; }
+  .ava { padding:0; overflow:hidden; border:2px solid #3A60BA !important; }
+  .ava img { width:100%; height:100%; object-fit:cover; display:block; }
+  #lecciones { gap:22px !important; padding-top:26px; }
+  .lc { position:relative; display:flex; align-items:center; gap:14px; width:100%; text-align:left; background:#FFFFFF; border:2px solid #E2E8F4; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,.05); padding:18px 14px 18px 16px; font-family:inherit; color:#1A1D4E; cursor:pointer; min-height:120px; }
+  .lc-n { flex:0 0 64px; height:64px; border-radius:18px; background:#CFE3FF; display:flex; align-items:center; justify-content:center; font-family:'Nunito',sans-serif; font-weight:900; font-size:38px; color:#25409A; text-shadow:0 3px 0 #9DBDF5, 0 4px 6px rgba(37,64,154,.25); box-shadow:inset 0 -4px 0 #B5D1FA; }
+  .lc-t { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; padding-right:98px; }
+  .lc-t b { font-family:'Nunito',sans-serif; font-size:19px; font-weight:800; color:#1A1D4E; line-height:1.2; }
+  .lc-t > span { font-size:14px; color:#4A4A4A; line-height:1.4; }
+  .lc-ok { font-style:normal; color:#1FAE6B; }
+  .lc-r { position:absolute; right:12px; bottom:14px; width:104px; height:100%; }
+  .lc-av { position:absolute; right:4px; bottom:36px; width:96px; height:110px; object-fit:contain; object-position:bottom; filter:drop-shadow(0 6px 6px rgba(0,0,0,.15)); pointer-events:none; z-index:1; }
+  .lc-btn { z-index:2; }
+  .lc-btn { position:absolute; right:0; bottom:0; min-width:104px; padding:9px 12px; border-radius:16px; color:#FFFFFF; font-weight:900; font-size:15.5px; text-align:center; transition:transform .06s, box-shadow .06s; }
+  .lc-btn.g { background:#58CC02; box-shadow:0 6px 0 #46A302; } .lc-btn.b { background:#2B5BCC; box-shadow:0 6px 0 #1D439E; }
+  .lc:active .lc-btn.g { transform:translateY(4px); box-shadow:0 2px 0 #46A302; } .lc:active .lc-btn.b { transform:translateY(4px); box-shadow:0 2px 0 #1D439E; }
+  .lc.lock { background:#F7F8FB; border-color:#E6EAF1; box-shadow:none; cursor:default; min-height:96px; }
+  .lc.lock .lc-n { background:#E6EAF1; color:#A3ABBA; text-shadow:none; box-shadow:none; }
+  .lc.lock .lc-t b { color:#8A93A5; } .lc.lock .lc-t > span { color:#A3ABBA; }
+  .lc.lock .lc-t { padding-right:56px; }
+  .lc-lock { position:absolute; right:18px; top:50%; transform:translateY(-50%); width:44px; height:44px; } .lc-lock svg { width:100%; height:100%; }
+  /* barra inferior: indicador del activo */
+  .nav button { position:relative; }
+  .nav button.on { color:#1A1D4E !important; }
+  .nav button.on::before { content:""; position:absolute; top:-7px; left:28%; right:28%; height:3px; border-radius:0 0 3px 3px; background:#3A60BA; }
+  .nav button.on svg path, .nav button.on svg rect, .nav button.on svg circle { fill:rgba(58,96,186,.18); }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -542,7 +574,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
     <div class="top">
       <div><div class="eye" id="eye">Inglés básico</div><h1 class="ttl" id="ttl">Hello, Constanza!</h1></div>
       <div class="acts"><span class="chip-r" title="Días seguidos estudiando"><svg viewBox="0 0 24 24" fill="#FF9F1C"><path d="M12 2c2.5 3.5 6 5.3 6 10.3a6 6 0 0 1-12 0c0-3 1.8-4.8 3-6.5.6 2.3 1.8 3.5 3 3.5 0-2.3-1.2-4.7 0-7.3z"/></svg><span id="racha">0</span></span><button class="chip-g gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">0</span></button>
-        <button class="ava" id="ava" aria-label="Tus logros">C</button></div>
+        <button class="ava" id="ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button></div>
     </div>
     <div class="panel on" id="p-inicio"><div class="stack" id="inicio"></div></div>
     <div class="panel" id="p-lecciones"><div class="stack" id="lecciones"></div></div>
@@ -729,17 +761,22 @@ function rInicio() {
   };
 }
 // ---------- lecciones ----------
+var LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#7A869A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5" fill="#E6EAF1"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4" fill="#7A869A" stroke="none"/></svg>';
 function rLecciones() {
-  var s = load(), h = '';
+  var s = load(), h = '', cur = nextLesson(s);
   for (var i = 0; i < NUM_LESSONS; i++) {
     var L = DATA.lecciones[i], st = L && s.les[L.id] || {};
     var prev = i > 0 ? DATA.lecciones[i - 1] : null, open = (L && REVISION[L.id]) || !prev || (s.les[prev.id] && s.les[prev.id].done);
-    if (L && open) h += '<button class="card les' + (st.done ? ' done' : '') + '" data-id="' + L.id + '"><span class="les-n' + (st.done ? ' ch' : '') + '">' + (st.done ? '<img src="img/char/' + LESSON_CHAR[L.n - 1] + '.webp" alt="">' : L.n) + '</span><span><h3>' + esc(L.titulo) + '</h3><p>' + esc(L.sub) + '</p></span><span class="st">' + (st.done ? 'Aprobada' : st.exam !== undefined ? 'Examen: ' + st.exam + '%' : 'Empezar') + '</span></button>';
-    else if (L) h += '<div class="card les lock"><span class="les-n">🔒</span><span><h3>' + esc(L.titulo) + '</h3><p>Aprueba el examen anterior para desbloquearla</p></span></div>';
-    else h += '<div class="card les lock"><span class="les-n">' + (i + 1) + '</span><span><h3>Lección ' + (i + 1) + '</h3><p>' + TITULOS[i] + ' · Próximamente</p></span></div>';
+    if (L && open) {
+      var green = st.done || L.id === cur.id, lbl = st.done ? 'Repasar' : (st.exam !== undefined || lessonPct(L, s) > 0 ? 'Continuar' : 'Empezar');
+      h += '<button class="lc" data-id="' + L.id + '"><span class="lc-n">' + L.n + '</span><span class="lc-t"><b>' + esc(L.titulo) + (st.done ? ' <i class="lc-ok">✓</i>' : '') + '</b><span>' + esc(L.sub) + '</span></span>' +
+        '<span class="lc-r"><img class="lc-av" src="img/char/' + LESSON_CHAR[i] + '.webp" alt=""><span class="lc-btn ' + (green ? 'g' : 'b') + '">' + lbl + '</span></span></button>';
+    } else {
+      h += '<div class="lc lock"><span class="lc-n">' + (i + 1) + '</span><span class="lc-t"><b>' + (L ? esc(L.titulo) : 'Lección ' + (i + 1)) + '</b><span>' + (L ? 'Aprueba el examen anterior para desbloquearla' : TITULOS[i] + ' · Próximamente') + '</span></span><span class="lc-lock">' + LOCK_SVG + '</span></div>';
+    }
   }
   el("lecciones").innerHTML = h;
-  el("lecciones").querySelectorAll("button.les").forEach(function (b) { b.onclick = function () { openLesson(b.dataset.id); }; });
+  el("lecciones").querySelectorAll("button.lc").forEach(function (b) { b.onclick = function () { openLesson(b.dataset.id); }; });
 }
 var curLesson = null, curSeg = "leccion";
 function openLesson(id, seg, fromPop) {
@@ -1055,7 +1092,7 @@ function prizes(s) {
   ];
 }
 // personajes de fieltro: uno por lección aprobada (se mostrarán en cada lección cuando estén listas)
-var LESSON_CHAR = ["nino", "poodle", "gato", "nina", "perro", "gatoblanco", "nino", "poodle", "gato", "nina", "perro"];
+var LESSON_CHAR = ["perro", "nina", "gato", "nino", "poodle", "gatoblanco", "chico", "bebe", "gatoteamo", "senor", "poodle2"];
 function rachaHTML(s) {
   var r = racha(allDays(s)), set = {}, pset = {}; s.days.forEach(function (d) { set[d] = 1; }); (s.protDays || []).forEach(function (d) { pset[d] = 1; });
   var hoy = new Date(), dow = (hoy.getDay() + 6) % 7, lun = new Date(hoy); lun.setDate(hoy.getDate() - dow);
