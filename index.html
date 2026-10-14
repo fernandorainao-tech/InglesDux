@@ -483,6 +483,25 @@
   .vc-ok { background:#8CD496 !important; box-shadow:0px 6px 0px #6BB576 !important; }
   .vc-rep:active { transform:translateY(4px) !important; box-shadow:0px 2px 0px #D96A66 !important; }
   .vc-ok:active { transform:translateY(4px) !important; box-shadow:0px 2px 0px #6BB576 !important; }
+
+  /* ===== globo tipo pensamiento: arriba del personaje ===== */
+  .vs, .scene { flex-direction:column !important; align-items:center !important; justify-content:flex-start !important; gap:0 !important; }
+  .vs { min-height:0; margin:6px 0 4px; }
+  .vs-bub, .bub { max-width:100% !important; width:auto; min-width:58%; text-align:center; transform-origin:center bottom !important; }
+  .vs-bub::before, .bub::before { display:none !important; }
+  .vs-row, .bub-row { justify-content:center; flex-wrap:nowrap; }
+  .bub-q, .vs-w { flex:0 1 auto; min-width:0; }
+  .vs-w { font-size:32px; } .vs-bub.lg .vs-w { font-size:26px; } .vs-bub.xl .vs-w { font-size:22px; }
+  .bub-q { font-size:26px; } .bub.lg .bub-q { font-size:22px; } .bub.xl .bub-q { font-size:19px; }
+  .vs-w, .bub-q { overflow-wrap:normal; word-break:normal; hyphens:none; text-wrap:balance; }
+  .vs-dot { display:block; background:#FFFFFF; border-radius:50%; box-shadow:0 3px 8px rgba(0,0,0,.06); }
+  .vs-dot.d1 { width:18px; height:18px; margin-top:8px; margin-left:-30px; }
+  .vs-dot.d2 { width:10px; height:10px; margin-top:4px; margin-left:-10px; }
+  .scene .vs-dot { background:#FFFFFF; border:1px solid #EEF0F8; }
+  .vs-av { height:140px !important; max-width:none !important; margin-top:2px; }
+  .sc-av { height:118px !important; width:auto !important; margin-top:2px; }
+  .bub { padding:14px 16px 12px !important; }
+  .scene { margin:4px 0 14px !important; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -542,9 +561,10 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
       <div class="qbar"><i id="ex-bar"></i></div><span class="qn" id="ex-n"></span></div>
     <div class="qk" id="ex-k"></div>
     <div class="tip" id="ex-intro">✍️ Escribe la traducción de cada una y toca <b>Comprobar</b>. Tienes 2 intentos; después te mostraremos alternativas.</div>
-    <div class="scene" id="ex-scene"><img class="sc-av" id="ex-av" src="img/char/nina.webp" alt="">
+    <div class="scene" id="ex-scene">
       <div class="bub" id="ex-bub"><span class="bub-n" id="ex-num"></span><div class="bub-row"><span class="bub-em hidden" id="ex-em"></span><span class="bub-q" id="ex-q"></span><button class="bub-spk" id="ex-say" data-say="" aria-label="Escuchar"></button></div>
-        <span class="bub-pr" id="ex-pr"></span><span class="bub-tip" id="ex-tip">Toca para escuchar</span></div></div>
+        <span class="bub-pr" id="ex-pr"></span><span class="bub-tip" id="ex-tip">Toca para escuchar</span></div>
+      <span class="vs-dot d1"></span><span class="vs-dot d2"></span><img class="sc-av" id="ex-av" src="img/char/nina.webp" alt=""></div>
     <label for="ex-in" class="sr">Tu respuesta</label>
     <input id="ex-in" class="ex-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
     <div class="ex-msg" id="ex-msg"></div>
@@ -888,6 +908,7 @@ function rEx() {
   var pr = dir === "en" ? prFor(it.q) : ""; el("ex-pr").textContent = pr ? "(" + pr + ")" : ""; el("ex-pr").classList.toggle("hidden", !pr);
   el("ex-say").classList.toggle("hidden", dir !== "en"); el("ex-tip").classList.toggle("hidden", dir !== "en");
   el("ex-bub").classList.toggle("es", dir !== "en");
+  el("ex-bub").classList.toggle("lg", it.q.length > 12 && it.q.length <= 24); el("ex-bub").classList.toggle("xl", it.q.length > 24);
   el("ex-scene").classList.remove("pop"); void el("ex-scene").offsetWidth; el("ex-scene").classList.add("pop");
   el("ex-in").value = ""; el("ex-in").placeholder = it.kw ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
@@ -995,9 +1016,10 @@ function rVocab() {
     '<div class="vc-top"><button class="vc-x" id="vc-x" aria-label="Salir"><svg viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
       '<div class="vc-bar" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + pct + '%"></i></div><button class="vc-gem gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div>' +
     '<div class="vs-tag"><span>' + (nueva ? 'PALABRA NUEVA' : 'REPASO') + '</span></div>' +
-    '<div class="vs" id="vc-card"><img class="vs-av" src="img/char/' + VOC_CH[h % VOC_CH.length] + '.webp" alt="">' +
-      '<div class="vs-bub" data-say="' + esc(w.en) + '" role="button" tabindex="0" aria-label="Escuchar ' + esc(w.en) + '"><div class="vs-row"><span class="vs-w">' + esc(w.en) + '</span><span class="vs-spk">' + IC.spk + '</span></div>' +
-      '<span class="vs-p">' + (w.pr ? '(' + esc(w.pr) + ')' : 'Toca para escuchar') + '</span><span class="vs-es hidden" id="vs-es">' + esc(w.es) + '</span></div></div>' +
+    '<div class="vs" id="vc-card">' +
+      '<div class="vs-bub' + (w.en.length > 22 ? ' xl' : w.en.length > 12 ? ' lg' : '') + '" data-say="' + esc(w.en) + '" role="button" tabindex="0" aria-label="Escuchar ' + esc(w.en) + '"><div class="vs-row"><span class="vs-w">' + esc(w.en) + '</span><span class="vs-spk">' + IC.spk + '</span></div>' +
+      '<span class="vs-p">' + (w.pr ? '(' + esc(w.pr) + ')' : 'Toca para escuchar') + '</span><span class="vs-es hidden" id="vs-es">' + esc(w.es) + '</span></div>' +
+      '<span class="vs-dot d1"></span><span class="vs-dot d2"></span><img class="vs-av" src="img/char/' + VOC_CH[h % VOC_CH.length] + '.webp" alt=""></div>' +
     '<button class="vs-show" id="vs-show">👁 Ver significado</button>' +
     '<div class="vc-btns"><button class="vc-rep" id="v-rep">Repasar</button><button class="vc-ok" id="v-ok">Me la sé</button></div>';
   el("vs-show").onclick = function () { var e = el("vs-es"), on = e.classList.toggle("hidden"); el("vs-show").textContent = on ? "👁 Ver significado" : "🙈 Ocultar significado"; };
