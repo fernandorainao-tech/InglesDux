@@ -504,6 +504,10 @@
   .scene { margin:4px 0 14px !important; }
   .scene.cal-mode .sc-av, .scene.cal-mode .vs-dot { display:none !important; }
   .scene.cal-mode .ex-pic { margin:0 0 14px; }
+  .exin.done { border-color:#1FAE6B; background:#F0FBF5; }
+  .exin.done b { color:#0E6B42; } .exin.done span { color:#2B7A4B; font-weight:700; }
+  .exin.done .btn { background:#1FAE6B; box-shadow:0 4px 0 #168A54; }
+  .exin.done .btn:active { transform:translateY(3px); box-shadow:0 1px 0 #168A54; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -760,7 +764,7 @@ function rLesson() {
       else if (b.t === "w") body += '<div class="wl">' + b.items.map(wordRow).join("") + '</div>';
       else if (b.t === "conj") body += '<div class="cj-grid">' + b.tables.map(function (t) { return '<div class="cj"><div class="cj-h"><b>' + esc(t.t.split("=")[0].trim()) + '</b><span>' + esc((t.t.split("=")[1] || "").replace(/\(\d\)/, "").trim()) + '</span><button class="spk sm" data-say="' + esc(t.t.split("=")[0].trim()) + '" aria-label="Escuchar">' + IC.spk + '</button></div>' +
         t.rows.map(function (r) { return '<div class="cj-r"><button class="cj-say" data-say="' + esc(r.en) + '"><b>' + esc(r.en) + '</b>' + (r.pr ? ' <i>(' + esc(r.pr) + ')</i>' : '') + '</button><span>' + esc(r.es) + '</span></div>'; }).join("") + '</div>'; }).join("") + '</div>';
-      else if (b.t === "ex") { var exs = (st.ex || {})[b.id]; body += '<div class="card exin"><span class="exin-ic">✍️</span><div><b>' + esc(b.titulo) + '</b><span>' + b.items.length + ' ejercicios · escribe la respuesta' + (exs !== undefined ? ' · último: ' + exs + '%' : '') + '</span></div><button class="btn" data-ex="' + b.id + '">' + (exs !== undefined ? 'Repetir' : 'Hacer') + '</button></div>'; }
+      else if (b.t === "ex") { var exs = (st.ex || {})[b.id]; body += '<div class="card exin' + (exs !== undefined ? ' done' : '') + '"><span class="exin-ic">' + (exs !== undefined ? '✅' : '✍️') + '</span><div><b>' + esc(b.titulo) + '</b><span>' + b.items.length + ' ejercicios · ' + (exs !== undefined ? 'Completado · último: ' + exs + '%' : 'escribe la respuesta') + '</span></div><button class="btn" data-ex="' + b.id + '">' + (exs !== undefined ? 'Repetir' : 'Hacer') + '</button></div>'; }
     });
     flushP();
     var ex = L.examen;
