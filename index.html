@@ -895,6 +895,10 @@ var PIC_BG = ["#FFE8D6", "#E3F2FF", "#E8F8EE", "#F3E8FF", "#FFF4D6", "#FFE3EC", 
 var PIC_CH = ["nino", "nina", "perro", "gato", "poodle", "chico", "gatoblanco", "bebe", "gatoteamo", "senor", "poodle2"];
 var CAL_EN = { monday:["ch","nino","#5B8DEF"], tuesday:["ch","nina","#E84393"], wednesday:["ch","perro","#F39C12"], thursday:["ch","gato","#16A085"], friday:["ch","poodle","#9B59B6"], saturday:["ch","chico","#E67E22"], sunday:["ch","gatoteamo","#E74C3C"],
   january:["em","🏖️","#FF9F43"], february:["em","🍉","#FF6B6B"], march:["em","🎒","#F7B731"], april:["em","🍂","#E17055"], may:["em","🌧️","#74B9FF"], june:["em","❄️","#81ECEC"], july:["em","⛄","#5DADE2"], august:["em","🧣","#A29BFE"], september:["em","🪁","#E84393"], october:["em","🌸","#FD79A8"], november:["em","🌷","#55EFC4"], december:["em","🎄","#2ECC71"] };
+var MONTH_POSE = { january:"nino_verano", february:"perro_verano", march:"poodle_otono", april:"poodle_otono", may:"poodle_otono", june:"nino_invierno", july:"nino_invierno", august:"nino_invierno",
+  september:"nina_primavera", october:"nina_primavera", november:"nina_primavera", december:"bebe_navidad" };
+var MES_ES = { enero:"january", febrero:"february", marzo:"march", abril:"april", mayo:"may", junio:"june", julio:"july", agosto:"august", septiembre:"september", octubre:"october", noviembre:"november", diciembre:"december" };
+function monthPose(it, dir) { var t = ((dir === "en" ? it.q : it.ans) || it.q || "").toLowerCase().trim(); return MONTH_POSE[t] || MONTH_POSE[MES_ES[(it.q || "").toLowerCase().trim()]] || null; }
 function calFor(it, dir) { var en = ((dir === "en" ? it.q : it.ans) || "").toLowerCase().trim(); var c = CAL_EN[en]; if (!c) return null; var o = { c: c[2] }; o[c[0]] = c[1]; return o; }
 function picFor(it, dir) {
   if (it.em || it.ch) return null;
@@ -910,15 +914,15 @@ function picFor(it, dir) {
 // ---------- avatares reutilizables (poses) ----------
 // Cada pregunta puede traer "avatarPose"; si no, se deduce. Para usar poses nuevas basta con
 // agregar el archivo en img/char/ y apuntarlo aquí (ej.: caminando: "nina_caminando").
-var AVATARS = { hablando: "nina", pensando: "gato", caminando: "chico", objeto: "senor", feliz: "gatoteamo", saludando: "nino", tierno: "poodle", bebe: "bebe" };
-var POSE_WORDS = { caminando: ["go","goes","going","come","comes","coming","walk","walking","walks","river","road","train"], pensando: ["seem","seems","say","says","saying","idea","opinion","see","sees","news","think"],
+var AVATARS = { hablando: "nina_saluda", pensando: "poodle_pregunta", caminando: "nino_apunta", objeto: "senor_lapiz", feliz: "gato_bien", saludando: "senor_saluda", tierno: "bebe_estrella", escuchando: "gatoblanco_megafono", leyendo: "nina_libro", tiempo: "nino_reloj", buscando: "gatoblanco_lupa", estudiando: "poodle_lentes", viajando: "chico_mochila", anunciando: "chico_megafono", dudando: "bebe_pregunta", ganando: "gato_trofeo", animando: "perro_mochila", escribiendo: "perro_lapiz" };
+var POSE_WORDS = { tiempo: ["today","to-day","tomorrow","morning","time","late","day","week","hour"], leyendo: ["book","letter","news","word","words","read"], escuchando: ["say","says","saying","hear","music","voice"], caminando: ["go","goes","going","come","comes","coming","walk","walking","walks","river","road","train"], pensando: ["seem","seems","idea","opinion","see","sees","think","question"],
   objeto: ["put","puts","take","takes","give","gives","giving","send","sends","get","gets","keep","keeps","keeping","make","makes","have","has","letter","book","plate","fork","hat","dress","apple","paint","painting"],
   feliz: ["smiling","good","sweet","peace","summer","flower","garden","love"] };
 function poseFor(it, dir) {
   if (it.avatarPose) return it.avatarPose;
   var en = ((dir === "en" ? it.q : it.ans) || "").toLowerCase().replace(/[^a-z\- ]/g, " ").split(/\s+/);
   for (var k in POSE_WORDS) { if (en.some(function (w) { return POSE_WORDS[k].indexOf(w) !== -1; })) return k; }
-  var h = 0, t = en.join(""); for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 97; return ["hablando", "saludando", "tierno", "hablando"][h % 4];
+  var h = 0, t = en.join(""); for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 97; return ["hablando", "saludando", "tierno", "estudiando", "animando", "escribiendo", "buscando", "anunciando", "ganando", "viajando"][h % 10];
 }
 var PR_MAP = null;
 function prFor(en) {
@@ -949,7 +953,8 @@ function rEx() {
   el("ex-av").src = "img/char/" + (cf && cf.ch ? cf.ch : av) + ".webp"; el("ex-av").dataset.pose = pose;
   var calEl = el("ex-cal"); el("ex-scene").classList.toggle("cal-mode", !!cf);
   if (cf) { calEl.classList.remove("hidden"); calEl.style.setProperty("--c", cf.c || "#3D5AFE");
-    calEl.innerHTML = '<div class="cal"><div class="cal-top"><i></i><i></i></div><div class="cal-body">' + (cf.ch ? '<img src="img/char/' + cf.ch + '.webp" alt="">' : '<span class="cal-em">' + cf.em + '</span>') + '</div></div>';
+    var mp = monthPose(it, dir), chImg = mp || cf.ch;
+    calEl.innerHTML = '<div class="cal"><div class="cal-top"><i></i><i></i></div><div class="cal-body">' + (chImg ? '<img src="img/char/' + chImg + '.webp" alt="">' : '<span class="cal-em">' + cf.em + '</span>') + '</div></div>';
   } else { calEl.classList.add("hidden"); calEl.innerHTML = ""; }
   var em = cf ? null : (dir === "es" ? (function () { var pf = picFor(it, dir); return pf && pf.em; })() : null);
   el("ex-em").textContent = em || ""; el("ex-em").classList.toggle("hidden", !em);
@@ -1053,7 +1058,7 @@ function rPractica() {
 }
 // ---------- vocabulario (tarjetas) ----------
 var vocIdx = 0, vocList = [], vocDone = 0, VOC_SES = 20;
-var VOC_CH = ["perro", "gato", "gatoblanco", "nino", "nina", "poodle", "chico", "bebe", "poodle2", "gatoteamo", "senor"];
+var VOC_CH = ["perro_lapiz", "nina_saluda", "nino_apunta", "poodle_pregunta", "gato_bien", "gatoblanco_megafono", "senor_lapiz", "chico_megafono", "bebe_estrella", "senor_saluda", "chico_mochila", "nina_libro", "nino_reloj", "poodle_lentes", "gato_trofeo", "gatoblanco_lupa", "perro_mochila", "bebe_pregunta"];
 function rVocab() {
   var s = load(); vocList = allWords();
   if (vocIdx >= vocList.length) vocIdx = 0;
@@ -1092,7 +1097,7 @@ function prizes(s) {
   ];
 }
 // personajes de fieltro: uno por lección aprobada (se mostrarán en cada lección cuando estén listas)
-var LESSON_CHAR = ["perro", "nina", "gato", "nino", "poodle", "gatoblanco", "chico", "bebe", "gatoteamo", "senor", "poodle2"];
+var LESSON_CHAR = ["perro_lapiz", "nina_saluda", "nino_apunta", "senor_lapiz", "chico_megafono", "nino_reloj", "nina_libro", "gato_trofeo", "poodle_pregunta", "perro_mochila", "gatoblanco_megafono"];
 function rachaHTML(s) {
   var r = racha(allDays(s)), set = {}, pset = {}; s.days.forEach(function (d) { set[d] = 1; }); (s.protDays || []).forEach(function (d) { pset[d] = 1; });
   var hoy = new Date(), dow = (hoy.getDay() + 6) % 7, lun = new Date(hoy); lun.setDate(hoy.getDate() - dow);
