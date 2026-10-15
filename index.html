@@ -563,6 +563,14 @@
   .hm-h { font-weight:900 !important; color:#1A1D4E !important; }
   .hm-lc { border-bottom:4px solid #E5E7EB !important; box-shadow:0 6px 16px rgba(26,29,78,.06) !important; transition:transform .06s; }
   .hm-lc:active { transform:translateY(3px); }
+
+  /* tarjeta Continuar: niña leyendo (pop-out) y caja 3D */
+  .hm-card { position:relative; border:2px solid #E2E8F4 !important; border-radius:24px !important; box-shadow:0px 8px 0px #E2E8F4, 0px 16px 20px rgba(0,0,0,.08) !important; margin-bottom:8px; }
+  .hm-card-top, .hm-txtwrap { padding-right:130px !important; }
+  .hm-pop { position:absolute !important; width:145px !important; height:auto !important; object-fit:contain; top:-45px !important; right:-20px !important; transform:none !important; filter:drop-shadow(-5px 8px 6px rgba(0,0,0,.3)) !important; z-index:10; }
+  #hm-les { box-shadow:0px 5px 0px #1A3A8A !important; } #hm-ex { box-shadow:0px 5px 0px #D0D7E5 !important; border-color:#D0D7E5 !important; }
+  #hm-les:active, #hm-ex:active, .hm-quick button:active, .hm-lc:active { transform:translateY(4px) !important; }
+  #hm-les:active { box-shadow:0px 1px 0px #1A3A8A !important; } #hm-ex:active { box-shadow:0px 1px 0px #D0D7E5 !important; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -761,8 +769,8 @@ function rInicio() {
       '<div class="hm-chips"><span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span><button class="hm-streak gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div></div>' +
       '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
       '<div class="hm-res hidden" id="hm-res"></div></div>' +
-    '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div></div><img class="hm-pop" src="img/char/gato.webp" alt="">' +
-      '<div class="hm-prog"><span class="hm-bar"><i style="width:' + Math.max(pct, 12) + '%"><em>' + pct + '%</em></i></span></div>' +
+    '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div></div><img class="hm-pop" src="img/char/nina_libro.webp" alt="">' +
+      '<div class="hm-prog hm-txtwrap"><span class="hm-bar"><i style="width:' + Math.max(pct, 20) + '%"><em>' + pct + '%</em></i></span></div>' +
       '<div class="hm-pills"><button id="hm-les">Lección</button><button id="hm-ex">Examen</button></div></div>' +
     '<div class="hm-quick"><button data-q="retos"><span>🏆</span>Retos</button><button data-q="pron"><span>🔊</span>Pronunciación</button><button data-q="exam"><span>📝</span>Exámenes</button></div>' +
     '<h3 class="hm-h">Todas las lecciones</h3><div class="hm-scroll">' + cards + '</div>';
