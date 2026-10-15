@@ -610,6 +610,8 @@
   #exam .ex-in { margin-top:14px !important; }
   #exam.sh-open .ex-scroll { padding-bottom:240px; }
   #exam .ex-foot.hidden-foot { display:none; }
+  #exam #ex-k { display:none !important; }
+  #exam .qtop { padding-bottom:10px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -669,7 +671,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
     <div class="qtop"><button class="qx" id="ex-x" aria-label="Salir del examen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="qbar"><i id="ex-bar"></i></div><span class="qn" id="ex-n"></span></div>
     <div class="qk" id="ex-k"></div>
-    <div class="tip" id="ex-intro">✍️ Escribe la traducción de cada una y toca <b>Comprobar</b>. Tienes 2 intentos; después te mostraremos alternativas.</div>
+    <div class="tip" id="ex-intro">✍️ Escribe la traducción de cada una</div>
     <div class="scene" id="ex-scene">
       <div class="ex-pic hidden" id="ex-cal"></div>
       <div class="bub" id="ex-bub"><span class="bub-n" id="ex-num"></span><div class="bub-row"><span class="bub-em hidden" id="ex-em"></span><span class="bub-q" id="ex-q"></span><button class="bub-spk" id="ex-say" data-say="" aria-label="Escuchar"></button></div>
