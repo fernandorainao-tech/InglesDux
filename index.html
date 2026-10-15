@@ -540,6 +540,29 @@
   .nav button.on { color:#1A1D4E !important; }
   .nav button.on::before { content:""; position:absolute; top:-7px; left:28%; right:28%; height:3px; border-radius:0 0 3px 3px; background:#3A60BA; }
   .nav button.on svg path, .nav button.on svg rect, .nav button.on svg circle { fill:rgba(58,96,186,.18); }
+
+  /* ===== inicio premium 3D ===== */
+  .hm-chips .hm-streak { background:rgba(255,255,255,.15) !important; color:#FFFFFF !important; font-weight:900 !important; border:1px solid rgba(255,255,255,.18); }
+  .hm-card { border-radius:24px !important; box-shadow:0 8px 24px rgba(0,0,0,.1) !important; padding:20px 18px 18px !important; overflow:visible; }
+  .hm-card-top { padding-right:84px; }
+  .hm-card h3 { font-size:21px !important; font-weight:900 !important; color:#1A1D4E !important; }
+  .hm-pop { position:absolute; right:-4px; top:-46px; width:128px; height:128px; object-fit:contain; filter:drop-shadow(0 8px 10px rgba(0,0,0,.18)); pointer-events:none; transform:rotate(6deg); }
+  .hm-prog { margin:16px 0 18px !important; }
+  .hm-bar { height:12px !important; border-radius:8px !important; background:#E6E9F2 !important; }
+  .hm-card .hm-bar { height:22px !important; border-radius:12px !important; }
+  .hm-card .hm-bar i { position:relative; background:#2F6BFF !important; border-radius:12px !important; display:flex !important; align-items:center; }
+  .hm-card .hm-bar em { font-style:normal; font-size:12px; font-weight:900; color:#fff; padding-left:9px; }
+  .hm-pills button { height:46px !important; border-radius:16px !important; font-size:16px !important; transition:transform .06s, box-shadow .06s; }
+  #hm-les { background:#3A60BA !important; color:#fff !important; border:none !important; box-shadow:0 4px 0 #1A3A8A; }
+  #hm-ex { background:#fff !important; color:#3A60BA !important; border:1.5px solid #E0E0E0 !important; box-shadow:0 4px 0 #E0E0E0; }
+  #hm-les:active { transform:translateY(3px); box-shadow:0 1px 0 #1A3A8A; } #hm-ex:active { transform:translateY(3px); box-shadow:0 1px 0 #E0E0E0; }
+  .hm-quick button { border-radius:16px !important; border-bottom:4px solid #E5E7EB !important; box-shadow:0 6px 16px rgba(26,29,78,.06) !important; transition:transform .06s, border-bottom-width .06s; }
+  .hm-quick button:active { transform:translateY(3px); border-bottom-width:1px !important; }
+  .hm-quick span { font-size:40px !important; filter:drop-shadow(0 4px 4px rgba(0,0,0,.12)); }
+  .hm-quick button { font-size:13.5px !important; color:#1A1D4E !important; font-weight:900 !important; }
+  .hm-h { font-weight:900 !important; color:#1A1D4E !important; }
+  .hm-lc { border-bottom:4px solid #E5E7EB !important; box-shadow:0 6px 16px rgba(26,29,78,.06) !important; transition:transform .06s; }
+  .hm-lc:active { transform:translateY(3px); }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -738,8 +761,8 @@ function rInicio() {
       '<div class="hm-chips"><span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span><button class="hm-streak gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div></div>' +
       '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
       '<div class="hm-res hidden" id="hm-res"></div></div>' +
-    '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div><img src="img/gatito.jpg" alt="" width="64" height="64"></div>' +
-      '<div class="hm-prog"><span class="hm-bar"><i style="width:' + pct + '%"></i></span><span>' + pct + '%</span></div>' +
+    '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div></div><img class="hm-pop" src="img/char/gato.webp" alt="">' +
+      '<div class="hm-prog"><span class="hm-bar"><i style="width:' + Math.max(pct, 12) + '%"><em>' + pct + '%</em></i></span></div>' +
       '<div class="hm-pills"><button id="hm-les">Lección</button><button id="hm-ex">Examen</button></div></div>' +
     '<div class="hm-quick"><button data-q="retos"><span>🏆</span>Retos</button><button data-q="pron"><span>🔊</span>Pronunciación</button><button data-q="exam"><span>📝</span>Exámenes</button></div>' +
     '<h3 class="hm-h">Todas las lecciones</h3><div class="hm-scroll">' + cards + '</div>';
