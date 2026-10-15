@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#FFFFFF">
 <title>Duxlingo</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -599,6 +599,17 @@
   .ex-inrow { display:flex; gap:8px; align-items:stretch; margin-top:16px; }
   .ex-inrow .ex-in { margin-top:0 !important; flex:1; min-width:0; }
   .ex-inrow .btn.check { width:auto !important; height:58px !important; margin:0 !important; padding:0 16px; font-size:16px !important; border-radius:18px !important; flex-shrink:0; }
+
+  /* ===== ejercicio a pantalla completa: Comprobar siempre sobre el teclado ===== */
+  #exam:not(.hidden) { position:fixed; left:0; right:0; top:0; height:100vh; height:100dvh; z-index:45; background:#FFFFFF; display:flex; flex-direction:column; padding:0 !important; }
+  #exam .ex-scroll { flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:calc(4px + env(safe-area-inset-top,0px)) 18px 16px; max-width:640px; width:100%; margin:0 auto; }
+  #exam .ex-foot { flex-shrink:0; padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px)); background:#FFFFFF; border-top:1px solid #EEF0F6; max-width:640px; width:100%; margin:0 auto; }
+  #exam .ex-foot .btn.check { width:100% !important; height:56px !important; margin:0 !important; border-radius:16px !important; font-size:17px !important; background:#58CC02; box-shadow:0 5px 0 #46A302; color:#fff; transition:transform .06s, box-shadow .06s; }
+  #exam .ex-foot .btn.check:active { transform:translateY(4px); box-shadow:0 1px 0 #46A302; }
+  #exam .ex-foot .btn.check:disabled { background:#E5E7EB; color:#9AA0B4; box-shadow:0 5px 0 #CDD1DA; }
+  #exam .ex-in { margin-top:14px !important; }
+  #exam.sh-open .ex-scroll { padding-bottom:240px; }
+  #exam .ex-foot.hidden-foot { display:none; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -654,6 +665,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   </div>
   <div id="exhub" class="hidden"></div>
   <div id="exam" class="hidden">
+    <div class="ex-scroll" id="ex-scroll">
     <div class="qtop"><button class="qx" id="ex-x" aria-label="Salir del examen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div class="qbar"><i id="ex-bar"></i></div><span class="qn" id="ex-n"></span></div>
     <div class="qk" id="ex-k"></div>
@@ -664,9 +676,11 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
         <span class="bub-pr" id="ex-pr"></span><span class="bub-tip" id="ex-tip">Toca para escuchar</span></div>
       <span class="vs-dot d1"></span><span class="vs-dot d2"></span><img class="sc-av" id="ex-av" src="img/char/nina.webp" alt=""></div>
     <label for="ex-in" class="sr">Tu respuesta</label>
-    <div class="ex-inrow"><input id="ex-in" class="ex-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"><button class="btn check" id="ex-check" disabled>Comprobar</button></div>
+    <input id="ex-in" class="ex-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
     <div class="ex-msg" id="ex-msg"></div>
     <div class="opts hidden" id="ex-opts"></div>
+      </div>
+    <div class="ex-foot" id="ex-foot"><button class="btn check" id="ex-check" disabled>Comprobar</button></div>
   </div>
   <div id="result" class="hidden"></div>
 </div>
@@ -1022,7 +1036,7 @@ function rEx() {
   el("ex-scene").classList.remove("pop"); void el("ex-scene").offsetWidth; el("ex-scene").classList.add("pop");
   el("ex-in").value = ""; el("ex-in").placeholder = it.kw ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
-  el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show");
+  el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show"); el("ex-foot").classList.remove("hidden-foot"); el("ex-scroll").scrollTop = 0;
   if (dir === "en") setTimeout(function () { speak(it.q); }, 250);
   el("exam").classList.remove("sh-open"); window.scrollTo(0, 0);
   setTimeout(function () { try { el("ex-in").focus({ preventScroll: true }); } catch (e) { el("ex-in").focus(); } window.scrollTo(0, 0); }, 60);
@@ -1033,7 +1047,7 @@ document.addEventListener("keydown", function (e) { if (e.target && e.target.id 
 function exOptions() {
   var x = EX.items[EX.i], pool = x.it.kw ? ["Agregando ing al final del verbo.", "Anteponiendo la palabra to al verbo."] : x.p.items.filter(function (it) { return (it.dir || x.p.dir) === (x.it.dir || x.p.dir); }).map(function (it) { return it.ans; }).filter(function (a) { return norm(a) !== norm(x.it.ans); });
   var opts = shuffle([x.it.ans].concat(shuffle(pool).slice(0, 2)));
-  EX.mode = "opts"; el("ex-in").classList.add("hidden"); el("ex-check").classList.add("hidden");
+  EX.mode = "opts"; el("ex-in").classList.add("hidden"); el("ex-check").classList.add("hidden"); el("ex-foot").classList.add("hidden-foot");
   el("ex-msg").textContent = "Elige la respuesta correcta:"; el("ex-msg").className = "ex-msg info";
   el("ex-opts").classList.remove("hidden");
   el("ex-opts").innerHTML = opts.map(function (o, i) { return '<button class="opt" data-o="' + esc(o) + '">' + esc(o) + '</button>'; }).join("");
@@ -1342,9 +1356,11 @@ el("shop-close").onclick = function () { el("shop").classList.add("hidden"); };
 el("shop").addEventListener("click", function (e) { if (e.target.id === "shop") el("shop").classList.add("hidden"); });
 document.addEventListener("click", function (e) { if (e.target.closest(".gem-chip")) openShop(); });
 
-// al abrir el teclado, mantener visible la fila de respuesta
-document.addEventListener("focusin", function (e) { if (e.target && e.target.id === "ex-in") setTimeout(function () { var r = el("ex-in").getBoundingClientRect(), vh = window.visualViewport ? window.visualViewport.height : innerHeight; if (r.bottom > vh - 12) window.scrollBy({ top: r.bottom - vh + 24, behavior: "smooth" }); }, 320); });
-if (window.visualViewport) window.visualViewport.addEventListener("resize", function () { if (document.activeElement && document.activeElement.id === "ex-in") { var r = el("ex-in").getBoundingClientRect(), vh = window.visualViewport.height; if (r.bottom > vh - 12) window.scrollBy({ top: r.bottom - vh + 24 }); } });
+
+// respaldo: si el navegador no achica la pantalla al abrir el teclado, ajustamos el alto a la zona visible
+function fitExam() { var ex = el("exam"); if (!ex || ex.classList.contains("hidden") || !window.visualViewport) return; var vv = window.visualViewport; ex.style.height = vv.height + "px"; ex.style.top = vv.offsetTop + "px"; }
+if (window.visualViewport) { window.visualViewport.addEventListener("resize", fitExam); window.visualViewport.addEventListener("scroll", fitExam); }
+document.addEventListener("focusin", function (e) { if (e.target && e.target.id === "ex-in") setTimeout(function () { fitExam(); el("ex-in").scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 250); });
 // ---------- bienvenida (solo la primera vez) ----------
 (function () {
   var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) return; } catch (e) { return; }
