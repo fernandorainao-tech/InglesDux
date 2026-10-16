@@ -1043,9 +1043,9 @@ function tone(freqs, dur, type, vol) { var c = sfxCtx(); if (!c) return; var t =
     g.gain.setValueAtTime(0.0001, t + i * dur * 0.55); g.gain.exponentialRampToValueAtTime(vol, t + i * dur * 0.55 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + i * dur * 0.55 + dur);
     o.connect(g); g.connect(c.destination); o.start(t + i * dur * 0.55); o.stop(t + i * dur * 0.55 + dur + 0.05); }); }
 function playSfx(ok) {
-  var a = ok ? SFX.ok : SFX.bad, ready = ok ? SFX.okReady : SFX.badReady;
-  if (a && ready) { try { a.currentTime = 0; var p = a.play(); if (p && p.catch) p.catch(function () { ok ? tone([880, 1318.5], 0.16, "sine", 0.25) : tone([196, 155.6], 0.2, "square", 0.08); }); return; } catch (e) {} }
-  if (ok) tone([880, 1318.5], 0.16, "sine", 0.25); else tone([196, 155.6], 0.2, "square", 0.08);
+  var a = ok ? SFX.ok : SFX.bad, ready = ok ? SFX.okReady : SFX.badReady; if (a) a.volume = ok ? 0.7 : 0.6;
+  if (a && ready) { try { a.currentTime = 0; var p = a.play(); if (p && p.catch) p.catch(function () { ok ? tone([1046.5, 1568], 0.5, "sine", 0.12) : tone([392, 311], 0.3, "sine", 0.1); }); return; } catch (e) {} }
+  if (ok) tone([1046.5, 1568], 0.5, "sine", 0.12); else tone([392, 311], 0.3, "sine", 0.1);
 }
 function startPractice(lid, exid) {
   var L = findLesson(lid), b = L.blocks.filter(function (x) { return x.id === exid; })[0]; curLesson = L;
