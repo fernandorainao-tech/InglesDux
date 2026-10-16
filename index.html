@@ -612,6 +612,32 @@
   #exam .ex-foot.hidden-foot { display:none; }
   #exam #ex-k { display:none !important; }
   #exam .qtop { padding-bottom:10px; }
+
+  /* ===== examen: mapa de desafíos 3D ===== */
+  body:has(#exhub:not(.hidden)) { background:#F4F6FB !important; }
+  #exhub { position:relative; background:transparent !important; padding-bottom:30px; }
+  .hb-pet { position:absolute; top:calc(6px + env(safe-area-inset-top,0px)); right:-15px; width:110px; z-index:10; filter:drop-shadow(-4px 8px 6px rgba(0,0,0,.15)); pointer-events:none; }
+  .hb-head { padding-right:96px !important; }
+  .hb-back { border-radius:16px !important; background:#FFFFFF !important; border:2px solid #CBD5E1 !important; box-shadow:0px 4px 0px #CBD5E1; color:#1A1D4E !important; }
+  .hb-back:active { transform:translateY(3px); box-shadow:0 1px 0 #CBD5E1; }
+  .hb-eye { color:#3A60BA !important; } .hb-ttl { color:#1A1D4E !important; font-weight:900 !important; font-size:23px !important; }
+  .hb-call { background-color:#E8EFFF !important; border:2px solid #C3D5FB; border-radius:20px !important; box-shadow:0px 6px 0px #C3D5FB; margin-bottom:24px !important; }
+  .hb-call p { color:#1A1D4E !important; } .hb-cap { font-size:30px !important; }
+  .hb-list { gap:18px !important; }
+  .hb { position:relative; border-radius:24px !important; padding:16px 70px 16px 14px !important; }
+  .hb-open { background-color:#FFFFFF !important; border:2px solid #2B5BCC !important; box-shadow:0px 8px 0px #1E429B, 0px 12px 20px rgba(43,91,204,.15) !important; transition:transform .06s, box-shadow .06s; }
+  .hb-open:active { transform:translateY(5px); box-shadow:0px 3px 0px #1E429B, 0px 6px 12px rgba(43,91,204,.12) !important; }
+  .hb-open .hb-ic { background:#CFE0FF !important; width:58px !important; height:58px !important; border-radius:18px !important; font-size:28px !important; }
+  .hb-open .hb-t b { color:#1A1D4E !important; font-weight:800 !important; } .hb-open .hb-t span { color:#4B5563 !important; }
+  .hb-go { position:absolute; right:20px; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; background:#2B5BCC; box-shadow:0px 4px 0px #1E429B; display:flex; align-items:center; justify-content:center; }
+  .hb-go .hb-chev { color:#FFFFFF !important; width:22px !important; height:22px !important; }
+  .hb-lock { background-color:#F1F3F8 !important; border:2px solid #E2E8F4 !important; box-shadow:none !important; opacity:1 !important; }
+  .hb-lock .hb-ic { background:transparent !important; width:58px !important; height:58px !important; }
+  .hb-lock .hb-ic svg { width:44px !important; height:44px !important; stroke:#94A3B8; stroke-width:2.6; }
+  .hb-lock .hb-ic svg rect { fill:#CBD5E1; }
+  .hb-lock .hb-t b, .hb-lock .hb-t span { color:#64748B !important; }
+  .hb-done { box-shadow:0 6px 0 #9ADBB8 !important; }
+  .hb-done .hb-go { background:#1FAE6B; box-shadow:0 4px 0 #168A54; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -942,9 +968,9 @@ function rHub() {
     var sub = a ? p.items.length + ' ' + unit + ' · ' + a.ok + '/' + a.res.length + ' correctas' : st === "lock" ? p.items.length + ' ' + unit + ' · Completa el bloque anterior' : p.items.length + ' ' + unit + ' · Toca para comenzar';
     html += '<button class="hb hb-' + st + '" data-k="' + p.k + '"' + (st === "lock" ? ' disabled aria-disabled="true"' : '') + '>' +
       '<span class="hb-ic">' + (a ? IC.check : st === "lock" ? '<svg viewBox="0 0 24 24" fill="none" stroke="#8A8A8A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>' : '✏️') + '</span>' +
-      '<span class="hb-t"><b>' + p.k + ') ' + esc(p.t) + '</b><span>' + sub + '</span></span>' + (st === "lock" ? '' : chev) + '</button>';
+      '<span class="hb-t"><b>' + p.k + ') ' + esc(p.t) + '</b><span>' + sub + '</span></span>' + (st === "lock" ? '' : '<span class="hb-go">' + chev + '</span>') + '</button>';
   });
-  el("exhub").innerHTML = '<div class="hb-head"><button class="hb-back" id="hub-back" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
+  el("exhub").innerHTML = '<img class="hb-pet" src="img/char/' + LESSON_CHAR[L.n - 1] + '.webp" alt=""><div class="hb-head"><button class="hb-back" id="hub-back" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
       '<div><div class="hb-eye">Lección ' + L.n + '</div><h2 class="hb-ttl">' + esc(L.examen.titulo) + '</h2></div></div>' +
     '<div class="hb-call"><span class="hb-cap" aria-hidden="true">🎓</span><p>El examen tiene <b>' + parts.length + ' bloques</b>. Escribe cada respuesta; si te equivocas <b>2 veces</b>, te daremos alternativas. Completa un bloque para pasar al siguiente: tu avance queda guardado.</p></div>' +
     '<div class="hb-list">' + html + '</div>' +
