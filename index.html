@@ -1028,6 +1028,25 @@ function prFor(en) {
   if (!PR_MAP) { PR_MAP = {}; DATA.lecciones.forEach(function (L) { L.blocks.forEach(function (b) { (b.items || []).forEach(function (w) { if (w.pr && w.en) PR_MAP[w.en.toLowerCase()] = w.pr; }); (b.tables || []).forEach(function (t) { t.rows.forEach(function (r) { if (r.pr) PR_MAP[r.en.toLowerCase()] = r.pr; }); }); }); }); }
   return PR_MAP[String(en).toLowerCase().trim()] || "";
 }
+
+// ---------- efectos de sonido (acierto / error) ----------
+// Archivos: audio/success.mp3 y audio/error.mp3 (en la carpeta "audio" junto a index.html).
+// Si no existen, se usa un sonido generado con Web Audio, así siempre suena algo.
+var SFX = { ok: null, bad: null, okReady: false, badReady: false, ctx: null };
+(function () {
+  function prep(key, url) { try { var a = new Audio(url); a.preload = "auto"; a.addEventListener("canplaythrough", function () { SFX[key + "Ready"] = true; }, { once: true }); a.addEventListener("error", function () { SFX[key + "Ready"] = false; }); a.load(); SFX[key] = a; } catch (e) {} }
+  prep("ok", "audio/success.mp3"); prep("bad", "audio/error.mp3");
+})();
+function sfxCtx() { if (!SFX.ctx) { var C = window.AudioContext || window.webkitAudioContext; if (C) SFX.ctx = new C(); } if (SFX.ctx && SFX.ctx.state === "suspended") SFX.ctx.resume(); return SFX.ctx; }
+function tone(freqs, dur, type, vol) { var c = sfxCtx(); if (!c) return; var t = c.currentTime;
+  freqs.forEach(function (f, i) { var o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.setValueAtTime(f, t + i * dur * 0.55);
+    g.gain.setValueAtTime(0.0001, t + i * dur * 0.55); g.gain.exponentialRampToValueAtTime(vol, t + i * dur * 0.55 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + i * dur * 0.55 + dur);
+    o.connect(g); g.connect(c.destination); o.start(t + i * dur * 0.55); o.stop(t + i * dur * 0.55 + dur + 0.05); }); }
+function playSfx(ok) {
+  var a = ok ? SFX.ok : SFX.bad, ready = ok ? SFX.okReady : SFX.badReady;
+  if (a && ready) { try { a.currentTime = 0; var p = a.play(); if (p && p.catch) p.catch(function () { ok ? tone([880, 1318.5], 0.16, "sine", 0.25) : tone([196, 155.6], 0.2, "square", 0.08); }); return; } catch (e) {} }
+  if (ok) tone([880, 1318.5], 0.16, "sine", 0.25); else tone([196, 155.6], 0.2, "square", 0.08);
+}
 function startPractice(lid, exid) {
   var L = findLesson(lid), b = L.blocks.filter(function (x) { return x.id === exid; })[0]; curLesson = L;
   var p = { k: "", t: b.titulo, dir: "mix", items: b.items, practice: exid };
@@ -1089,6 +1108,7 @@ el("ex-check") && (el("ex-check").onclick = function () {
   var x = EX.items[EX.i], u = el("ex-in").value, j = judge(x.it, u);
   if (j) { exResolve(true, u, false, j === 1); return; }
   EX.tries++; EX.lastU = u;
+  playSfx(false);
   if (EX.tries < 2) { el("ex-msg").textContent = "No es correcta. Inténtalo otra vez (te queda 1 intento)."; el("ex-msg").className = "ex-msg bad"; el("ex-in").select(); }
   else exOptions();
 });
@@ -1096,12 +1116,12 @@ function exResolve(ok, u, viaOpts, typo) {
   EX.done = true; var x = EX.items[EX.i], s = load(), en = (x.it.dir || x.p.dir) === "en" ? x.it.q : x.it.ans;
   if (ok) { EX.ok++; s.correct++; } var k = wkey(en), r = s.w[k] || {}; if (ok) r.ok = (r.ok || 0) + 1; else r.bad = (r.bad || 0) + 1; s.w[k] = r; markDay(s); save(s);
   EX.res.push({ ok: ok ? 1 : 0, u: ok ? "" : (EX.lastU || u), op: viaOpts ? 1 : 0 });
-  var sh = el("sheet"); sh.className = "sheet show " + (ok ? "good" : "wrong"); el("sh-ic").innerHTML = ok ? IC.check : IC.x; el("exam").classList.add("sh-open");
+  var sh = el("sheet"); if (ok || viaOpts) playSfx(ok); sh.className = "sheet show " + (ok ? "good" : "wrong"); el("sh-ic").innerHTML = ok ? IC.check : IC.x; el("exam").classList.add("sh-open");
   el("sh-t").textContent = ok ? (typo ? "¡Correcto! (revisa la ortografía)" : viaOpts ? "¡Correcto, con ayuda!" : "¡Correcto!") : "La respuesta correcta es «" + x.it.ans + "»";
   el("sh-p").innerHTML = '<b>' + esc(x.it.q) + '</b> = ' + esc(x.it.ans) + (ok ? '' : '. Repásala en la lección: volverá a aparecer en tus prácticas.');
   el("sh-btn").textContent = EX.i < EX.items.length - 1 ? "Siguiente" : "Terminar el bloque";
   el("sh-btn").dataset.ctx = "exam";
-  speak(en);
+  setTimeout(function () { speak(en); }, 650);
 }
 function finishBlock() {
   if (EX.practice) { var sx = load(), stx = sx.les[EX.L.id] || {}, pc = Math.round(EX.ok * 100 / EX.items.length); stx.ex = stx.ex || {}; stx.ex[EX.practice] = pc; sx.les[EX.L.id] = stx; sx.gems += 10; save(sx); gemFx(10);
@@ -1308,13 +1328,13 @@ el("qcheck").onclick = function () {
   s.w[k] = r; markDay(s); save(s);
   el("opts").querySelectorAll(".opt").forEach(function (b, i) { b.disabled = true; b.classList.remove("sel"); if (q.opts[i] === q.ans) { b.classList.add("ok"); b.insertAdjacentHTML("beforeend", '<span style="width:20px;height:20px">' + IC.check + '</span>'); } else if (i === Q.sel) b.classList.add("bad"); });
   el("qcheck").classList.add("hidden");
-  var sh = el("sheet"); sh.className = "sheet show " + (ok ? "good" : "wrong");
+  var sh = el("sheet"); playSfx(ok); sh.className = "sheet show " + (ok ? "good" : "wrong");
   el("sh-ic").innerHTML = ok ? IC.check : IC.x;
   var good = ["¡Excelente!", "¡Muy bien!", "¡Perfecto!", "¡Así se hace!"];
   el("sh-t").textContent = ok ? good[Math.floor(Math.random() * good.length)] : "Casi. La correcta es «" + q.ans + "»";
   el("sh-p").innerHTML = '<b>' + esc(q.en) + '</b>' + (q.pr2 ? ' (' + esc(q.pr2) + ')' : '') + ' = ' + esc(q.es) + (ok ? '' : '. Esta volverá a aparecer en tus repasos.');
   el("sh-btn").textContent = Q.i < Q.qs.length - 1 ? "Continuar" : "Ver resultado"; el("sh-btn").dataset.ctx = "quiz";
-  speak(q.en);
+  setTimeout(function () { speak(q.en); }, 650);
 };
 el("sh-btn").onclick = function () { el("sheet").classList.remove("show");
   if (el("sh-btn").dataset.ctx === "exam") { if (EX.i < EX.items.length - 1) { EX.i++; rEx(); } else finishBlock(); return; }
