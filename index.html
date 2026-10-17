@@ -638,6 +638,26 @@
   .hb-lock .hb-t b, .hb-lock .hb-t span { color:#64748B !important; }
   .hb-done { box-shadow:0 6px 0 #9ADBB8 !important; }
   .hb-done .hb-go { background:#1FAE6B; box-shadow:0 4px 0 #168A54; }
+
+  /* ===== nombre del usuario ===== */
+  .nm { position:fixed; inset:0; z-index:320; background:#F4F6FB; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .nm-box { width:100%; max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .nm-pet { width:150px; filter:drop-shadow(0 12px 12px rgba(0,0,0,.18)); animation:avIn .5s cubic-bezier(.2,.9,.3,1.3); }
+  .nm-box h1 { font-family:'Nunito',system-ui,sans-serif; font-weight:900; font-size:28px; color:#1A1D4E; line-height:1.2; }
+  .nm-in { width:100%; height:60px; border-radius:16px; background:#FFFFFF; border:2px solid #C3D5FB; box-shadow:0 5px 0 #C3D5FB, inset 0 2px 4px rgba(26,29,78,.05); text-align:center; font-family:'Nunito',sans-serif; font-weight:800; font-size:22px; color:#1A1D4E; outline:none; }
+  .nm-in:focus { border-color:#3A60BA; box-shadow:0 5px 0 #3A60BA; }
+  .nm-btn, .nm-save { width:100%; height:58px; border:none; border-radius:16px; color:#fff; font-family:inherit; font-weight:900; font-size:18px; transition:transform .06s, box-shadow .06s; margin-top:6px; }
+  .nm-btn { background:#3A60BA; box-shadow:0px 5px 0px #1A3A8A; } .nm-btn:active { transform:translateY(4px); box-shadow:0 1px 0 #1A3A8A; }
+  .nm-save { background:#58CC02; box-shadow:0px 5px 0px #46A302; } .nm-save:active { transform:translateY(4px); box-shadow:0 1px 0 #46A302; }
+  .nm-btn:disabled, .nm-save:disabled { background:#E5E7EB; color:#9AA0B4; box-shadow:0 5px 0 #CDD1DA; }
+  #nmed .nm-in { margin:10px 0 14px; }
+  .pf-name { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#fff; border:2px solid #E2E8F4; border-radius:20px; box-shadow:0 6px 0 #E2E8F4; padding:12px 14px; margin:4px 0 18px; font-family:inherit; cursor:pointer; transition:transform .06s, box-shadow .06s; }
+  .pf-name:active { transform:translateY(4px); box-shadow:0 2px 0 #E2E8F4; }
+  .pf-name img { width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #3A60BA; }
+  .pf-name > span:nth-child(2) { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .pf-name small { font-size:12px; font-weight:800; color:#3A60BA; text-transform:uppercase; letter-spacing:.06em; }
+  .pf-name b { font-size:20px; font-weight:900; color:#1A1D4E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pf-pen { width:44px; height:44px; border-radius:14px; background:#FFF4D6; box-shadow:0 4px 0 #F2D58A; display:flex; align-items:center; justify-content:center; font-size:22px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -670,7 +690,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   <!-- ===== APP ===== -->
   <div id="app">
     <div class="top">
-      <div><div class="eye" id="eye">Inglés básico</div><h1 class="ttl" id="ttl">Hello, Constanza!</h1></div>
+      <div><div class="eye" id="eye">Inglés básico</div><h1 class="ttl" id="ttl">Hello!</h1></div>
       <div class="acts"><span class="chip-r" title="Días seguidos estudiando"><svg viewBox="0 0 24 24" fill="#FF9F1C"><path d="M12 2c2.5 3.5 6 5.3 6 10.3a6 6 0 0 1-12 0c0-3 1.8-4.8 3-6.5.6 2.3 1.8 3.5 3 3.5 0-2.3-1.2-4.7 0-7.3z"/></svg><span id="racha">0</span></span><button class="chip-g gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">0</span></button>
         <button class="ava" id="ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button></div>
     </div>
@@ -723,6 +743,15 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   <p>Gana diamantes: <b>+15</b> por racha diaria, <b>+10</b> por ejercicio, <b>+30</b> por logro. Se suman solos a tu saldo.</p>
   <div class="shop-item"><span class="shop-ic">🛡️</span><div><b>Protector de Racha</b><span>Cuida tu racha hasta 2 días sin estudiar.</span><em id="shop-prot"></em></div></div>
   <button class="shop-buy" id="shop-buy">Comprar · 35 💎</button><button class="shop-close" id="shop-close">Cerrar</button></div></div>
+<div id="nm" class="nm hidden" role="dialog" aria-modal="true" aria-labelledby="nm-t">
+  <div class="nm-box"><img class="nm-pet" src="img/char/perro_mochila.webp" alt="">
+    <h1 id="nm-t">¡Hola! ¿Cómo te llamas?</h1>
+    <input id="nm-in" class="nm-in" type="text" maxlength="24" autocomplete="given-name" placeholder="Tu nombre" enterkeyhint="go">
+    <button class="nm-btn" id="nm-go" disabled>Comenzar</button></div></div>
+<div class="shop hidden" id="nmed" role="dialog" aria-modal="true" aria-labelledby="nmed-t"><div class="shop-box">
+  <div class="shop-grip"></div><h3 id="nmed-t">Cambiar nombre</h3>
+  <input id="nmed-in" class="nm-in" type="text" maxlength="24" placeholder="Tu nombre" enterkeyhint="done">
+  <button class="nm-save" id="nmed-save">Guardar</button><button class="shop-close" id="nmed-x">Cancelar</button></div></div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
 <div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
 <nav class="nav" id="nav" aria-label="Navegación principal">
@@ -798,7 +827,7 @@ function allWords() { var out = []; DATA.lecciones.forEach(function (L) { out = 
 function findLesson(id) { return DATA.lecciones.filter(function (L) { return L.id === id; })[0]; }
 var TITULOS = ["Primeros pasos", "Los 16 verbos y el presente", "The, would, may y números", "Pasado, do/make y to have", "To be y plurales", "Imperativo, la hora y this/that", "Pronombres y posesión", "Comparativos y negación", "Preguntas en inglés", "Más verbos y preposiciones", "Pronunciación y vocabulario"];
 // ---------- cabecera / pestañas ----------
-var HEAD = { inicio: ["Inglés básico", "Hello, Constanza!"], lecciones: ["11 lecciones", "Lecciones"], practica: ["Aprende jugando", "Retos"], vocab: ["Tus tarjetas", "Vocabulario"], logros: ["Tu perfil", "Perfil"] };
+var HEAD = { inicio: ["Inglés básico", "Hello!"], lecciones: ["11 lecciones", "Lecciones"], practica: ["Aprende jugando", "Retos"], vocab: ["Tus tarjetas", "Vocabulario"], logros: ["Tu perfil", "Perfil"] };
 var curTab = "inicio";
 function tab(t, fromPop) {
   curTab = t;
@@ -834,7 +863,7 @@ function rInicio() {
       '<b>Lección ' + (i + 1) + '</b><span class="hm-lc-s">' + esc(X ? X.titulo : TITULOS[i]) + '</span><span class="hm-bar"><i style="width:' + p + '%"></i></span><span class="hm-lc-p">' + (X ? p + '%' : 'Próximamente') + '</span></button>';
   }
   el("inicio").innerHTML =
-    '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="44" height="44"><h1 class="hm-hi2"><span class="hi-l1">Hola! <span class="wave" aria-hidden="true">👋</span></span><span class="hi-l2">Constanza</span></h1></div>' +
+    '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="44" height="44"><h1 class="hm-hi2"><span class="hi-l1">Hola! <span class="wave" aria-hidden="true">👋</span></span><span class="hi-l2">' + esc(userName() || 'amiga') + '</span></h1></div>' +
       '<div class="hm-chips"><span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span><button class="hm-streak gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div></div>' +
       '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
       '<div class="hm-res hidden" id="hm-res"></div></div>' +
@@ -1270,8 +1299,9 @@ function rLogros() {
   var pz = prizes(s).map(function (p) { var c = SH[p.col] || SH.sun;
     return '<div class="pz' + (p.won ? ' won' : '') + '"><div class="pz-badge">' + shieldSVG(c[0], c[1]) + '<img src="img/char/' + (CH[p.id] || "nino") + '.webp" alt="" loading="lazy"><span class="pz-num" style="background:' + c[2] + '">' + p.meta + '</span></div>' +
       '<b>' + p.n + '</b><span>' + (p.won ? '✓ Ganado' : Math.min(p.a, p.meta) + ' de ' + p.meta) + '</span></div>'; }).join("");
-  el("logros").innerHTML = rachaHTML(s) + '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
+  el("logros").innerHTML = '<button class="pf-name" id="pf-name"><img src="img/avatar-nino.jpg" alt=""><span><small>Tu nombre</small><b>' + esc(userName() || 'Sin nombre') + '</b></span><span class="pf-pen">✏️</span></button>' + rachaHTML(s) + '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
   bindRacha();
+  el("pf-name").onclick = openNameEdit;
 }
 var toastT = null;
 function checkPrizes() {
@@ -1409,11 +1439,32 @@ document.addEventListener("click", function (e) { if (e.target.closest(".gem-chi
 function fitExam() { var ex = el("exam"); if (!ex || ex.classList.contains("hidden") || !window.visualViewport) return; var vv = window.visualViewport; ex.style.height = vv.height + "px"; ex.style.top = vv.offsetTop + "px"; }
 if (window.visualViewport) { window.visualViewport.addEventListener("resize", fitExam); window.visualViewport.addEventListener("scroll", fitExam); }
 document.addEventListener("focusin", function (e) { if (e.target && e.target.id === "ex-in") setTimeout(function () { fitExam(); el("ex-in").scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 250); });
+
+// ---------- nombre del usuario (estado global + localStorage) ----------
+var NAME_KEY = "duxlingo_name";
+function userName() { try { return (localStorage.getItem(NAME_KEY) || "").trim(); } catch (e) { return ""; } }
+function setUserName(n) { n = String(n || "").trim().slice(0, 24); try { localStorage.setItem(NAME_KEY, n); } catch (e) {} render(curTab); }
+function askName() {
+  var nm = el("nm"), inp = el("nm-in"), go = el("nm-go");
+  inp.oninput = function () { go.disabled = !inp.value.trim(); };
+  inp.onkeydown = function (e) { if (e.key === "Enter" && inp.value.trim()) go.click(); };
+  go.onclick = function () { if (!inp.value.trim()) return; setUserName(inp.value); nm.classList.add("hidden"); };
+  nm.classList.remove("hidden"); setTimeout(function () { inp.focus(); }, 300);
+}
+function openNameEdit() {
+  var m = el("nmed"), inp = el("nmed-in"), sv = el("nmed-save"); inp.value = userName(); sv.disabled = !inp.value.trim();
+  inp.oninput = function () { sv.disabled = !inp.value.trim(); };
+  inp.onkeydown = function (e) { if (e.key === "Enter" && inp.value.trim()) sv.click(); };
+  sv.onclick = function () { if (!inp.value.trim()) return; setUserName(inp.value); m.classList.add("hidden"); };
+  el("nmed-x").onclick = function () { m.classList.add("hidden"); };
+  m.classList.remove("hidden"); setTimeout(function () { inp.focus(); inp.select(); }, 250);
+}
+el("nmed").addEventListener("click", function (e) { if (e.target.id === "nmed") el("nmed").classList.add("hidden"); });
 // ---------- bienvenida (solo la primera vez) ----------
 (function () {
-  var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) return; } catch (e) { return; }
+  var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) { if (!userName()) askName(); return; } } catch (e) { return; }
   var ob = el("ob");
-  function close() { try { localStorage.setItem(KEYOB, "1"); } catch (e) {} ob.classList.add("hidden"); }
+  function close() { try { localStorage.setItem(KEYOB, "1"); } catch (e) {} ob.classList.add("hidden"); if (!userName()) askName(); }
   el("ob-btn").onclick = close; el("ob-skip").onclick = close;
   ob.classList.remove("hidden");
 })();
