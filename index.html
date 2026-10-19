@@ -652,6 +652,8 @@
   .nm-btn:disabled, .nm-save:disabled { background:#E5E7EB; color:#9AA0B4; box-shadow:0 5px 0 #CDD1DA; }
   #nmed .nm-in { margin:10px 0 14px; }
   .pf-name { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#fff; border:2px solid #E2E8F4; border-radius:20px; box-shadow:0 6px 0 #E2E8F4; padding:12px 14px; margin:4px 0 18px; font-family:inherit; cursor:pointer; transition:transform .06s, box-shadow .06s; }
+  .pf-sum { display:flex; align-items:center; gap:12px; cursor:default; }
+  .pf-sum-ic { width:48px; height:48px; border-radius:14px; background:#FFF4D6; display:flex; align-items:center; justify-content:center; font-size:26px; }
   .pf-name:active { transform:translateY(4px); box-shadow:0 2px 0 #E2E8F4; }
   .pf-name img { width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #3A60BA; }
   .pf-name > span:nth-child(2) { flex:1; min-width:0; display:flex; flex-direction:column; }
@@ -669,7 +671,7 @@
   .pf-tabs button.on { color:#FFFFFF; border-bottom-color:#7FE3E8; }
   .pf-eye { font-size:13px; font-weight:900; letter-spacing:.1em; color:#FFFFFF; opacity:.9; }
   .pf-nm { font-family:'Nunito',system-ui,sans-serif; font-size:32px; font-weight:900; color:#FFFFFF; line-height:1.15; max-width:58%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .pf-av { position:absolute; right:10px; bottom:40px; width:110px; filter:drop-shadow(0 8px 10px rgba(0,0,0,.3)); pointer-events:none; }
+  .pf-av { position:absolute; right:10px; bottom:72px; width:110px; filter:drop-shadow(0 8px 10px rgba(0,0,0,.3)); pointer-events:none; }
   .pf-name { position:relative; z-index:10; margin-top:-40px !important; background-color:#FFFFFF !important; border-radius:24px !important; border:none !important; box-shadow:0px 6px 0px #E5E9F0, 0px 10px 15px rgba(0,0,0,.05) !important; padding:16px !important; }
   .pf-name:active { transform:translateY(4px); box-shadow:0 2px 0 #E5E9F0 !important; }
   /* resultado */
@@ -1314,13 +1316,20 @@ function rLogros() {
   var pz = prizes(s).map(function (p) { var c = SH[p.col] || SH.sun;
     return '<div class="pz' + (p.won ? ' won' : '') + '"><div class="pz-badge">' + shieldSVG(c[0], c[1]) + '<img src="img/char/' + (CH[p.id] || "nino") + '.webp" alt="" loading="lazy"><span class="pz-num" style="background:' + c[2] + '">' + p.meta + '</span></div>' +
       '<b>' + p.n + '</b><span>' + (p.won ? '✓ Ganado' : Math.min(p.a, p.meta) + ' de ' + p.meta) + '</span></div>'; }).join("");
-  el("logros").innerHTML = '<div class="pf-ban"><div class="pf-tabs"><button class="on" data-pt="top">PERFIL</button><button data-pt="lg">LOGROS</button></div><div class="pf-eye">TU PERFIL</div><div class="pf-nm">' + esc(userName() || 'Sin nombre') + '</div><img class="pf-av" src="img/char/nino.webp" alt=""></div>' + '<button class="pf-name" id="pf-name"><img src="img/avatar-nino.jpg" alt=""><span><small>Tu nombre</small><b>' + esc(userName() || 'Sin nombre') + '</b></span><span class="pf-pen">✏️</span></button>' + rachaHTML(s) + '<h2 class="lg-h" id="pf-lg">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
-  bindRacha();
-  el("pf-name").onclick = openNameEdit;
-  el("logros").querySelectorAll(".pf-tabs button").forEach(function (b) { b.onclick = function () {
-    el("logros").querySelectorAll(".pf-tabs button").forEach(function (x) { x.classList.toggle("on", x === b); });
-    if (b.dataset.pt === "lg") { var t = el("pf-lg"); window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 16, behavior: "smooth" }); } else window.scrollTo({ top: 0, behavior: "smooth" }); }; });
+  var lgTab = pfTab === "lg";
+  var ban = '<div class="pf-ban"><div class="pf-tabs"><button' + (lgTab ? '' : ' class="on"') + ' data-pt="top">PERFIL</button><button' + (lgTab ? ' class="on"' : '') + ' data-pt="lg">LOGROS</button></div>' +
+    '<div class="pf-eye">' + (lgTab ? 'TUS LOGROS' : 'TU PERFIL') + '</div><div class="pf-nm">' + esc(userName() || 'Sin nombre') + '</div><img class="pf-av" src="img/char/' + (lgTab ? 'gato_trofeo' : 'nino') + '.webp" alt=""></div>';
+  if (lgTab) {
+    var won = prizes(s).filter(function (p) { return p.won; }).length, tot = prizes(s).length;
+    el("logros").innerHTML = ban + '<div class="pf-name pf-sum"><span class="pf-sum-ic">🏆</span><span><small>Premios ganados</small><b>' + won + ' de ' + tot + '</b></span></div>' +
+      '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
+  } else {
+    el("logros").innerHTML = ban + '<button class="pf-name" id="pf-name"><img src="img/avatar-nino.jpg" alt=""><span><small>Tu nombre</small><b>' + esc(userName() || 'Sin nombre') + '</b></span><span class="pf-pen">✏️</span></button>' + rachaHTML(s);
+    bindRacha(); el("pf-name").onclick = openNameEdit;
+  }
+  el("logros").querySelectorAll(".pf-tabs button").forEach(function (bt) { bt.onclick = function () { pfTab = bt.dataset.pt; rLogros(); window.scrollTo(0, 0); }; });
 }
+var pfTab = "top";
 var toastT = null;
 function checkPrizes() {
   var s = load(), won = prizes(s).filter(function (p) { return p.won && s.seen.indexOf(p.id) === -1; });
