@@ -691,6 +691,19 @@
   .pf-fit .rw-cal p { padding:clamp(6px, 1.2dvh, 12px) 14px; font-size:clamp(12.5px, 1.8dvh, 14.5px); }
   .pf-fit .rw-act { margin-top:clamp(8px, 1.4dvh, 12px); }
   .pf-fit .rw-share.wide { height:clamp(42px, 6dvh, 52px); }
+
+  /* Perfil: la tarjeta de racha crece hasta abajo y "Compartir" queda al fondo */
+  .pf-fit { display:flex; flex-direction:column; height:calc(100dvh - var(--pf-off, 96px)); }
+  .pf-fit .rw { flex:1; display:flex; flex-direction:column; min-height:0; padding-bottom:10px; }
+  .pf-fit .rw-cal { flex:1; display:flex; flex-direction:column; justify-content:space-evenly; min-height:max-content; }
+  @media (max-height:700px) { .pf-fit .rw-flame { width:56px !important; } .pf-fit .rw-num { font-size:40px !important; margin-top:-34px !important; } .pf-fit .rw-lbl { font-size:14px !important; } .pf-fit .pf-ban { height:140px !important; } .pf-fit .rw-cal p { font-size:13px !important; padding:8px 12px !important; } }
+  .pf-fit .rw-in { padding:clamp(10px, 2.2dvh, 22px) 14px !important; }
+  .pf-fit .rw-heads span { font-size:clamp(14px, 2dvh, 16px); }
+  .pf-fit .rw-row { margin-top:clamp(8px, 1.6dvh, 14px); }
+  .pf-fit .rw-c { height:clamp(34px, 5.6dvh, 48px) !important; }
+  .pf-fit .rw-c svg { width:20px; height:20px; }
+  .pf-fit .rw-cal p { font-size:clamp(14px, 2.1dvh, 16.5px) !important; padding:clamp(10px, 2dvh, 18px) 16px !important; }
+  .pf-fit .rw-act { margin-top:auto !important; padding-top:12px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -1344,6 +1357,7 @@ function rLogros() {
       '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
   } else {
     el("logros").classList.add("pf-fit");
+    requestAnimationFrame(function () { var lg = el("logros"), nav = el("nav"); if (!lg || !nav) return; var top = lg.getBoundingClientRect().top + window.scrollY, nh = nav.getBoundingClientRect().height; lg.style.setProperty("--pf-off", Math.round(top + nh + 8) + "px"); });
     el("logros").innerHTML = ban + '<button class="pf-name" id="pf-name"><img src="img/avatar-nino.jpg" alt=""><span><small>Tu nombre</small><b>' + esc(userName() || 'Sin nombre') + '</b></span><span class="pf-pen">✏️</span></button>' + rachaHTML(s);
     bindRacha(); el("pf-name").onclick = openNameEdit;
   }
