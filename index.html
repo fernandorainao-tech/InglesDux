@@ -674,6 +674,23 @@
   .pf-av { position:absolute; right:10px; bottom:72px; width:110px; filter:drop-shadow(0 8px 10px rgba(0,0,0,.3)); pointer-events:none; }
   .pf-name { position:relative; z-index:10; margin-top:-40px !important; background-color:#FFFFFF !important; border-radius:24px !important; border:none !important; box-shadow:0px 6px 0px #E5E9F0, 0px 10px 15px rgba(0,0,0,.05) !important; padding:16px !important; }
   .pf-name:active { transform:translateY(4px); box-shadow:0 2px 0 #E5E9F0 !important; }
+
+  /* Perfil ajustado a la pantalla (sin desplazamiento) */
+  body.pf-lock:has(#app:not(.hidden) #p-logros.on) { overflow:hidden; height:100dvh; overscroll-behavior:none; }
+  .pf-fit .pf-ban { height:clamp(150px, 22dvh, 210px); }
+  .pf-fit .pf-tabs { margin-bottom:clamp(8px, 2dvh, 22px); }
+  .pf-fit .pf-av { width:clamp(80px, 12dvh, 108px); bottom:clamp(44px, 8dvh, 72px); }
+  .pf-fit .pf-name { padding:12px 14px !important; margin-bottom:clamp(6px, 1.6dvh, 16px) !important; }
+  .pf-fit .rw { margin-bottom:0; }
+  .pf-fit .rw-top { margin:0 0 clamp(6px, 1.4dvh, 14px); }
+  .pf-fit .rw-flame { width:clamp(64px, 11dvh, 104px); height:auto; }
+  .pf-fit .rw-num { font-size:clamp(44px, 7.5dvh, 70px); margin-top:clamp(-56px, -6dvh, -34px); }
+  .pf-fit .rw-lbl { font-size:clamp(15px, 2.2dvh, 18px); margin-top:2px; }
+  .pf-fit .rw-in { padding:clamp(8px, 1.4dvh, 12px) 12px; }
+  .pf-fit .rw-c { height:clamp(28px, 4.2dvh, 36px); }
+  .pf-fit .rw-cal p { padding:clamp(6px, 1.2dvh, 12px) 14px; font-size:clamp(12.5px, 1.8dvh, 14.5px); }
+  .pf-fit .rw-act { margin-top:clamp(8px, 1.4dvh, 12px); }
+  .pf-fit .rw-share.wide { height:clamp(42px, 6dvh, 52px); }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -852,6 +869,7 @@ function tab(t, fromPop) {
   document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
   el("p-" + t).classList.add("on"); el("eye").textContent = HEAD[t][0]; el("ttl").textContent = HEAD[t][1];
   document.body.classList.toggle("home", t === "inicio");
+  document.body.classList.toggle("pf-lock", t === "logros" && pfTab !== "lg");
   if (t !== "vocab") vocDone = 0;
   render(t);
   if (!fromPop) { if (t === "inicio") history.replaceState({ v: "tab", t: "inicio" }, ""); else history.pushState({ v: "tab", t: t }, ""); }
@@ -1319,15 +1337,17 @@ function rLogros() {
   var lgTab = pfTab === "lg";
   var ban = '<div class="pf-ban"><div class="pf-tabs"><button' + (lgTab ? '' : ' class="on"') + ' data-pt="top">PERFIL</button><button' + (lgTab ? ' class="on"' : '') + ' data-pt="lg">LOGROS</button></div>' +
     '<div class="pf-eye">' + (lgTab ? 'TUS LOGROS' : 'TU PERFIL') + '</div><div class="pf-nm">' + esc(userName() || 'Sin nombre') + '</div><img class="pf-av" src="img/char/' + (lgTab ? 'gato_trofeo' : 'nino') + '.webp" alt=""></div>';
+  el("logros").classList.remove("pf-fit");
   if (lgTab) {
     var won = prizes(s).filter(function (p) { return p.won; }).length, tot = prizes(s).length;
     el("logros").innerHTML = ban + '<div class="pf-name pf-sum"><span class="pf-sum-ic">🏆</span><span><small>Premios ganados</small><b>' + won + ' de ' + tot + '</b></span></div>' +
       '<h2 class="lg-h">Logros personales</h2><div class="lp-scroll">' + lp + '</div><h2 class="lg-h">Premios</h2><div class="pz-grid">' + pz + '</div>';
   } else {
+    el("logros").classList.add("pf-fit");
     el("logros").innerHTML = ban + '<button class="pf-name" id="pf-name"><img src="img/avatar-nino.jpg" alt=""><span><small>Tu nombre</small><b>' + esc(userName() || 'Sin nombre') + '</b></span><span class="pf-pen">✏️</span></button>' + rachaHTML(s);
     bindRacha(); el("pf-name").onclick = openNameEdit;
   }
-  el("logros").querySelectorAll(".pf-tabs button").forEach(function (bt) { bt.onclick = function () { pfTab = bt.dataset.pt; rLogros(); window.scrollTo(0, 0); }; });
+  el("logros").querySelectorAll(".pf-tabs button").forEach(function (bt) { bt.onclick = function () { pfTab = bt.dataset.pt; document.body.classList.toggle("pf-lock", pfTab !== "lg"); rLogros(); window.scrollTo(0, 0); }; });
 }
 var pfTab = "top";
 var toastT = null;
