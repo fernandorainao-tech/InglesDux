@@ -704,6 +704,23 @@
   .pf-fit .rw-c svg { width:20px; height:20px; }
   .pf-fit .rw-cal p { font-size:clamp(14px, 2.1dvh, 16.5px) !important; padding:clamp(10px, 2dvh, 18px) 16px !important; }
   .pf-fit .rw-act { margin-top:auto !important; padding-top:12px; }
+
+  /* ===== inicio: tarjetas y carrusel estilo videojuego 3D ===== */
+  .hm-quick button { background-color:#FFFFFF !important; border:2px solid #E2E8F4 !important; border-radius:20px !important; box-shadow:0px 6px 0px #E2E8F4 !important; transition:transform .06s, box-shadow .06s !important; }
+  .hm-quick button:active { box-shadow:0px 2px 0px #E2E8F4 !important; transform:translateY(4px) !important; }
+  .hm-scroll { padding-top:14px !important; padding-bottom:20px !important; }
+  .hm-lc { position:relative; background-color:#FFFFFF !important; border:2px solid #E2E8F4 !important; border-radius:20px !important; box-shadow:0px 6px 0px #E2E8F4 !important; transition:transform .06s, box-shadow .06s !important; overflow:visible; }
+  .hm-lc:active { box-shadow:0px 2px 0px #E2E8F4 !important; transform:translateY(4px) !important; }
+  .hm-lc-ic3 { width:48px; height:48px; border-radius:14px; background:#EEF3FF; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .hm-lc-ic3 img { width:48px; height:48px; object-fit:contain; }
+  .hm-lc.lock .hm-lc-ic3 img { filter:grayscale(1); opacity:.5; }
+  .hm-bar.g3 { height:12px !important; border-radius:12px !important; background:#E2E8F4 !important; box-shadow:inset 0px 2px 4px rgba(0,0,0,.1); flex:none; margin-top:8px; }
+  .hm-bar.g3 i { border-radius:12px !important; background:#3A60BA; box-shadow:inset 0 -3px 0 rgba(0,0,0,.12); position:relative; }
+  .hm-bar.g3 i::after { content:""; position:absolute; left:6px; right:6px; top:2px; height:3px; border-radius:2px; background:rgba(255,255,255,.4); }
+  .hm-lc.full { border-color:#B8EBA0 !important; box-shadow:0px 6px 0px #B8EBA0 !important; }
+  .hm-lc.full .hm-bar.g3 i { background:#58CC02 !important; }
+  .hm-lc.full .hm-lc-p { color:#46A302 !important; }
+  .hm-crown { position:absolute; top:-12px; right:-6px; z-index:10; width:34px; height:34px; border-radius:50%; background:#FFC800; box-shadow:0 3px 0 #E0A800; display:flex; align-items:center; justify-content:center; font-size:18px; transform:rotate(12deg); }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -907,8 +924,10 @@ function rInicio() {
   var cards = '';
   for (var i = 0; i < NUM_LESSONS; i++) {
     var X = DATA.lecciones[i], prev = i > 0 ? DATA.lecciones[i - 1] : null, open = X && (REVISION[X.id] || !prev || (s.les[prev.id] && s.les[prev.id].done)), p = X ? lessonPct(X, s) : 0;
-    cards += '<button class="hm-lc' + (open ? '' : ' lock') + '"' + (open ? ' data-id="' + X.id + '"' : ' disabled') + '><span class="hm-lc-top"><span class="hm-lc-ic' + (X && s.les[X.id] && s.les[X.id].done ? ' ch' : '') + '">' + (X && s.les[X.id] && s.les[X.id].done ? '<img src="img/char/' + LESSON_CHAR[i] + '.webp" alt="">' : LES_IC[i]) + '</span>' + (open ? '' : '<span class="hm-lc-lock">🔒</span>') + '</span>' +
-      '<b>Lección ' + (i + 1) + '</b><span class="hm-lc-s">' + esc(X ? X.titulo : TITULOS[i]) + '</span><span class="hm-bar"><i style="width:' + p + '%"></i></span><span class="hm-lc-p">' + (X ? p + '%' : 'Próximamente') + '</span></button>';
+    var dn = X && s.les[X.id] && s.les[X.id].done;
+    cards += '<button class="hm-lc' + (open ? '' : ' lock') + (dn ? ' full' : '') + '"' + (open ? ' data-id="' + X.id + '"' : ' disabled') + '>' + (dn ? '<span class="hm-crown" aria-label="Completada">👑</span>' : '') +
+      '<span class="hm-lc-top"><span class="hm-lc-ic3"><img src="img/char/' + LESSON_CHAR[i] + '.webp" alt=""></span>' + (open ? '' : '<span class="hm-lc-lock">🔒</span>') + '</span>' +
+      '<b>Lección ' + (i + 1) + '</b><span class="hm-lc-s">' + esc(X ? X.titulo : TITULOS[i]) + '</span><span class="hm-bar g3"><i style="width:' + (dn ? 100 : p) + '%"></i></span><span class="hm-lc-p">' + (dn ? '¡Completada!' : X ? p + '%' : 'Próximamente') + '</span></button>';
   }
   el("inicio").innerHTML =
     '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="44" height="44"><h1 class="hm-hi2"><span class="hi-l1">Hola! <span class="wave" aria-hidden="true">👋</span></span><span class="hi-l2">' + esc(userName() || 'amiga') + '</span></h1></div>' +
