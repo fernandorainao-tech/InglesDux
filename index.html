@@ -721,6 +721,8 @@
   .hm-lc.full .hm-bar.g3 i { background:#58CC02 !important; }
   .hm-lc.full .hm-lc-p { color:#46A302 !important; }
   .hm-crown { position:absolute; top:-12px; right:-6px; z-index:10; width:34px; height:34px; border-radius:50%; background:#FFC800; box-shadow:0 3px 0 #E0A800; display:flex; align-items:center; justify-content:center; font-size:18px; transform:rotate(12deg); }
+  .rw-c.fz::before { background:#CFEAFF !important; }
+  .rw-c.fz { font-size:16px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -878,9 +880,20 @@ function usarProtector(s) {
   while (!set[hoyStr(d)] && falt.length <= s.prot) { falt.push(hoyStr(d)); d.setDate(d.getDate() - 1); }
   if (falt.length && falt.length <= s.prot && set[hoyStr(d)]) { s.protDays = s.protDays.concat(falt); s.prot -= falt.length; }
 }
-function racha(days) { var set = {}; days.forEach(function (d) { set[d] = 1; }); var d = new Date(), n = 0; if (!set[hoyStr(d)]) d.setDate(d.getDate() - 1);
-  while (set[hoyStr(d)]) { n++; d.setDate(d.getDate() - 1); } return n; }
-function rachaMax(days) { var s = days.slice().sort(), m = 0, r = 0, p = null; s.forEach(function (x) { var t = new Date(x + "T12:00:00"); r = (p && Math.round((t - p) / 864e5) === 1) ? r + 1 : 1; m = Math.max(m, r); p = t; }); return m; }
+// racha con "congelamiento": si se salta UN día, el número se congela (no vuelve a 0) y sigue al retomar.
+function rachaInfo(days) {
+  var set = {}; days.forEach(function (d) { set[d] = 1; }); var d = new Date(), n = 0, frozen = [], miss = 0;
+  if (!set[hoyStr(d)]) d.setDate(d.getDate() - 1);
+  for (var guard = 0; guard < 4000; guard++) {
+    var k = hoyStr(d);
+    if (set[k]) { n++; miss = 0; }
+    else { var p = new Date(d); p.setDate(p.getDate() - 1); if (miss === 0 && set[hoyStr(p)] && n >= 0) { frozen.push(k); miss = 1; } else break; }
+    d.setDate(d.getDate() - 1);
+  }
+  return { n: n, frozen: frozen };
+}
+function racha(days) { return rachaInfo(days).n; }
+function rachaMax(days) { var s = days.slice().sort(), m = 0, r = 0, p = null; s.forEach(function (x) { var t = new Date(x + "T12:00:00"), g = p ? Math.round((t - p) / 864e5) : 0; r = (p && (g === 1 || g === 2)) ? r + 1 : (p && g === 0 ? r : 1); m = Math.max(m, r); p = t; }); return m; }
 function mastered(s) { var n = 0; for (var k in s.w) if (s.w[k].known || (s.w[k].ok || 0) >= 2) n++; return n; }
 // ---------- datos ----------
 function lessonItems(L) { var out = []; L.blocks.forEach(function (b) { if (b.t === "w") out = out.concat(b.items); }); return out; }
@@ -1314,16 +1327,17 @@ function prizes(s) {
 // personajes de fieltro: uno por lección aprobada (se mostrarán en cada lección cuando estén listas)
 var LESSON_CHAR = ["perro_lapiz", "nina_saluda", "nino_apunta", "senor_lapiz", "chico_megafono", "nino_reloj", "nina_libro", "gato_trofeo", "poodle_pregunta", "perro_mochila", "gatoblanco_megafono"];
 function rachaHTML(s) {
-  var r = racha(allDays(s)), set = {}, pset = {}; s.days.forEach(function (d) { set[d] = 1; }); (s.protDays || []).forEach(function (d) { pset[d] = 1; });
+  var ri = rachaInfo(allDays(s)), r = ri.n, set = {}, pset = {}, fset = {}; s.days.forEach(function (d) { set[d] = 1; }); (s.protDays || []).forEach(function (d) { pset[d] = 1; }); ri.frozen.forEach(function (d) { fset[d] = 1; });
   var hoy = new Date(), dow = (hoy.getDay() + 6) % 7, lun = new Date(hoy); lun.setDate(hoy.getDate() - dow);
   var L = ["L", "Ma", "Mi", "J", "V", "S", "D"], heads = "", cells = "", n = 0, st = [];
-  L.forEach(function (l, i) { var d = new Date(lun); d.setDate(lun.getDate() + i); var k = hoyStr(d); st.push(set[k] ? "on" : pset[k] ? "pr" : ""); if (set[k] || pset[k]) n++; });
+  L.forEach(function (l, i) { var d = new Date(lun); d.setDate(lun.getDate() + i); var k = hoyStr(d); st.push(set[k] ? "on" : pset[k] ? "pr" : fset[k] ? "fz" : ""); if (set[k] || pset[k]) n++; });
   L.forEach(function (l, i) {
     heads += '<span' + (i === dow ? ' class="hoy"' : '') + '>' + l + '</span>';
     var on = st[i], left = i > 0 && st[i - 1] && on, right = i < 6 && st[i + 1] && on;
-    cells += '<span class="rw-c' + (on ? ' ' + on : '') + (left ? ' jl' : '') + (right ? ' jr' : '') + (i === dow && !on ? ' hoy' : '') + '">' + (on === "on" ? IC.check : on === "pr" ? '🛡️' : '') + '</span>';
+    cells += '<span class="rw-c' + (on ? ' ' + on : '') + (left ? ' jl' : '') + (right ? ' jr' : '') + (i === dow && !on ? ' hoy' : '') + '">' + (on === "on" ? IC.check : on === "pr" ? '<span>🛡️</span>' : on === "fz" ? '<span>❄️</span>' : '') + '</span>';
   });
-  var msg = n === 7 ? "¡Felicidades por alcanzar una semana perfecta! ¿Crees que puedes repetirlo la próxima semana?" : n === 0 ? "Estudia hoy para encender tu racha de esta semana." : "¡Llevas " + n + " de 7 días esta semana! Completa los 7 para lograr una semana perfecta.";
+  var yk = new Date(); yk.setDate(yk.getDate() - 1); var frozenNow = !set[hoyStr(new Date())] && fset[hoyStr(yk)];
+  var msg = frozenNow ? "❄️ Tu racha está congelada: ayer no practicaste, pero no la perdiste. ¡Practica hoy para seguir sumando!" : n === 7 ? "¡Felicidades por alcanzar una semana perfecta! ¿Crees que puedes repetirlo la próxima semana?" : n === 0 ? "Estudia hoy para encender tu racha de esta semana." : "¡Llevas " + n + " de 7 días esta semana! Completa los 7 para lograr una semana perfecta.";
   var flame = '<svg class="rw-flame" viewBox="0 0 120 140" aria-hidden="true"><defs><linearGradient id="rwf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB13B"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs>' +
     '<path d="M60 4 C70 30 104 44 104 88 A44 44 0 0 1 16 88 C16 62 30 52 36 36 C42 52 50 58 54 58 C50 38 52 20 60 4 Z" fill="url(#rwf)"/>' +
     '<path d="M60 58 C66 72 82 80 82 100 A22 22 0 0 1 38 100 C38 88 46 82 50 74 C54 82 58 84 60 84 C58 76 58 66 60 58 Z" fill="#FFD34D"/></svg>';
