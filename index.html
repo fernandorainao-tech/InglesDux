@@ -886,9 +886,10 @@
   .top-pet { display:none; width:58px; height:58px; object-fit:contain; filter:drop-shadow(0 5px 5px rgba(0,0,0,.18)); animation:petPeek 2.6s ease-in-out infinite; }
   body.on-retos .top-pet { display:block; }
   @keyframes petPeek { 0%,100% { transform:rotate(-6deg) translateY(0); } 50% { transform:rotate(6deg) translateY(-3px); } }
-  .go-btn { flex-shrink:0; margin-left:auto; background-color:#1CB0F6; color:#FFFFFF; font-weight:900; font-size:14px; padding:8px 14px; border-radius:14px; box-shadow:0px 3px 0px #0D84C2; letter-spacing:.03em; }
-  .go-btn.g { background-color:#58CC02; box-shadow:0px 3px 0px #46A302; }
-  .card.les:active .go-btn { transform:translateY(2px); box-shadow:0 1px 0 #0D84C2; }
+  .go-btn { flex-shrink:0; margin-left:auto; background-color:#1CB0F6; border:2px solid #0093D6; box-shadow:0px 4px 0px #0076AB; border-radius:14px; padding:8px 16px; color:#FFFFFF; font-weight:bold; font-size:14px; letter-spacing:.03em; }
+  .go-btn.g { background-color:#58CC02; border-color:#4DB302; box-shadow:0px 4px 0px #46A302; }
+  .card.les:active .go-btn, .go-btn:active { transform:translateY(2px); box-shadow:0px 2px 0px #0076AB; }
+  .card.les:active .go-btn.g, .go-btn.g:active { box-shadow:0px 2px 0px #46A302; }
   #practica .les.done { background:linear-gradient(135deg, #EAF9E1, #F6FDF2) !important; border:2px solid #9FDC7C !important; }
   body.dark-mode #practica .les.done { background:linear-gradient(135deg, #1D3A22, #1A2E26) !important; border-color:#2F7A3F !important; }
   #practica .les.done .les-n { background:radial-gradient(circle at 35% 30%, #8CF04A, #58CC02 60%, #3F9E00) !important; color:#fff !important; border-radius:50% !important; box-shadow:0 4px 0 #3A8F00, 0 0 12px rgba(88,204,2,.45) !important; }
@@ -916,18 +917,22 @@
   /* ===== Retos: barra de recursos + título ===== */
   #app:has(#p-practica.on) .top { display:none; }
   body:has(#app:not(.hidden) #p-practica.on) { background:var(--bg-main) !important; }
-  .rt-stats { width:calc(100% + 36px); margin:0 -18px; padding:12px 16px; padding-top:calc(12px + env(safe-area-inset-top,0px)); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--bg-main); z-index:50; }
-  .rt-ava { width:42px; height:42px; border-radius:50%; padding:0; overflow:hidden; border:2px solid #3A60BA; background:var(--card-bg); flex-shrink:0; }
+  /* Barra flotante 3D. .wrap ya aporta 18px de padding: margin -2px = 16px desde el borde de pantalla.
+     2ª sombra (color de fondo) tapa el contenido que pasa por detrás al hacer scroll. */
+  .top-stats-bar { position:sticky; top:calc(12px + env(safe-area-inset-top,0px)); z-index:50; margin:calc(12px + env(safe-area-inset-top,0px)) -2px 12px; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; background-color:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 5px 0px var(--shadow-color), 0 -18px 0 18px var(--bg-main); }
+  .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
-  .rt-pill { display:flex; align-items:center; gap:6px; height:40px; padding:0 14px; border-radius:16px; font-family:inherit; font-size:15px; border:none; }
-  .rt-pill b { font-weight:900; }
-  .rt-fire { position:absolute; left:50%; transform:translateX(-50%); background:#FFD166; color:#7A4A00; box-shadow:0 4px 0 #E5B751; }
-  .rt-gem { background:#BDE0FE; color:#123A78; box-shadow:0 4px 0 #93C6F9; cursor:pointer; }
-  .rt-head { width:100%; padding:24px 0 16px; display:flex; align-items:center; justify-content:space-between; }
-  .rt-eye { font-size:13px; font-weight:900; letter-spacing:.12em; color:#4FA8FF; }
-  .rt-ttl { font-family:'Nunito',system-ui,sans-serif; font-size:40px; font-weight:900; color:var(--text-main); line-height:1.05; }
+  .rt-badge { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:6px 16px; border-radius:16px; font-family:inherit; font-size:16px; font-weight:bold; line-height:1.4; color:#FFFFFF; }
+  .rt-badge b { font-weight:900; font-size:17px; }
+  /* Racha centrada respecto a la barra (= centro de pantalla) aunque avatar y gemas midan distinto */
+  .streak-badge { position:absolute; left:50%; transform:translateX(-50%); background:#FFC800; border:2px solid #E2A100; box-shadow:0px 4px 0px #C88F00; }
+  .gems-badge { background:#3A73E2; border:2px solid #204EB2; box-shadow:0px 4px 0px #1A3E92; cursor:pointer; }
+  .gems-badge:active { transform:translateY(2px); box-shadow:0px 2px 0px #1A3E92; }
+  .rt-head { padding:24px 2px; display:flex; align-items:center; justify-content:space-between; }
+  .rt-eye { font-size:13px; font-weight:900; letter-spacing:.12em; color:#1CB0F6; margin-bottom:4px; }
+  .rt-ttl { font-family:'Nunito',system-ui,sans-serif; font-size:42px; font-weight:900; line-height:1.05; color:var(--text-main); text-shadow:0px 3px 0px var(--shadow-color); }
   body.dark-mode .rt-ttl { color:#FFFFFF; }
-  .rt-pet { width:80px; height:80px; object-fit:contain; filter:drop-shadow(0 8px 8px rgba(0,0,0,.25)); animation:petPeek 2.6s ease-in-out infinite; }
+  .rt-pet { width:95px; height:auto; flex-shrink:0; object-fit:contain; filter:drop-shadow(0px 4px 6px rgba(0,0,0,0.4)); animation:petPeek 2.6s ease-in-out infinite; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -1519,8 +1524,8 @@ function rPractica() {
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
   h = '<button class="card les spk-entry" id="p-match"><span class="les-n" style="background:#E8F8DD;color:#58CC02">🧩</span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' + h;
-  var head = '<div class="rt-stats"><button class="rt-ava" id="rt-ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button>' +
-    '<span class="rt-pill rt-fire">🔥 <b>' + racha(allDays(s)) + '</b></span><button class="rt-pill rt-gem gem-chip" aria-label="Diamantes: abrir tienda">💎 <b class="gem-n">' + s.gems + '</b></button></div>' +
+  var head = '<div class="top-stats-bar"><button class="rt-ava" id="rt-ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button>' +
+    '<span class="rt-badge streak-badge">🔥 <b>' + racha(allDays(s)) + '</b></span><button class="rt-badge gems-badge gem-chip" aria-label="Diamantes: abrir tienda">💎 <b class="gem-n">' + s.gems + '</b></button></div>' +
     '<div class="rt-head"><div><div class="rt-eye">APRENDE JUGANDO</div><h1 class="rt-ttl">Retos</h1></div><img class="rt-pet" src="img/char/poodle_lentes.webp" alt=""></div>';
   el("practica").innerHTML = head + h;
   el("rt-ava").onclick = function () { tab("logros"); };
