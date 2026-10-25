@@ -937,14 +937,18 @@ function pickVoice() {
   VOICE = vs.find(function (v) { return /en[-_]US/i.test(v.lang) && /female|samantha|google us/i.test(v.name); }) || vs.find(function (v) { return /en[-_]US/i.test(v.lang); }) || vs.find(function (v) { return /^en/i.test(v.lang); }) || null;
 }
 if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+var SPEAK_T = null;
+function stopAudio() { clearTimeout(SPEAK_T); SPEAK_T = null; try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {} }
+function speakLater(text, ms) { clearTimeout(SPEAK_T); SPEAK_T = setTimeout(function () { SPEAK_T = null; speak(text); }, ms); }
 function speak(text) {
   if (!window.speechSynthesis) return;
+  clearTimeout(SPEAK_T); SPEAK_T = null;
   speechSynthesis.cancel();
   var u = new SpeechSynthesisUtterance(String(text).replace(/To-day/i, "today"));
   u.lang = "en-US"; if (VOICE) u.voice = VOICE; u.rate = 0.85;
   speechSynthesis.speak(u);
 }
-document.addEventListener("click", function (e) { var b = e.target.closest("[data-say]"); if (b) { e.stopPropagation(); speak(b.dataset.say); } });
+document.addEventListener("click", function (e) { var b = e.target.closest("[data-say]"); if (b) { e.stopPropagation(); speak(b.getAttribute("data-say")); } });
 // ---------- progreso ----------
 var KEY = "duxlingo_v1";
 function load() { var s; try { s = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { s = {}; }
@@ -1251,6 +1255,7 @@ function startBlock(k, fromPop) {
   rEx();
 }
 function rEx() {
+  stopAudio();
   var x = EX.items[EX.i], p = x.p, it = x.it, dir = it.dir || p.dir; EX.tries = 0; EX.mode = "write"; EX.done = false;
   el("ex-bar").style.width = Math.round(EX.i * 100 / EX.items.length) + "%"; el("ex-n").textContent = (EX.i + 1) + "/" + EX.items.length;
   el("ex-intro").classList.toggle("hidden", EX.i !== 0);
@@ -1273,7 +1278,7 @@ function rEx() {
   el("ex-in").value = ""; el("ex-in").classList.remove("shake"); el("ex-in").placeholder = (it.kw || it.kwAny || it.kwAll) ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
   el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show"); el("ex-foot").classList.remove("hidden-foot"); el("ex-scroll").scrollTop = 0;
-  if (dir === "en") setTimeout(function () { speak(it.q); }, 250);
+  if (dir === "en") speakLater(it.q, 250);
   el("exam").classList.remove("sh-open"); window.scrollTo(0, 0);
   setTimeout(function () { try { el("ex-in").focus({ preventScroll: true }); } catch (e) { el("ex-in").focus(); } window.scrollTo(0, 0); }, 60);
 }
@@ -1316,7 +1321,7 @@ function exResolve(ok, u, viaOpts, typo) {
   el("sh-p").innerHTML = '<b>' + esc(x.it.q) + '</b> = ' + esc(x.it.ans) + (ok ? '' : '. Repásala en la lección: volverá a aparecer en tus prácticas.');
   el("sh-btn").textContent = EX.i < EX.items.length - 1 ? "Siguiente" : "Terminar el bloque";
   el("sh-btn").dataset.ctx = "exam";
-  setTimeout(function () { speak(en); }, 650);
+  speakLater(en, 650);
 }
 function finishBlock() {
   if (EX.practice) { var sx = load(), stx = sx.les[EX.L.id] || {}, pc = Math.round(EX.ok * 100 / EX.items.length); stx.ex = stx.ex || {}; stx.ex[EX.practice] = pc; sx.les[EX.L.id] = stx; sx.gems += 10; save(sx); gemFx(10);
@@ -1379,6 +1384,7 @@ function rPractica() {
 var vocIdx = 0, vocList = [], vocDone = 0, VOC_SES = 20;
 var VOC_CH = ["perro_lapiz", "nina_saluda", "nino_apunta", "poodle_pregunta", "gato_bien", "gatoblanco_megafono", "senor_lapiz", "chico_megafono", "bebe_estrella", "senor_saluda", "chico_mochila", "nina_libro", "nino_reloj", "poodle_lentes", "gato_trofeo", "gatoblanco_lupa", "perro_mochila", "bebe_pregunta"];
 function rVocab() {
+  stopAudio();
   var s = load(); vocList = allWords();
   if (vocIdx >= vocList.length) vocIdx = 0;
   var w = vocList[vocIdx], r = s.w[wkey(w.en)], nueva = !r || (!r.ok && !r.bad && !r.known);
@@ -1526,6 +1532,7 @@ function startQuiz(lessonId, mode, fromPop) {
   rQ();
 }
 function rQ() {
+  stopAudio();
   var q = Q.qs[Q.i]; Q.sel = null; Q.done = false;
   el("qbar").style.width = Math.round(Q.i * 100 / Q.qs.length) + "%"; el("qn").textContent = (Q.i + 1) + "/" + Q.qs.length; el("qk").textContent = q.k;
   el("qprompt").innerHTML = q.listen ? '<button class="spk" data-say="' + esc(q.say) + '" aria-label="Escuchar">' + IC.ear + '</button><div><div class="qw">Escucha la palabra</div><div class="qp">Toca el botón y elige la que oíste</div></div>'
@@ -1533,7 +1540,7 @@ function rQ() {
   el("opts").innerHTML = q.opts.map(function (o, i) { return '<button class="opt" data-i="' + i + '">' + esc(o) + '</button>'; }).join("");
   el("opts").querySelectorAll(".opt").forEach(function (b) { b.onclick = function () { if (Q.done) return; Q.sel = +b.dataset.i; el("opts").querySelectorAll(".opt").forEach(function (x) { x.classList.toggle("sel", x === b); }); el("qcheck").disabled = false; }; });
   el("qcheck").disabled = true; el("qcheck").classList.remove("hidden"); el("sheet").classList.remove("show");
-  if (q.listen || q.say) setTimeout(function () { speak(q.say); }, 250);
+  if (q.listen || q.say) speakLater(q.say, 250);
   window.scrollTo(0, 0);
 }
 el("qcheck").onclick = function () {
@@ -1549,9 +1556,9 @@ el("qcheck").onclick = function () {
   el("sh-t").textContent = ok ? good[Math.floor(Math.random() * good.length)] : "Casi. La correcta es «" + q.ans + "»";
   el("sh-p").innerHTML = '<b>' + esc(q.en) + '</b>' + (q.pr2 ? ' (' + esc(q.pr2) + ')' : '') + ' = ' + esc(q.es) + (ok ? '' : '. Esta volverá a aparecer en tus repasos.');
   el("sh-btn").textContent = Q.i < Q.qs.length - 1 ? "Continuar" : "Ver resultado"; el("sh-btn").dataset.ctx = "quiz";
-  setTimeout(function () { speak(q.en); }, 650);
+  speakLater(q.en, 650);
 };
-el("sh-btn").onclick = function () { el("sheet").classList.remove("show");
+el("sh-btn").onclick = function () { stopAudio(); el("sheet").classList.remove("show");
   if (el("sh-btn").dataset.ctx === "spk") { if (SPK.i < SPK.items.length - 1) { SPK.i++; rSpk(); } else finishSpk(); return; }
   if (el("sh-btn").dataset.ctx === "exam") { if (EX.i < EX.items.length - 1) { EX.i++; rEx(); } else finishBlock(); return; }
   if (Q.i < Q.qs.length - 1) { Q.i++; rQ(); } else finishQuiz(); };
@@ -1699,6 +1706,7 @@ function startSpeak(lid) {
   history.pushState({ v: "spk" }, ""); rSpk();
 }
 function rSpk() {
+  stopAudio();
   var w = SPK.items[SPK.i]; SPK.tries = 0;
   el("spk-bar").style.width = Math.round(SPK.i * 100 / SPK.items.length) + "%"; el("spk-n").textContent = (SPK.i + 1) + "/" + SPK.items.length;
   el("spk-w").textContent = w.en; el("spk-pr").textContent = w.pr ? "(" + w.pr + ") · " + w.es : w.es;
@@ -1730,7 +1738,7 @@ function spkResolve(ok, heard, skipped) {
   el("sh-t").textContent = ok ? "¡Excelente pronunciación!" : skipped ? "Ejercicio saltado" : "Casi… escuchamos «" + heard + "»";
   el("sh-p").innerHTML = '<b>' + esc(w.en) + '</b>' + (w.pr ? ' (' + esc(w.pr) + ')' : '') + ' = ' + esc(w.es);
   el("sh-btn").textContent = SPK.i < SPK.items.length - 1 ? "Continuar" : "Ver resultado"; el("sh-btn").dataset.ctx = "spk";
-  if (!ok) setTimeout(function () { speak(w.en); }, 600);
+  if (!ok) speakLater(w.en, 600);
 }
 function finishSpk() {
   var s = load(); s.gems += 10; save(s); gemFx(10); checkPrizes();
@@ -1760,6 +1768,7 @@ function startMatch(lid) {
   history.pushState({ v: "mt" }, ""); rMatch();
 }
 function rMatch() {
+  stopAudio();
   var pares = MT.rounds[MT.r], fichas = [];
   pares.forEach(function (p, id) { fichas.push({ t: p.en, id: id, lang: "en" }); fichas.push({ t: p.es, id: id, lang: "es" }); });
   fichas = shuffle(fichas);
