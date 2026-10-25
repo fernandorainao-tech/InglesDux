@@ -932,6 +932,8 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   /* Íconos ilustrados de las tarjetas de Retos (la imagen trae su propio fondo) */
   .challenge-icon { width:60px; height:60px; flex-shrink:0; border-radius:16px; overflow:hidden; }
   .challenge-icon img { width:100%; height:100%; object-fit:cover; display:block; }
+  /* Avatares 3D de las tarjetas rápidas del Inicio */
+  .avatar-icon-3d { width:65px; height:65px; object-fit:contain; flex-shrink:0; margin-bottom:2px; filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); pointer-events:none; }
   body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -1205,7 +1207,7 @@ function rInicio() {
     '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div></div><img class="hm-pop" src="img/char/nina_libro.webp" alt="">' +
       '<div class="hm-prog hm-txtwrap"><span class="hm-bar"><i style="width:' + Math.max(pct, 20) + '%"><em>' + pct + '%</em></i></span></div>' +
       '<div class="hm-pills"><button id="hm-les">Lección</button><button id="hm-ex">Examen</button></div></div>' +
-    '<div class="hm-quick"><button data-q="vocab"><span>🃏</span>Vocabulario</button><button data-q="pron"><span>🔊</span>Pronunciación</button><button data-q="exam"><span>📝</span>Exámenes</button></div>' +
+    '<div class="hm-quick"><button data-q="vocab"><img class="avatar-icon-3d" src="img/home/vocab.webp" alt="" width="65" height="65">Vocabulario</button><button data-q="pron"><img class="avatar-icon-3d" src="img/home/pron.webp" alt="" width="65" height="65">Pronunciación</button><button data-q="exam"><img class="avatar-icon-3d" src="img/home/exam.webp" alt="" width="65" height="65">Exámenes</button></div>' +
     '<h3 class="hm-h">Todas las lecciones</h3><div class="hm-scroll">' + cards + '</div>';
   el("hm-les").onclick = function () { openLesson(L.id); };
   el("hm-ex").onclick = function () { startExam(L.id); };
