@@ -893,6 +893,25 @@
   body.dark-mode #practica .les.done { background:linear-gradient(135deg, #1D3A22, #1A2E26) !important; border-color:#2F7A3F !important; }
   #practica .les.done .les-n { background:radial-gradient(circle at 35% 30%, #8CF04A, #58CC02 60%, #3F9E00) !important; color:#fff !important; border-radius:50% !important; box-shadow:0 4px 0 #3A8F00, 0 0 12px rgba(88,204,2,.45) !important; }
   #practica .les.done .les-n svg { width:24px; height:24px; }
+
+  /* ===== sin desplazamiento horizontal y barra inferior anclada ===== */
+  *, *::before, *::after { box-sizing:border-box; }
+  html, body { max-width:100%; overflow-x:hidden; }
+  #app, .wrap { overflow-x:hidden; }
+  .wrap { padding-bottom:100px !important; }
+  .top { width:100%; justify-content:space-between; gap:8px !important; min-width:0; }
+  .top-tit { flex:1 1 auto; min-width:0; }
+  .top-tit > div { min-width:0; } .top .ttl { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .top-pet { width:46px !important; height:46px !important; flex-shrink:0; }
+  .top > div:last-child { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .chip-r, .chip-g { height:40px !important; padding:0 10px !important; font-size:14px !important; flex-shrink:0; }
+  .ava { width:40px !important; height:40px !important; flex-shrink:0; margin:0 !important; }
+  @media (max-width:370px) { .top-pet { display:none !important; } .chip-r, .chip-g { padding:0 8px !important; } }
+  .nav { position:fixed !important; bottom:0 !important; left:0 !important; right:auto !important; width:100% !important; z-index:999 !important; background-color:var(--card-bg) !important; }
+  body.dark-mode .nav { background-color:#202F36 !important; }
+  /* ventanas por encima de la barra inferior */
+  .sheet { z-index:1001 !important; } .shop { z-index:1002 !important; } .toast { z-index:1003 !important; } .ob { z-index:1004 !important; } .nm { z-index:1005 !important; }
+  #exam:not(.hidden), .spk-scr:not(.hidden) { z-index:1000 !important; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
