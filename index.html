@@ -934,6 +934,23 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .challenge-icon img { width:100%; height:100%; object-fit:cover; display:block; }
   /* Avatares 3D de las tarjetas rápidas del Inicio */
   .avatar-icon-3d { width:65px; height:65px; object-fit:contain; flex-shrink:0; margin-bottom:2px; filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); pointer-events:none; }
+  /* ===== Cabecera de Lecciones: tarjeta flotante 3D (.wrap aporta 18px: margin -2px = 16px del borde) ===== */
+  #app:has(#p-lecciones.on) .top, body.dark-mode #app:has(#p-lecciones.on) .top { margin:calc(12px + env(safe-area-inset-top,0px)) -2px 14px; padding:20px 14px 20px 18px; display:flex; align-items:center; justify-content:space-between; gap:10px !important; background:var(--card-bg); border:2px solid var(--border-color); border-radius:24px; box-shadow:0px 6px 0px var(--shadow-color); }
+  body.dark-mode #app:has(#p-lecciones.on) .top { border-color:#2B3D46; box-shadow:0px 6px 0px #0A1114; }
+  #app:has(#p-lecciones.on) .top .eye { margin-bottom:4px; color:#1CB0F6; font-weight:900; }
+  /* Título completo: sin elipsis; si no cabe, baja de tamaño en vez de cortarse */
+  #app:has(#p-lecciones.on) .top .ttl { white-space:normal; overflow:visible; text-overflow:clip; font-size:clamp(22px, 6.4vw, 26px); font-weight:900; line-height:1.1; }
+  #app:has(#p-lecciones.on) .top-tit { flex:0 0 auto; }   /* el título nunca se encoge */
+  #app:has(#p-lecciones.on) .top .acts { flex:0 1 auto; min-width:0; justify-content:flex-end; }
+  #app:has(#p-lecciones.on) .top .acts { gap:6px; }
+  /* Pastillas chunky iguales a las de Retos */
+  #app:has(#p-lecciones.on) .chip-r, #app:has(#p-lecciones.on) .chip-g { height:38px !important; padding:0 9px !important; gap:4px; border-radius:14px !important; font-size:15px !important; font-weight:900; color:#FFFFFF !important; }
+  #app:has(#p-lecciones.on) .chip-r { background:#FFC800 !important; border:2px solid #E2A100; box-shadow:0px 4px 0px #C88F00 !important; }
+  #app:has(#p-lecciones.on) .chip-r svg { width:18px; height:18px; fill:#FF6B00; }
+  #app:has(#p-lecciones.on) .chip-g { background:#3A73E2 !important; border:2px solid #204EB2; box-shadow:0px 4px 0px #1A3E92 !important; }
+  #app:has(#p-lecciones.on) .chip-g:active { transform:translateY(2px); box-shadow:0px 2px 0px #1A3E92 !important; }
+  @media (max-width:375px) { #app:has(#p-lecciones.on) .top .ava { display:none; } }  /* pantallas angostas: el perfil sigue en la barra inferior */
+  #app:has(#p-lecciones.on) .top .ava { width:42px; height:42px; flex-shrink:0; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); }
   body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
