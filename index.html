@@ -920,6 +920,7 @@
   /* Barra flotante 3D. .wrap ya aporta 18px de padding: margin -2px = 16px desde el borde de pantalla.
      2ª sombra (color de fondo) tapa el contenido que pasa por detrás al hacer scroll. */
   .top-stats-bar { position:sticky; top:calc(12px + env(safe-area-inset-top,0px)); z-index:50; margin:calc(12px + env(safe-area-inset-top,0px)) -2px 12px; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; background-color:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 5px 0px var(--shadow-color), 0 -18px 0 18px var(--bg-main); }
+  body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
   .rt-badge { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:6px 16px; border-radius:16px; font-family:inherit; font-size:16px; font-weight:bold; line-height:1.4; color:#FFFFFF; }
