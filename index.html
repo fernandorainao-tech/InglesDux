@@ -920,6 +920,9 @@
   /* Barra flotante 3D. .wrap ya aporta 18px de padding: margin -2px = 16px desde el borde de pantalla.
      2ª sombra (color de fondo) tapa el contenido que pasa por detrás al hacer scroll. */
   .top-stats-bar { position:sticky; top:calc(12px + env(safe-area-inset-top,0px)); z-index:50; margin:calc(12px + env(safe-area-inset-top,0px)) -2px 12px; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; background-color:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 5px 0px var(--shadow-color), 0 -18px 0 18px var(--bg-main); }
+  /* Íconos ilustrados de las tarjetas de Retos (la imagen trae su propio fondo) */
+  .challenge-icon { width:60px; height:60px; flex-shrink:0; border-radius:16px; overflow:hidden; }
+  .challenge-icon img { width:100%; height:100%; object-fit:cover; display:block; }
   body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -1525,7 +1528,7 @@ function rPractica() {
   });
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
-  h = '<button class="card les spk-entry" id="p-match"><span class="les-n" style="background:#E8F8DD;color:#58CC02">🧩</span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' + h;
+  h = '<button class="card les spk-entry" id="p-match"><span class="challenge-icon"><img src="img/retos/pares.webp" alt="Pares" width="60" height="60"></span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="challenge-icon"><img src="img/retos/habla.webp" alt="Habla" width="60" height="60"></span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' + h;
   var head = '<div class="top-stats-bar"><button class="rt-ava" id="rt-ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button>' +
     '<span class="rt-badge streak-badge">🔥 <b>' + racha(allDays(s)) + '</b></span><button class="rt-badge gems-badge gem-chip" aria-label="Diamantes: abrir tienda">💎 <b class="gem-n">' + s.gems + '</b></button></div>' +
     '<div class="rt-head"><div><div class="rt-eye">APRENDE JUGANDO</div><h1 class="rt-ttl">Retos</h1></div><img class="rt-pet" src="img/char/poodle_lentes.webp" alt=""></div>';
