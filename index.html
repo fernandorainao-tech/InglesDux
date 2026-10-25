@@ -12,6 +12,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>
+// Barra de estado según el tema: claro = blanca con íconos oscuros; oscuro = #131F24 con íconos claros.
+// Se ejecuta en <head> para que iOS lea el valor correcto al abrir la app desde el inicio.
+window.setStatusBar=function(dark){
+  var t=document.querySelector('meta[name="theme-color"]'),a=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+  if(t)t.setAttribute("content",dark?"#131F24":"#FFFFFF");
+  if(a)a.setAttribute("content",dark?"black":"default"); // iOS solo admite default/black/black-translucent
+};
+try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
+</script>
 <meta name="apple-mobile-web-app-title" content="InglesDux">
 <meta name="application-name" content="InglesDux">
 
@@ -967,7 +977,7 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 </head>
-<body><script>try{if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark-mode");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#131F24");}}catch(e){}</script><div id="dl-splash" aria-hidden="true"><div class="spl-logo"><div class="spl-top"><div class="spl-hi">Hi!<i></i></div><img class="spl-pet" src="img/mascota.webp" alt="" width="321" height="260"></div><div class="spl-nm"><span class="i">Ingles</span><span class="d">Dux</span></div></div></div><script>(function(){
+<body><script>try{if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark-mode");}catch(e){}</script><div id="dl-splash" aria-hidden="true"><div class="spl-logo"><div class="spl-top"><div class="spl-hi">Hi!<i></i></div><img class="spl-pet" src="img/mascota.webp" alt="" width="321" height="260"></div><div class="spl-nm"><span class="i">Ingles</span><span class="d">Dux</span></div></div></div><script>(function(){
 // Splash: mínimo 2,5 s visible; se oculta al cargar la página (respaldo duro a los 6 s).
 var sp=document.getElementById("dl-splash"),t0=Date.now(),ended=false;
 function out(){if(ended)return;ended=true;sp.classList.add("out");setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);},550);}
@@ -1988,7 +1998,7 @@ window.addEventListener("popstate", function () { if (!el("mt").classList.contai
 function toggleTheme() {
   var dark = document.body.classList.toggle("dark-mode");
   try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
-  var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", dark ? "#131F24" : "#FFFFFF");
+  setStatusBar(dark);
   var b = el("pf-theme"); if (b) { b.textContent = dark ? "🌙" : "☀️"; b.classList.remove("spin"); void b.offsetWidth; b.classList.add("spin"); }
 }
 // ---------- bienvenida (solo la primera vez) ----------
