@@ -1,6 +1,6 @@
 /* InglesDux · service worker */
-var VERSION = "duxlingo-v70";
-var SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/logo.png", "./icons/apple-touch-icon.png", "./img/bienvenida.webp", "./audio/success.mp3", "./audio/error.mp3", "./img/avatar-nino.jpg", "./img/gatito.jpg"];
+var VERSION = "duxlingo-v71";
+var SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/dux/icon-192.png", "./icons/dux/icon-512.png", "./icons/logo.png", "./icons/dux/apple-touch-icon.png", "./img/mascota.webp", "./img/bienvenida.webp", "./audio/success.mp3", "./audio/error.mp3", "./img/avatar-nino.jpg", "./img/gatito.jpg"];
 self.addEventListener("install", function (e) { e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); })); });
 self.addEventListener("activate", function (e) { e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k.indexOf("duxlingo-") === 0 && k !== VERSION; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); })); });
 self.addEventListener("fetch", function (e) {
