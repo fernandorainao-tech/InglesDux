@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#FFFFFF">
-<title>Duxlingo</title>
+<title>InglesDux</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Duxlingo">
-<meta name="application-name" content="Duxlingo">
+<meta name="apple-mobile-web-app-title" content="InglesDux">
+<meta name="application-name" content="InglesDux">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -796,8 +796,6 @@
   /* ===== ajustes del modo oscuro ===== */
   body.dark-mode { background:var(--bg-main); color:var(--text-main); }
   body.dark-mode #app, body.dark-mode .top { background:transparent; }
-  body.dark-mode #dl-splash { background:#131F24; }
-  body.dark-mode #dl-splash .spl-nm span:nth-child(n+5) { color:#FFFFFF !important; }
   body.dark-mode .nav { background:#202F36 !important; box-shadow:0 -4px 16px rgba(0,0,0,.35) !important; border-top:1px solid #37464F !important; }
   body.dark-mode .nav button { color:#8FA0A8 !important; } body.dark-mode .nav button.on { color:#FFFFFF !important; }
   body.dark-mode .nav button.on::before { background:#1CB0F6; }
@@ -948,26 +946,33 @@
   .toast.hidden { display:flex !important; transform:translateY(-140%); opacity:0; pointer-events:none; }
   .toast b { font-family:'Fredoka','Nunito',system-ui,sans-serif; font-size:16px; } .toast span { font-size:13px; color:#6B4A00; }
 
-  #dl-splash { position:fixed; top:0; left:0; width:100vw; height:100vh; height:100dvh; z-index:9999; background:var(--card-bg); display:flex; align-items:center; justify-content:center; overflow:hidden; transition:opacity .6s ease; }
-  #dl-splash .row { justify-content:center; margin:0 auto; }
+  /* ===== Pantalla de carga InglesDux (siempre fondo pizarra oscuro) ===== */
+  #dl-splash { position:fixed; inset:0; width:100vw; height:100vh; height:100dvh; z-index:9999; background:#131F24; display:flex; align-items:center; justify-content:center; overflow:hidden; opacity:1; transition:opacity 0.5s ease; }
   #dl-splash.out { opacity:0; pointer-events:none; }
-  #dl-splash .row { display:flex; align-items:center; }
-  #dl-splash img { width:78px; height:auto; animation:dlPop .9s cubic-bezier(.2,.9,.3,1.3) both; }
-  #dl-splash .spl-nm { max-width:0; overflow:hidden; white-space:nowrap; font-family:'Fredoka','Nunito',system-ui,sans-serif; font-weight:600; font-size:40px; transition:max-width 1.2s cubic-bezier(.2,.7,.2,1); }
-  #dl-splash.go .spl-nm { max-width:260px; }
-  #dl-splash .spl-nm span { display:inline-block; opacity:0; transform:translateY(8px); transition:opacity .4s ease, transform .4s ease; }
-  #dl-splash.go .spl-nm span { opacity:1; transform:none; }
-  #dl-splash .gap { width:12px; }
-  @keyframes dlPop { 0% { transform:scale(.6) rotate(-8deg); opacity:0; } 100% { transform:none; opacity:1; } }
+  .spl-logo { display:flex; flex-direction:column; align-items:center; }
+  .spl-top { display:flex; align-items:flex-end; justify-content:center; gap:14px; }
+  /* Globo 3D "Hi!" con cola abajo-izquierda y punto amarillo arriba-derecha */
+  .spl-hi { position:relative; align-self:center; margin-bottom:26px; background-color:#1CB0F6; color:#FFFFFF; border-radius:16px; padding:8px 16px; box-shadow:0px 4px 0px #0076AB; font-family:'Fredoka','Nunito',system-ui,sans-serif; font-weight:900; font-size:30px; line-height:1.1; animation:splPop .6s .15s cubic-bezier(.2,.9,.3,1.3) both; }
+  .spl-hi::after { content:""; position:absolute; left:14px; bottom:-12px; border-width:12px 12px 0 0; border-style:solid; border-color:#1CB0F6 transparent transparent transparent; filter:drop-shadow(0 4px 0 #0076AB); }
+  .spl-hi i { position:absolute; top:-6px; right:-6px; width:16px; height:16px; border-radius:50%; background:#FFC800; border:2px solid #131F24; }
+  /* Mascota: margen inferior negativo para que el texto tape el corte del chaleco */
+  .spl-pet { height:116px; width:auto; margin-bottom:-14px; filter:drop-shadow(0px 6px 8px rgba(0,0,0,0.3)); animation:splPop .7s .3s cubic-bezier(.2,.9,.3,1.3) both; }
+  .spl-nm { position:relative; z-index:1; font-family:'Fredoka','Nunito',system-ui,sans-serif; font-weight:900; font-size:42px; line-height:1; letter-spacing:.01em; text-shadow:0px 4px 0px #0A1114; animation:splUp .6s .55s ease both; }
+  .spl-nm .i { color:#1CB0F6; }
+  .spl-nm .d { color:#FFFFFF; }
+  @keyframes splPop { 0% { transform:scale(.6) translateY(10px); opacity:0; } 100% { transform:none; opacity:1; } }
+  @keyframes splUp { 0% { transform:translateY(12px); opacity:0; } 100% { transform:none; opacity:1; } }
   @media (prefers-reduced-motion: reduce) { #dl-splash * { transition:none !important; animation:none !important; } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 </head>
-<body><script>try{if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark-mode");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#131F24");}}catch(e){}</script><div id="dl-splash" aria-hidden="true"><div class="row"><img src="icons/logo.png" alt=""><div class="spl-nm"><span class="gap"></span><span style="color:#3D5AFE;transition-delay:250ms">D</span><span style="color:#3D5AFE;transition-delay:360ms">u</span><span style="color:#3D5AFE;transition-delay:470ms">x</span><span style="color:#1B2142;transition-delay:580ms">l</span><span style="color:#1B2142;transition-delay:690ms">i</span><span style="color:#1B2142;transition-delay:800ms">n</span><span style="color:#1B2142;transition-delay:910ms">g</span><span style="color:#1B2142;transition-delay:1020ms">o</span></div></div></div><script>(function(){var sp=document.getElementById("dl-splash"),t0=Date.now(),ended=false;
-requestAnimationFrame(function(){setTimeout(function(){sp.classList.add("go");},500);});
-function out(){if(ended)return;ended=true;sp.classList.add("out");setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);},650);}
-function done(){setTimeout(out,Math.max(0,3200-(Date.now()-t0)));}
-if(document.readyState==="complete")done();else window.addEventListener("load",done);setTimeout(out,7000);})();</script>
+<body><script>try{if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark-mode");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#131F24");}}catch(e){}</script><div id="dl-splash" aria-hidden="true"><div class="spl-logo"><div class="spl-top"><div class="spl-hi">Hi!<i></i></div><img class="spl-pet" src="img/mascota.webp" alt="" width="321" height="260"></div><div class="spl-nm"><span class="i">Ingles</span><span class="d">Dux</span></div></div></div><script>(function(){
+// Splash: mínimo 2,5 s visible; se oculta al cargar la página (respaldo duro a los 6 s).
+var sp=document.getElementById("dl-splash"),t0=Date.now(),ended=false;
+function out(){if(ended)return;ended=true;sp.classList.add("out");setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);},550);}
+function done(){setTimeout(out,Math.max(0,2500-(Date.now()-t0)));}
+if(document.readyState==="complete")done();else window.addEventListener("load",done);
+setTimeout(out,6000);})();</script>
 <div class="wrap">
   <!-- ===== APP ===== -->
   <div id="app">
