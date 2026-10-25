@@ -1953,9 +1953,9 @@ function startMatch(lid) {
 function rMatch() {
   stopAudio();
   var pares = MT.rounds[MT.r], fichas = [];
-  // columna izquierda = español, columna derecha = inglés; cada columna se mezcla por separado
-  var arrayIzquierda = shuffle(pares.map(function (p, id) { return { t: p.es, id: id, lang: "es" }; }));
-  var arrayDerecha = shuffle(pares.map(function (p, id) { return { t: p.en, id: id, lang: "en" }; }));
+  // columna izquierda = inglés, columna derecha = español; cada columna se mezcla por separado
+  var arrayIzquierda = shuffle(pares.map(function (p, id) { return { t: p.en, id: id, lang: "en" }; }));
+  var arrayDerecha = shuffle(pares.map(function (p, id) { return { t: p.es, id: id, lang: "es" }; }));
   if (pares.length > 1 && arrayIzquierda.every(function (f, i) { return f.id === arrayDerecha[i].id; })) arrayDerecha.push(arrayDerecha.shift());   // nunca alineados fila a fila
   for (var i = 0; i < arrayIzquierda.length; i++) { fichas.push(arrayIzquierda[i]); fichas.push(arrayDerecha[i]); }
   el("mt-bar").style.width = Math.round(MT.r * 100 / MT.rounds.length) + "%"; el("mt-n").textContent = (MT.r + 1) + "/" + MT.rounds.length;
