@@ -746,6 +746,31 @@
   .sc-brand img { width:62px; height:62px; object-fit:contain; } .sc-brand b { color:#FFD13B; font-weight:900; } .sc-brand span { font-weight:900; }
   .sc-brand em { margin-left:auto; font-style:normal; font-size:34px; font-weight:800; opacity:.9; }
   .share-btn { background:#FFC800 !important; color:#5A3B00 !important; box-shadow:0 5px 0 #E0A800 !important; }
+
+  /* ===== reconocimiento de voz ===== */
+  .spk-scr:not(.hidden) { position:fixed; inset:0; height:100dvh; z-index:46; background:#F4F6FB; display:flex; flex-direction:column; }
+  .spk-scroll { flex:1; overflow-y:auto; padding:calc(4px + env(safe-area-inset-top,0px)) 18px 12px; max-width:640px; width:100%; margin:0 auto; }
+  .spk-k { font-weight:900; color:#1A1D4E; font-size:19px; margin:6px 0 16px; }
+  .spk-card { background:#FFFFFF; border:2px solid #E2E8F4; border-radius:24px; box-shadow:0 6px 0 #E2E8F4; padding:22px 18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .spk-av { width:110px; height:110px; object-fit:contain; filter:drop-shadow(0 8px 8px rgba(0,0,0,.12)); }
+  .spk-w { font-family:'Nunito',system-ui,sans-serif; font-weight:900; font-size:44px; color:#1A1D4E; line-height:1.1; overflow-wrap:anywhere; }
+  .spk-pr { font-size:15px; color:#6B7280; }
+  .spk-hear { margin-top:8px; border:none; background:#DDF4FF; color:#0B79B5; font-weight:800; font-family:inherit; font-size:15px; padding:9px 16px; border-radius:14px; }
+  .spk-msg { min-height:24px; margin-top:14px; text-align:center; font-weight:800; font-size:15px; } .spk-msg.bad { color:#E2504F; }
+  .spk-foot { flex-shrink:0; padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px)); max-width:640px; width:100%; margin:0 auto; }
+  .spk-row { display:flex; gap:12px; }
+  .spk-mic { position:relative; flex:1; height:62px; border:none; border-radius:18px; background:#1CB0F6; color:#fff; font-family:inherit; font-weight:900; font-size:18px; box-shadow:0 6px 0 #1899D6; transition:transform .06s, box-shadow .06s; overflow:hidden; }
+  .spk-mic:active { transform:translateY(4px); box-shadow:0 2px 0 #1899D6; }
+  .spk-mic.on { background:#E2504F; box-shadow:0 6px 0 #B83A39; animation:micPulse 1.1s ease-in-out infinite; }
+  @keyframes micPulse { 0%,100% { filter:brightness(1); } 50% { filter:brightness(1.12); } }
+  .spk-waves { position:absolute; left:16px; top:50%; transform:translateY(-50%); display:none; gap:4px; align-items:center; }
+  .spk-mic.on .spk-waves { display:flex; }
+  .spk-waves i { width:5px; height:14px; border-radius:3px; background:#fff; animation:wave3 .8s ease-in-out infinite; }
+  .spk-waves i:nth-child(2) { animation-delay:.15s; } .spk-waves i:nth-child(3) { animation-delay:.3s; }
+  @keyframes wave3 { 0%,100% { height:8px; } 50% { height:26px; } }
+  .spk-rep { width:62px; height:62px; border-radius:18px; background:#FFFFFF; border:2px solid #E2E8F4; box-shadow:0 6px 0 #E2E8F4; font-size:28px; font-weight:900; color:#1CB0F6; transition:transform .06s, box-shadow .06s; }
+  .spk-rep:active { transform:translateY(4px); box-shadow:0 2px 0 #E2E8F4; }
+  .spk-skip { display:block; margin:14px auto 0; background:none; border:none; color:#A0A6B8; font-family:inherit; font-weight:900; font-size:14px; letter-spacing:.06em; padding:8px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -846,6 +871,14 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   <h3>¡Comparte tu logro!</h3><div class="sc-prev" id="sc-prev"></div>
   <button class="nm-save" id="sc-go">📤 Compartir</button><button class="shop-close" id="sc-x">Cerrar</button></div></div>
 <div id="sc-full" aria-hidden="true"></div>
+<div id="spk" class="spk-scr hidden" role="dialog" aria-label="Reconocimiento de voz">
+  <div class="spk-scroll"><div class="qtop"><button class="qx" id="spk-x" aria-label="Salir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="qbar"><i id="spk-bar"></i></div><span class="qn" id="spk-n"></span></div>
+    <div class="spk-k">🎤 Di esta palabra en inglés</div>
+    <div class="spk-card"><img class="spk-av" id="spk-av" src="img/char/gatoblanco_megafono.webp" alt=""><div class="spk-w" id="spk-w"></div><div class="spk-pr" id="spk-pr"></div><button class="spk-hear" id="spk-hear">🔊 Escuchar</button></div>
+    <div class="spk-msg" id="spk-msg"></div></div>
+  <div class="spk-foot"><div class="spk-row"><button class="spk-mic" id="spk-mic"><span class="spk-waves"><i></i><i></i><i></i></span><span id="spk-mic-t">🎤 Toca para hablar</span></button><button class="spk-rep" id="spk-rep" aria-label="Repetir">↻</button></div>
+    <button class="spk-skip" id="spk-skip">NO PUEDO HABLAR AHORA</button></div>
+</div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
 <div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
 <nav class="nav" id="nav" aria-label="Navegación principal">
@@ -983,7 +1016,7 @@ function rInicio() {
   el("hm-les").onclick = function () { openLesson(L.id); };
   el("hm-ex").onclick = function () { startExam(L.id); };
   el("inicio").querySelectorAll(".hm-quick button").forEach(function (b) { b.onclick = function () {
-    if (b.dataset.q === "retos") tab("practica"); else if (b.dataset.q === "pron") startQuiz(L.id, "escucha"); else startExam(L.id); }; });
+    if (b.dataset.q === "retos") tab("practica"); else if (b.dataset.q === "pron") startSpeak(L.id); else startExam(L.id); }; });
   el("inicio").querySelectorAll(".hm-lc[data-id]").forEach(function (b) { b.onclick = function () { openLesson(b.dataset.id); }; });
   var q = el("hm-q"), res = el("hm-res");
   q.oninput = function () {
@@ -1316,7 +1349,9 @@ function rPractica() {
   });
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
+  h = '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="st">Jugar</span></button>' + h;
   el("practica").innerHTML = h;
+  el("p-spk").onclick = function () { startSpeak(nextLesson(load()).id); };
   el("practica").querySelectorAll("button.les[data-id]").forEach(function (b) { b.onclick = function () { startQuiz(b.dataset.id, "practica"); }; });
   if (pend) el("p-err").onclick = function () { startQuiz(null, "errores"); };
 }
@@ -1497,6 +1532,7 @@ el("qcheck").onclick = function () {
   setTimeout(function () { speak(q.en); }, 650);
 };
 el("sh-btn").onclick = function () { el("sheet").classList.remove("show");
+  if (el("sh-btn").dataset.ctx === "spk") { if (SPK.i < SPK.items.length - 1) { SPK.i++; rSpk(); } else finishSpk(); return; }
   if (el("sh-btn").dataset.ctx === "exam") { if (EX.i < EX.items.length - 1) { EX.i++; rEx(); } else finishBlock(); return; }
   if (Q.i < Q.qs.length - 1) { Q.i++; rQ(); } else finishQuiz(); };
 function finishQuiz() {
@@ -1625,6 +1661,72 @@ function shareCardNow() {
 el("sc-go").onclick = shareCardNow;
 el("sc-x").onclick = function () { el("share-m").classList.add("hidden"); };
 el("share-m").addEventListener("click", function (e) { if (e.target.id === "share-m") el("share-m").classList.add("hidden"); });
+
+// ---------- reconocimiento de voz (Web Speech API) ----------
+var SPK = null, REC = null;
+function speechOK() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
+function cleanTxt(t) { return String(t || "").toLowerCase().replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim(); }
+function voiceMatch(target, heard) {
+  var t = cleanTxt(target).replace(/^to /, ""), alts = [].concat(heard);
+  return alts.some(function (h) { h = cleanTxt(h); if (!h) return false; if (h === t || (" " + h + " ").indexOf(" " + t + " ") !== -1) return true; return t.length >= 4 && lev(h, t) <= (t.length >= 8 ? 2 : 1); });
+}
+function startSpeak(lid) {
+  if (!speechOK()) { el("toast-t").textContent = "Tu navegador no permite reconocimiento de voz"; el("toast-s").textContent = "Te dejamos el ejercicio de escuchar"; el("toast").classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(function () { el("toast").classList.add("hidden"); }, 3500); startQuiz(lid, "escucha"); return; }
+  var L = findLesson(lid) || DATA.lecciones[0], ws = lessonWords(L).filter(function (w) { return /^[A-Za-z][A-Za-z\- ]*$/.test(w.en) && w.en.split(" ").length <= 2; });
+  ws = shuffle(ws).slice(0, 10);
+  SPK = { L: L, items: ws, i: 0, ok: 0, tries: 0 };
+  el("app").classList.add("hidden"); el("nav").classList.add("hidden"); el("spk").classList.remove("hidden");
+  history.pushState({ v: "spk" }, ""); rSpk();
+}
+function rSpk() {
+  var w = SPK.items[SPK.i]; SPK.tries = 0;
+  el("spk-bar").style.width = Math.round(SPK.i * 100 / SPK.items.length) + "%"; el("spk-n").textContent = (SPK.i + 1) + "/" + SPK.items.length;
+  el("spk-w").textContent = w.en; el("spk-pr").textContent = w.pr ? "(" + w.pr + ") · " + w.es : w.es;
+  el("spk-av").src = "img/char/" + VOC_CH[(SPK.i * 7) % VOC_CH.length] + ".webp";
+  el("spk-msg").textContent = ""; el("spk-msg").className = "spk-msg"; setMic(false); el("sheet").classList.remove("show");
+}
+function setMic(on) { el("spk-mic").classList.toggle("on", on); el("spk-mic-t").textContent = on ? "Escuchando…" : "🎤 Toca para hablar"; }
+function spkListen() {
+  if (REC) { try { REC.abort(); } catch (e) {} REC = null; setMic(false); return; }
+  var R = window.SpeechRecognition || window.webkitSpeechRecognition; REC = new R();
+  REC.lang = "en-US"; REC.interimResults = false; REC.maxAlternatives = 4; var got = false;
+  REC.onstart = function () { setMic(true); };
+  REC.onresult = function (ev) { got = true; var alts = []; for (var k = 0; k < ev.results[0].length; k++) alts.push(ev.results[0][k].transcript); judgeVoice(alts); };
+  REC.onerror = function (ev) { setMic(false); REC = null; el("spk-msg").className = "spk-msg bad";
+    el("spk-msg").textContent = ev.error === "not-allowed" || ev.error === "service-not-allowed" ? "Necesitamos permiso para usar el micrófono. Actívalo en los ajustes del navegador." : ev.error === "no-speech" ? "No te escuchamos. Toca el micrófono y habla más fuerte." : "No se pudo usar el micrófono. Inténtalo otra vez."; };
+  REC.onend = function () { setMic(false); REC = null; if (!got && !el("spk-msg").textContent) { el("spk-msg").className = "spk-msg bad"; el("spk-msg").textContent = "No te escuchamos. Inténtalo otra vez."; } };
+  try { REC.start(); } catch (e) { REC = null; }
+}
+function judgeVoice(alts) {
+  var w = SPK.items[SPK.i], ok = voiceMatch(w.en, alts), heard = alts[0] || "";
+  if (!ok && SPK.tries < 1) { SPK.tries++; playSfx(false); el("spk-msg").className = "spk-msg bad"; el("spk-msg").textContent = "Escuchamos «" + heard + "». ¡Inténtalo otra vez!"; return; }
+  spkResolve(ok, heard);
+}
+function spkResolve(ok, heard, skipped) {
+  var w = SPK.items[SPK.i], s = load(), k = wkey(w.en), r = s.w[k] || {};
+  if (ok) { SPK.ok++; s.correct++; r.ok = (r.ok || 0) + 1; } else if (!skipped) r.bad = (r.bad || 0) + 1;
+  s.w[k] = r; markDay(s); save(s);
+  var sh = el("sheet"); if (!skipped) playSfx(ok); sh.className = "sheet show " + (ok ? "good" : "wrong"); el("sh-ic").innerHTML = ok ? IC.check : IC.x;
+  el("sh-t").textContent = ok ? "¡Excelente pronunciación!" : skipped ? "Ejercicio saltado" : "Casi… escuchamos «" + heard + "»";
+  el("sh-p").innerHTML = '<b>' + esc(w.en) + '</b>' + (w.pr ? ' (' + esc(w.pr) + ')' : '') + ' = ' + esc(w.es);
+  el("sh-btn").textContent = SPK.i < SPK.items.length - 1 ? "Continuar" : "Ver resultado"; el("sh-btn").dataset.ctx = "spk";
+  if (!ok) setTimeout(function () { speak(w.en); }, 600);
+}
+function finishSpk() {
+  var s = load(); s.gems += 10; save(s); gemFx(10); checkPrizes();
+  el("spk").classList.add("hidden");
+  el("result").innerHTML = '<div class="res"><div class="blk-done">🎤</div><h2>' + SPK.ok + ' de ' + SPK.items.length + ' bien pronunciadas</h2><p>¡Sigue practicando en voz alta! +10 💎</p><div class="stack"><button class="btn" id="spk-again">Practicar otra vez</button><button class="btn ghost" id="spk-out">Volver</button></div></div>';
+  el("result").classList.remove("hidden"); window.scrollTo(0, 0); history.replaceState({ v: "spkres" }, "");
+  el("spk-again").onclick = function () { el("result").classList.add("hidden"); var id = SPK.L.id; history.back(); setTimeout(function () { startSpeak(id); }, 60); };
+  el("spk-out").onclick = function () { history.back(); };
+}
+function exitSpk() { if (REC) { try { REC.abort(); } catch (e) {} REC = null; } el("spk").classList.add("hidden"); el("result").classList.add("hidden"); el("sheet").classList.remove("show"); el("app").classList.remove("hidden"); el("nav").classList.remove("hidden"); render(curTab); }
+el("spk-mic").onclick = spkListen;
+el("spk-rep").onclick = function () { speak(SPK.items[SPK.i].en); };
+el("spk-hear").onclick = function () { speak(SPK.items[SPK.i].en); };
+el("spk-skip").onclick = function () { if (REC) { try { REC.abort(); } catch (e) {} REC = null; } spkResolve(false, "", true); };
+el("spk-x").onclick = function () { history.back(); };
+window.addEventListener("popstate", function () { if (!el("spk").classList.contains("hidden") || (SPK && !el("result").classList.contains("hidden") && el("result").querySelector("#spk-out"))) exitSpk(); });
 // ---------- bienvenida (solo la primera vez) ----------
 (function () {
   var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) { if (!userName()) askName(); return; } } catch (e) { return; }
