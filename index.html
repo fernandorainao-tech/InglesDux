@@ -1073,7 +1073,7 @@ setTimeout(out,6000);})();</script>
 <nav class="nav" id="nav" aria-label="Navegación principal">
   <button class="on" data-tab="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Inicio</button>
   <button data-tab="lecciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>Lecciones</button>
-  <button data-tab="vocab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>Vocabulario</button>
+  <button data-tab="practica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8M9 18h6"/></svg>Retos</button>
   <button data-tab="logros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Perfil</button>
 </nav>
 <script>
@@ -1205,12 +1205,12 @@ function rInicio() {
     '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div></div><img class="hm-pop" src="img/char/nina_libro.webp" alt="">' +
       '<div class="hm-prog hm-txtwrap"><span class="hm-bar"><i style="width:' + Math.max(pct, 20) + '%"><em>' + pct + '%</em></i></span></div>' +
       '<div class="hm-pills"><button id="hm-les">Lección</button><button id="hm-ex">Examen</button></div></div>' +
-    '<div class="hm-quick"><button data-q="retos"><span>🏆</span>Retos</button><button data-q="pron"><span>🔊</span>Pronunciación</button><button data-q="exam"><span>📝</span>Exámenes</button></div>' +
+    '<div class="hm-quick"><button data-q="vocab"><span>🃏</span>Vocabulario</button><button data-q="pron"><span>🔊</span>Pronunciación</button><button data-q="exam"><span>📝</span>Exámenes</button></div>' +
     '<h3 class="hm-h">Todas las lecciones</h3><div class="hm-scroll">' + cards + '</div>';
   el("hm-les").onclick = function () { openLesson(L.id); };
   el("hm-ex").onclick = function () { startExam(L.id); };
   el("inicio").querySelectorAll(".hm-quick button").forEach(function (b) { b.onclick = function () {
-    if (b.dataset.q === "retos") tab("practica"); else if (b.dataset.q === "pron") startSpeak(L.id); else startExam(L.id); }; });
+    if (b.dataset.q === "vocab") tab("vocab"); else if (b.dataset.q === "pron") startSpeak(L.id); else startExam(L.id); }; });
   el("inicio").querySelectorAll(".hm-lc[data-id]").forEach(function (b) { b.onclick = function () { openLesson(b.dataset.id); }; });
   var q = el("hm-q"), res = el("hm-res");
   q.oninput = function () {
