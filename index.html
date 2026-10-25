@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root { --bg-main:#F4F6FB; --card-bg:#FFFFFF; --text-main:#1A1D4E; --text-secondary:#5A6185; --shadow-color:#E2E8F4; --border-color:#E2E8F4; --soft-bg:#EEF2FF; }
-  body.dark-mode { --bg-main:#131F24; --card-bg:#202F36; --text-main:#FFFFFF; --text-secondary:#AFBAC0; --shadow-color:#182328; --border-color:#37464F; --soft-bg:#1A2A31;
+  body.dark-mode { --bg-main:#131F24; --card-bg:#202F36; --text-main:#FFFFFF; --text-secondary:#C2CCD1; --shadow-color:#0A1114; --border-color:#37464F; --soft-bg:#1A2A31;
     --bg:#131F24; --card:#202F36; --ink:#FFFFFF; --muted:#AFBAC0; --soft:#8FA0A8; --line:#37464F; --pri-s:#1F3A55; --coral-s:#3A2426; --sun-s:#3A3220; --ok-s:#1E3A2C; --bad-s:#3A2426; color-scheme:dark; }
 
   :root { --bg:#FFFFFF; --card:#FFFFFF; --ink:#1B2142; --muted:#5A6185; --soft:#8A90B0; --line:#E3E7F5;
@@ -838,6 +838,30 @@
   body.dark-mode .rw-share { background:#202F36 !important; color:#FFFFFF !important; border-color:#37464F !important; }
   body.dark-mode .pf-name b, body.dark-mode .lp-card b, body.dark-mode .pz b { color:#FFFFFF !important; }
   body.dark-mode .sc-card, body.dark-mode .hm-head, body.dark-mode .pf-ban { color:#FFFFFF; }
+
+  /* modo oscuro: más contraste y volumen 3D */
+  body.dark-mode .card, body.dark-mode .hm-card, body.dark-mode .hm-quick button, body.dark-mode .hm-lc, body.dark-mode .lc, body.dark-mode .lp-card, body.dark-mode .pf-name,
+  body.dark-mode .rw-cal, body.dark-mode .cj, body.dark-mode .exin, body.dark-mode .hb, body.dark-mode .opt, body.dark-mode .mt-b, body.dark-mode .spk-card, body.dark-mode .vs-bub,
+  body.dark-mode .bub, body.dark-mode .les, body.dark-mode .card.txt, body.dark-mode .rw-share, body.dark-mode .spk-rep, body.dark-mode .hb-call { border:2px solid var(--border-color) !important; }
+  body.dark-mode .hm-card { box-shadow:0px 8px 0px #0A1114, 0px 16px 22px rgba(0,0,0,.45) !important; }
+  body.dark-mode .hm-quick button, body.dark-mode .hm-lc, body.dark-mode .lc, body.dark-mode .lp-card, body.dark-mode .pf-name, body.dark-mode .les, body.dark-mode .exin, body.dark-mode .spk-card, body.dark-mode .rw-share { box-shadow:0px 6px 0px #0A1114 !important; }
+  body.dark-mode .hm-quick button:active, body.dark-mode .hm-lc:active, body.dark-mode .lc:active, body.dark-mode .pf-name:active { box-shadow:0px 2px 0px #0A1114 !important; }
+  body.dark-mode .opt, body.dark-mode .mt-b:not(.selected):not(.correct):not(.incorrect) { box-shadow:0 4px 0 #0A1114 !important; }
+  body.dark-mode .mt-b.disabled { box-shadow:none !important; }
+  body.dark-mode #hm-ex { box-shadow:0px 5px 0px #0A1114 !important; border-color:var(--border-color) !important; color:#9CC4FF !important; }
+  body.dark-mode #hm-les { box-shadow:0px 5px 0px #0E2466 !important; }
+  body.dark-mode .lc.full, body.dark-mode .hm-lc.full { border-color:#3E8F2A !important; box-shadow:0px 6px 0px #1E4A14 !important; }
+  body.dark-mode .lc-btn.g { box-shadow:0 6px 0 #2F7A01; } body.dark-mode .lc-btn.b { box-shadow:0 6px 0 #10296B; }
+  /* textos dentro de fondos de color y textos pequeños */
+  body.dark-mode .hm-card .hm-bar em, body.dark-mode .hm-bar em { color:#FFFFFF !important; }
+  body.dark-mode .hm-k, body.dark-mode .pf-name small, body.dark-mode .hb-eye { color:#8EC5FF !important; }
+  body.dark-mode .hm-lc-p, body.dark-mode .hm-prog span:last-child { color:#8EC5FF !important; }
+  body.dark-mode .hm-lc.full .hm-lc-p { color:#7EE05A !important; }
+  body.dark-mode .hm-lc-s, body.dark-mode .lc-t > span, body.dark-mode .hb-t span, body.dark-mode .pz > span, body.dark-mode .lp-card > span, body.dark-mode .les p, body.dark-mode .exin span, body.dark-mode .p { color:#C2CCD1 !important; }
+  body.dark-mode .wr .e, body.dark-mode .wr .p, body.dark-mode .spk-pr, body.dark-mode .bub-pr, body.dark-mode .vs-p { color:#B8C4CA !important; }
+  body.dark-mode .les .st, body.dark-mode .mt-b { color:#E6EEF2; }
+  body.dark-mode .lc.lock .lc-t b, body.dark-mode .lc.lock .lc-t > span { color:#7F8E96 !important; }
+  body.dark-mode .lc.lock .lc-n { background:#26343B !important; color:#6C7B83 !important; text-shadow:none !important; box-shadow:none !important; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
