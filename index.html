@@ -771,6 +771,19 @@
   .spk-rep { width:62px; height:62px; border-radius:18px; background:#FFFFFF; border:2px solid #E2E8F4; box-shadow:0 6px 0 #E2E8F4; font-size:28px; font-weight:900; color:#1CB0F6; transition:transform .06s, box-shadow .06s; }
   .spk-rep:active { transform:translateY(4px); box-shadow:0 2px 0 #E2E8F4; }
   .spk-skip { display:block; margin:14px auto 0; background:none; border:none; color:#A0A6B8; font-family:inherit; font-weight:900; font-size:14px; letter-spacing:.06em; padding:8px; }
+
+  /* ===== selecciona los pares ===== */
+  .mt-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px; }
+  .mt-b { min-height:58px; padding:10px 8px; background:#FFFFFF; border:2px solid #E2E8F4; border-radius:16px; box-shadow:0px 4px 0px #E2E8F4; color:#3C4152; font-family:'Nunito',system-ui,sans-serif; font-weight:800; font-size:17px; text-align:center; line-height:1.2; transition:transform .06s, box-shadow .06s, background .15s, border-color .15s, color .15s; overflow-wrap:anywhere; }
+  .mt-b:active { transform:translateY(3px); box-shadow:0 1px 0 #E2E8F4; }
+  .mt-b.selected { border-color:#1CB0F6; color:#1CB0F6; box-shadow:0 4px 0 #1CB0F6; background:#DDF4FF; }
+  .mt-b.correct { border-color:#58CC02; color:#58A700; box-shadow:0 4px 0 #58CC02; background:#D7FFB8; }
+  .mt-b.incorrect { border-color:#FF4B4B; color:#EA2B2B; box-shadow:0 4px 0 #FF4B4B; background:#FFDFE0; animation:mtShake .4s ease; }
+  .mt-b.disabled { opacity:.5; pointer-events:none; box-shadow:none; background:#F1F3F8; color:#9AA0B4; border-color:#E2E8F4; transform:translateY(4px); }
+  @keyframes mtShake { 0%,100% { transform:none; } 20% { transform:translateX(-7px); } 40% { transform:translateX(6px); } 60% { transform:translateX(-4px); } 80% { transform:translateX(3px); } }
+  .mt-go { width:100%; height:56px; border:none; border-radius:16px; background:#58CC02; color:#fff; font-family:inherit; font-weight:900; font-size:17px; box-shadow:0 5px 0 #46A302; transition:transform .06s, box-shadow .06s; }
+  .mt-go:active { transform:translateY(4px); box-shadow:0 1px 0 #46A302; }
+  .mt-go:disabled { background:#E5E7EB; color:#9AA0B4; box-shadow:0 5px 0 #CDD1DA; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -878,6 +891,12 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
     <div class="spk-msg" id="spk-msg"></div></div>
   <div class="spk-foot"><div class="spk-row"><button class="spk-mic" id="spk-mic"><span class="spk-waves"><i></i><i></i><i></i></span><span id="spk-mic-t">🎤 Toca para hablar</span></button><button class="spk-rep" id="spk-rep" aria-label="Repetir">↻</button></div>
     <button class="spk-skip" id="spk-skip">NO PUEDO HABLAR AHORA</button></div>
+</div>
+<div id="mt" class="spk-scr hidden" role="dialog" aria-label="Selecciona los pares">
+  <div class="spk-scroll"><div class="qtop"><button class="qx" id="mt-x" aria-label="Salir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="qbar"><i id="mt-bar"></i></div><span class="qn" id="mt-n"></span></div>
+    <div class="spk-k">🧩 Selecciona los pares</div>
+    <div class="mt-grid" id="mt-grid"></div></div>
+  <div class="spk-foot"><button class="mt-go" id="mt-go" disabled>Continuar</button></div>
 </div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
 <div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
@@ -1349,9 +1368,10 @@ function rPractica() {
   });
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
-  h = '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="st">Jugar</span></button>' + h;
+  h = '<button class="card les spk-entry" id="p-match"><span class="les-n" style="background:#E8F8DD;color:#58CC02">🧩</span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="st">Jugar</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="st">Jugar</span></button>' + h;
   el("practica").innerHTML = h;
   el("p-spk").onclick = function () { startSpeak(nextLesson(load()).id); };
+  el("p-match").onclick = function () { startMatch(nextLesson(load()).id); };
   el("practica").querySelectorAll("button.les[data-id]").forEach(function (b) { b.onclick = function () { startQuiz(b.dataset.id, "practica"); }; });
   if (pend) el("p-err").onclick = function () { startQuiz(null, "errores"); };
 }
@@ -1727,6 +1747,57 @@ el("spk-hear").onclick = function () { speak(SPK.items[SPK.i].en); };
 el("spk-skip").onclick = function () { if (REC) { try { REC.abort(); } catch (e) {} REC = null; } spkResolve(false, "", true); };
 el("spk-x").onclick = function () { history.back(); };
 window.addEventListener("popstate", function () { if (!el("spk").classList.contains("hidden") || (SPK && !el("result").classList.contains("hidden") && el("result").querySelector("#spk-out"))) exitSpk(); });
+
+// ---------- ejercicio: selecciona los pares (matching) ----------
+var MT = null;
+function startMatch(lid) {
+  var L = findLesson(lid) || DATA.lecciones[0], seen = {}, pool = lessonWords(L).filter(function (w) {
+    var es = w.es.split(/[,(]/)[0].trim(); if (!es || es.length > 16 || w.en.length > 14 || seen[es.toLowerCase()] || seen[w.en.toLowerCase()]) return false; seen[es.toLowerCase()] = seen[w.en.toLowerCase()] = 1; return true; });
+  pool = shuffle(pool).slice(0, 18);
+  var rounds = []; for (var i = 0; i + 5 <= pool.length && rounds.length < 3; i += 6) rounds.push(pool.slice(i, i + 6).map(function (w) { return { es: w.es.split(/[,(]/)[0].trim(), en: w.en }; }));
+  MT = { L: L, rounds: rounds, r: 0, errors: 0 };
+  el("app").classList.add("hidden"); el("nav").classList.add("hidden"); el("mt").classList.remove("hidden");
+  history.pushState({ v: "mt" }, ""); rMatch();
+}
+function rMatch() {
+  var pares = MT.rounds[MT.r], fichas = [];
+  pares.forEach(function (p, id) { fichas.push({ t: p.en, id: id, lang: "en" }); fichas.push({ t: p.es, id: id, lang: "es" }); });
+  fichas = shuffle(fichas);
+  el("mt-bar").style.width = Math.round(MT.r * 100 / MT.rounds.length) + "%"; el("mt-n").textContent = (MT.r + 1) + "/" + MT.rounds.length;
+  el("mt-grid").innerHTML = fichas.map(function (f) { return '<button class="mt-b" data-pair="' + f.id + '" data-lang="' + f.lang + '">' + esc(f.t) + '</button>'; }).join("");
+  el("mt-go").disabled = true; el("mt-go").textContent = MT.r < MT.rounds.length - 1 ? "Continuar" : "Ver resultado";
+  var primerSeleccionado = null, ocupado = false;
+  el("mt-grid").querySelectorAll(".mt-b").forEach(function (b) { b.onclick = function () {
+    if (ocupado || b.classList.contains("disabled")) return;
+    if (b.dataset.lang === "en") speak(b.textContent);
+    if (!primerSeleccionado) { primerSeleccionado = b; b.classList.add("selected"); return; }
+    if (b === primerSeleccionado) { b.classList.remove("selected"); primerSeleccionado = null; return; }
+    var segundoSeleccionado = b, a = primerSeleccionado; primerSeleccionado = null;
+    if (a.dataset.lang === segundoSeleccionado.dataset.lang) { a.classList.remove("selected"); segundoSeleccionado.classList.add("selected"); primerSeleccionado = segundoSeleccionado; return; }
+    ocupado = true;
+    if (a.dataset.pair === segundoSeleccionado.dataset.pair) {
+      playSfx(true); [a, segundoSeleccionado].forEach(function (x) { x.classList.remove("selected"); x.classList.add("correct"); });
+      setTimeout(function () { [a, segundoSeleccionado].forEach(function (x) { x.classList.remove("correct"); x.classList.add("disabled"); }); ocupado = false;
+        if (el("mt-grid").querySelectorAll(".mt-b:not(.disabled)").length === 0) { el("mt-go").disabled = false; playSfx(true); } }, 1000);
+    } else {
+      MT.errors++; playSfx(false); [a, segundoSeleccionado].forEach(function (x) { x.classList.remove("selected"); x.classList.add("incorrect"); });
+      setTimeout(function () { [a, segundoSeleccionado].forEach(function (x) { x.classList.remove("incorrect"); }); ocupado = false; }, 500);
+    }
+  }; });
+}
+el("mt-go").onclick = function () {
+  if (el("mt-go").disabled) return;
+  if (MT.r < MT.rounds.length - 1) { MT.r++; rMatch(); return; }
+  var s = load(), tot = MT.rounds.reduce(function (n, r) { return n + r.length; }, 0); s.gems += 10; s.correct += tot; markDay(s); save(s); gemFx(10); checkPrizes();
+  el("mt").classList.add("hidden");
+  el("result").innerHTML = '<div class="res"><div class="blk-done">🧩</div><h2>¡' + tot + ' pares encontrados!</h2><p>' + (MT.errors ? MT.errors + (MT.errors === 1 ? ' error' : ' errores') + ' en el camino. ' : '¡Sin errores! ') + '+10 💎</p><div class="stack"><button class="btn" id="mt-again">Jugar otra vez</button><button class="btn ghost" id="mt-out">Volver</button></div></div>';
+  el("result").classList.remove("hidden"); window.scrollTo(0, 0); history.replaceState({ v: "mtres" }, "");
+  el("mt-again").onclick = function () { var id = MT.L.id; history.back(); setTimeout(function () { startMatch(id); }, 60); };
+  el("mt-out").onclick = function () { history.back(); };
+};
+function exitMatch() { el("mt").classList.add("hidden"); el("result").classList.add("hidden"); el("app").classList.remove("hidden"); el("nav").classList.remove("hidden"); render(curTab); }
+el("mt-x").onclick = function () { history.back(); };
+window.addEventListener("popstate", function () { if (!el("mt").classList.contains("hidden") || (MT && !el("result").classList.contains("hidden") && el("result").querySelector("#mt-out"))) exitMatch(); });
 // ---------- bienvenida (solo la primera vez) ----------
 (function () {
   var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) { if (!userName()) askName(); return; } } catch (e) { return; }
