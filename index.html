@@ -1839,7 +1839,7 @@ window.addEventListener("popstate", function () { if (!el("spk").classList.conta
 var MT = null;
 function startMatch(lid) {
   var L = findLesson(lid) || DATA.lecciones[0], seen = {}, pool = lessonWords(L).filter(function (w) {
-    var es = w.es.split(/[,(;]/)[0].trim(); if (!es || es.toLowerCase() === w.en.toLowerCase() || es.length > 16 || w.en.length > 14 || seen[es.toLowerCase()] || seen[w.en.toLowerCase()]) return false; seen[es.toLowerCase()] = seen[w.en.toLowerCase()] = 1; return true; });
+    var es = w.es.split(/[,(;]/)[0].trim(); if (!es || norm(es) === norm(w.en) || es.length > 16 || w.en.length > 14 || seen[es.toLowerCase()] || seen[w.en.toLowerCase()]) return false; seen[es.toLowerCase()] = seen[w.en.toLowerCase()] = 1; return true; });
   pool = shuffle(pool).slice(0, 18);
   var rounds = []; for (var i = 0; i + 5 <= pool.length && rounds.length < 3; i += 6) rounds.push(pool.slice(i, i + 6).map(function (w) { return { es: w.es.split(/[,(;]/)[0].trim(), en: w.en }; }));
   MT = { L: L, rounds: rounds, r: 0, errors: 0 };
@@ -1849,8 +1849,11 @@ function startMatch(lid) {
 function rMatch() {
   stopAudio();
   var pares = MT.rounds[MT.r], fichas = [];
-  pares.forEach(function (p, id) { fichas.push({ t: p.en, id: id, lang: "en" }); fichas.push({ t: p.es, id: id, lang: "es" }); });
-  fichas = shuffle(fichas);
+  // columna izquierda = español, columna derecha = inglés; cada columna se mezcla por separado
+  var arrayIzquierda = shuffle(pares.map(function (p, id) { return { t: p.es, id: id, lang: "es" }; }));
+  var arrayDerecha = shuffle(pares.map(function (p, id) { return { t: p.en, id: id, lang: "en" }; }));
+  if (pares.length > 1 && arrayIzquierda.every(function (f, i) { return f.id === arrayDerecha[i].id; })) arrayDerecha.push(arrayDerecha.shift());   // nunca alineados fila a fila
+  for (var i = 0; i < arrayIzquierda.length; i++) { fichas.push(arrayIzquierda[i]); fichas.push(arrayDerecha[i]); }
   el("mt-bar").style.width = Math.round(MT.r * 100 / MT.rounds.length) + "%"; el("mt-n").textContent = (MT.r + 1) + "/" + MT.rounds.length;
   el("mt-grid").innerHTML = fichas.map(function (f) { return '<button class="mt-b" data-pair="' + f.id + '" data-lang="' + f.lang + '">' + esc(f.t) + '</button>'; }).join("");
   el("mt-go").disabled = true; el("mt-go").textContent = MT.r < MT.rounds.length - 1 ? "Continuar" : "Ver resultado";
