@@ -897,7 +897,7 @@
   /* ===== sin desplazamiento horizontal y barra inferior anclada ===== */
   *, *::before, *::after { box-sizing:border-box; }
   html, body { max-width:100%; overflow-x:clip; }
-  #app, .wrap { overflow-x:clip; }
+  .wrap { overflow-x:clip; } /* #app sin clip: recortaba la barra sticky de Retos (margin negativo) */
   .wrap { padding-bottom:100px !important; }
   .top { width:100%; justify-content:space-between; gap:8px !important; min-width:0; }
   .top-tit { flex:1 1 auto; min-width:0; }
