@@ -862,6 +862,37 @@
   body.dark-mode .les .st, body.dark-mode .mt-b { color:#E6EEF2; }
   body.dark-mode .lc.lock .lc-t b, body.dark-mode .lc.lock .lc-t > span { color:#7F8E96 !important; }
   body.dark-mode .lc.lock .lc-n { background:#26343B !important; color:#6C7B83 !important; text-shadow:none !important; box-shadow:none !important; }
+
+  /* ===== resultados festivos ===== */
+  .res-win { position:relative; padding-top:6px; overflow:hidden; }
+  .confetti { position:absolute; inset:0 0 auto 0; height:320px; pointer-events:none; overflow:hidden; }
+  .confetti i { position:absolute; top:-20px; width:9px; height:15px; border-radius:3px; opacity:.95; animation:confFall linear infinite; }
+  @keyframes confFall { 0% { transform:translateY(-20px) rotate(0); } 100% { transform:translateY(340px) rotate(540deg); opacity:.2; } }
+  .win-pet { position:relative; width:180px; margin:4px auto 20px; display:block; filter:drop-shadow(0 14px 14px rgba(0,0,0,.25)); animation:winPop .7s cubic-bezier(.2,.9,.3,1.4), winBob 2.4s 1s ease-in-out infinite; }
+  @keyframes winPop { from { transform:scale(.4) rotate(-12deg); opacity:0; } to { transform:none; opacity:1; } }
+  @keyframes winBob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+  .win-t { font-family:'Nunito',system-ui,sans-serif; font-size:30px !important; font-weight:900; color:var(--text-main) !important; text-shadow:0 3px 0 rgba(0,0,0,.18); margin-bottom:6px; line-height:1.15; }
+  .stat-card { display:flex; align-items:center; justify-content:space-between; gap:10px; background-color:var(--card-bg); border:2px solid var(--border-color); border-radius:16px; box-shadow:0px 4px 0px var(--shadow-color); padding:12px; margin:15px 0; text-align:left; }
+  .st-l { display:flex; align-items:center; gap:10px; color:var(--text-main); font-weight:800; font-size:15px; } .st-x { font-size:28px; }
+  .st-r { display:flex; align-items:center; gap:6px; background:var(--soft-bg); border-radius:12px; padding:8px 12px; color:var(--text-main); font-size:20px; }
+  .st-gem { font-size:30px; filter:drop-shadow(0 0 8px rgba(28,176,246,.6)); animation:gemShine 1.8s ease-in-out infinite; }
+  @keyframes gemShine { 0%,100% { transform:scale(1); } 50% { transform:scale(1.15) rotate(-6deg); } }
+  .btn-back3d { width:100%; height:54px; border-radius:16px; background-color:var(--soft-bg); border:2px solid var(--border-color); box-shadow:0px 4px 0px var(--shadow-color); color:var(--text-main); font-family:inherit; font-weight:900; font-size:17px; transition:transform .06s, box-shadow .06s; }
+  .btn-back3d:active { transform:translateY(3px); box-shadow:0 1px 0 var(--shadow-color); }
+  body.dark-mode .btn-back3d { background-color:#2C3E47; border-color:#37464F; box-shadow:0px 4px 0px #182328; color:#FFFFFF; }
+  body.dark-mode .stat-card { background-color:#202F36; border-color:#37464F; box-shadow:0px 4px 0px #182328; }
+  /* ===== Retos: cabecera con personaje, botones ¡IR! y completadas ===== */
+  .top-tit { display:flex; align-items:center; gap:10px; }
+  .top-pet { display:none; width:58px; height:58px; object-fit:contain; filter:drop-shadow(0 5px 5px rgba(0,0,0,.18)); animation:petPeek 2.6s ease-in-out infinite; }
+  body.on-retos .top-pet { display:block; }
+  @keyframes petPeek { 0%,100% { transform:rotate(-6deg) translateY(0); } 50% { transform:rotate(6deg) translateY(-3px); } }
+  .go-btn { flex-shrink:0; margin-left:auto; background-color:#1CB0F6; color:#FFFFFF; font-weight:900; font-size:14px; padding:8px 14px; border-radius:14px; box-shadow:0px 3px 0px #0D84C2; letter-spacing:.03em; }
+  .go-btn.g { background-color:#58CC02; box-shadow:0px 3px 0px #46A302; }
+  .card.les:active .go-btn { transform:translateY(2px); box-shadow:0 1px 0 #0D84C2; }
+  #practica .les.done { background:linear-gradient(135deg, #EAF9E1, #F6FDF2) !important; border:2px solid #9FDC7C !important; }
+  body.dark-mode #practica .les.done { background:linear-gradient(135deg, #1D3A22, #1A2E26) !important; border-color:#2F7A3F !important; }
+  #practica .les.done .les-n { background:radial-gradient(circle at 35% 30%, #8CF04A, #58CC02 60%, #3F9E00) !important; color:#fff !important; border-radius:50% !important; box-shadow:0 4px 0 #3A8F00, 0 0 12px rgba(88,204,2,.45) !important; }
+  #practica .les.done .les-n svg { width:24px; height:24px; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -896,7 +927,7 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   <!-- ===== APP ===== -->
   <div id="app">
     <div class="top">
-      <div><div class="eye" id="eye">Inglés básico</div><h1 class="ttl" id="ttl">Hello!</h1></div>
+      <div class="top-tit"><div><div class="eye" id="eye">Inglés básico</div><h1 class="ttl" id="ttl">Hello!</h1></div><img class="top-pet" id="top-pet" src="img/char/poodle_lentes.webp" alt=""></div>
       <div class="acts"><span class="chip-r" title="Días seguidos estudiando"><svg viewBox="0 0 24 24" fill="#FF9F1C"><path d="M12 2c2.5 3.5 6 5.3 6 10.3a6 6 0 0 1-12 0c0-3 1.8-4.8 3-6.5.6 2.3 1.8 3.5 3 3.5 0-2.3-1.2-4.7 0-7.3z"/></svg><span id="racha">0</span></span><button class="chip-g gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">0</span></button>
         <button class="ava" id="ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button></div>
     </div>
@@ -1074,6 +1105,7 @@ function tab(t, fromPop) {
   document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
   el("p-" + t).classList.add("on"); el("eye").textContent = HEAD[t][0]; el("ttl").textContent = HEAD[t][1];
   document.body.classList.toggle("home", t === "inicio");
+  document.body.classList.toggle("on-retos", t === "practica");
   document.body.classList.toggle("pf-lock", t === "logros" && pfTab !== "lg");
   if (t !== "vocab") vocDone = 0;
   render(t);
@@ -1447,11 +1479,11 @@ function rPractica() {
   var s = load(), h = '<p style="color:var(--muted);font-size:15px">Rondas de 10 preguntas con palabras y frases. Las que fallas vuelven a aparecer hasta que las aprendas.</p>';
   DATA.lecciones.forEach(function (L) {
     var st = s.les[L.id] || {};
-    h += '<button class="card les' + (st.best !== undefined ? ' done' : '') + '" data-id="' + L.id + '"><span class="les-n">' + (st.best !== undefined ? '✓' : L.n) + '</span><span><h3>' + esc(L.titulo) + '</h3><p>' + (st.best !== undefined ? 'Mejor ronda: ' + st.best + '%' : 'Sin rondas aún') + '</p></span><span class="st" style="color:var(--pri)">Jugar</span></button>';
+    h += '<button class="card les' + (st.best !== undefined ? ' done' : '') + '" data-id="' + L.id + '"><span class="les-n">' + (st.best !== undefined ? IC.check : L.n) + '</span><span><h3>' + esc(L.titulo) + '</h3><p>' + (st.best !== undefined ? 'Mejor ronda: ' + st.best + '%' : 'Sin rondas aún') + '</p></span><span class="go-btn' + (st.best !== undefined ? ' g' : '') + '">¡IR!</span></button>';
   });
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
-  h = '<button class="card les spk-entry" id="p-match"><span class="les-n" style="background:#E8F8DD;color:#58CC02">🧩</span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="st">Jugar</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="st">Jugar</span></button>' + h;
+  h = '<button class="card les spk-entry" id="p-match"><span class="les-n" style="background:#E8F8DD;color:#58CC02">🧩</span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' + h;
   el("practica").innerHTML = h;
   el("p-spk").onclick = function () { startSpeak(nextLesson(load()).id); };
   el("p-match").onclick = function () { startMatch(nextLesson(load()).id); };
@@ -1819,10 +1851,17 @@ function spkResolve(ok, heard, skipped) {
   el("sh-btn").textContent = SPK.i < SPK.items.length - 1 ? "Continuar" : "Ver resultado"; el("sh-btn").dataset.ctx = "spk";
   if (!ok) speakLater(w.en, 600);
 }
+function winHTML(title, errors, gems, again, out) {
+  var conf = ""; for (var i = 0; i < 26; i++) conf += '<i style="left:' + Math.round(Math.random() * 100) + '%;background:' + ["#FFC800", "#1CB0F6", "#58CC02", "#FF4B4B", "#CE82FF", "#FF9600"][i % 6] + ';animation-delay:' + (Math.random() * 1.2).toFixed(2) + 's;animation-duration:' + (2.2 + Math.random() * 1.6).toFixed(2) + 's"></i>';
+  return '<div class="res res-win"><div class="confetti" aria-hidden="true">' + conf + '</div><img class="win-pet" src="img/char/perro_festejo.webp" alt="">' +
+    '<h2 class="win-t">' + title + '</h2>' +
+    '<div class="stat-card"><div class="st-l"><span class="st-x">' + (errors ? '❌' : '✅') + '</span><span>' + (errors ? 'Errores en el camino: <b>' + errors + '</b>' : '¡Sin errores!') + '</span></div><div class="st-r"><span class="st-gem">💎</span><b>+' + gems + '</b></div></div>' +
+    '<div class="stack"><button class="btn" id="' + again + '">Jugar otra vez</button><button class="btn-back3d" id="' + out + '">Volver</button></div></div>';
+}
 function finishSpk() {
   var s = load(); s.gems += 10; save(s); gemFx(10); checkPrizes();
   el("spk").classList.add("hidden");
-  el("result").innerHTML = '<div class="res"><div class="blk-done">🎤</div><h2>' + SPK.ok + ' de ' + SPK.items.length + ' bien pronunciadas</h2><p>¡Sigue practicando en voz alta! +10 💎</p><div class="stack"><button class="btn" id="spk-again">Practicar otra vez</button><button class="btn ghost" id="spk-out">Volver</button></div></div>';
+  el("result").innerHTML = winHTML(SPK.ok + ' de ' + SPK.items.length + ' bien pronunciadas', SPK.items.length - SPK.ok, 10, "spk-again", "spk-out");
   el("result").classList.remove("hidden"); window.scrollTo(0, 0); history.replaceState({ v: "spkres" }, "");
   el("spk-again").onclick = function () { el("result").classList.add("hidden"); var id = SPK.L.id; history.back(); setTimeout(function () { startSpeak(id); }, 60); };
   el("spk-out").onclick = function () { history.back(); };
@@ -1881,7 +1920,7 @@ el("mt-go").onclick = function () {
   if (MT.r < MT.rounds.length - 1) { MT.r++; rMatch(); return; }
   var s = load(), tot = MT.rounds.reduce(function (n, r) { return n + r.length; }, 0); s.gems += 10; s.correct += tot; markDay(s); save(s); gemFx(10); checkPrizes();
   el("mt").classList.add("hidden");
-  el("result").innerHTML = '<div class="res"><div class="blk-done">🧩</div><h2>¡' + tot + ' pares encontrados!</h2><p>' + (MT.errors ? MT.errors + (MT.errors === 1 ? ' error' : ' errores') + ' en el camino. ' : '¡Sin errores! ') + '+10 💎</p><div class="stack"><button class="btn" id="mt-again">Jugar otra vez</button><button class="btn ghost" id="mt-out">Volver</button></div></div>';
+  el("result").innerHTML = winHTML('¡' + tot + ' pares encontrados!', MT.errors, 10, "mt-again", "mt-out");
   el("result").classList.remove("hidden"); window.scrollTo(0, 0); history.replaceState({ v: "mtres" }, "");
   el("mt-again").onclick = function () { var id = MT.L.id; history.back(); setTimeout(function () { startMatch(id); }, 60); };
   el("mt-out").onclick = function () { history.back(); };
