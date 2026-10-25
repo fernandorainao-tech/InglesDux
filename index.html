@@ -896,8 +896,8 @@
 
   /* ===== sin desplazamiento horizontal y barra inferior anclada ===== */
   *, *::before, *::after { box-sizing:border-box; }
-  html, body { max-width:100%; overflow-x:hidden; }
-  #app, .wrap { overflow-x:hidden; }
+  html, body { max-width:100%; overflow-x:clip; }
+  #app, .wrap { overflow-x:clip; }
   .wrap { padding-bottom:100px !important; }
   .top { width:100%; justify-content:space-between; gap:8px !important; min-width:0; }
   .top-tit { flex:1 1 auto; min-width:0; }
@@ -912,6 +912,22 @@
   /* ventanas por encima de la barra inferior */
   .sheet { z-index:1001 !important; } .shop { z-index:1002 !important; } .toast { z-index:1003 !important; } .ob { z-index:1004 !important; } .nm { z-index:1005 !important; }
   #exam:not(.hidden), .spk-scr:not(.hidden) { z-index:1000 !important; }
+
+  /* ===== Retos: barra de recursos + título ===== */
+  #app:has(#p-practica.on) .top { display:none; }
+  body:has(#app:not(.hidden) #p-practica.on) { background:var(--bg-main) !important; }
+  .rt-stats { width:calc(100% + 36px); margin:0 -18px; padding:12px 16px; padding-top:calc(12px + env(safe-area-inset-top,0px)); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--bg-main); z-index:50; }
+  .rt-ava { width:42px; height:42px; border-radius:50%; padding:0; overflow:hidden; border:2px solid #3A60BA; background:var(--card-bg); flex-shrink:0; }
+  .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
+  .rt-pill { display:flex; align-items:center; gap:6px; height:40px; padding:0 14px; border-radius:16px; font-family:inherit; font-size:15px; border:none; }
+  .rt-pill b { font-weight:900; }
+  .rt-fire { position:absolute; left:50%; transform:translateX(-50%); background:#FFD166; color:#7A4A00; box-shadow:0 4px 0 #E5B751; }
+  .rt-gem { background:#BDE0FE; color:#123A78; box-shadow:0 4px 0 #93C6F9; cursor:pointer; }
+  .rt-head { width:100%; padding:24px 0 16px; display:flex; align-items:center; justify-content:space-between; }
+  .rt-eye { font-size:13px; font-weight:900; letter-spacing:.12em; color:#4FA8FF; }
+  .rt-ttl { font-family:'Nunito',system-ui,sans-serif; font-size:40px; font-weight:900; color:var(--text-main); line-height:1.05; }
+  body.dark-mode .rt-ttl { color:#FFFFFF; }
+  .rt-pet { width:80px; height:80px; object-fit:contain; filter:drop-shadow(0 8px 8px rgba(0,0,0,.25)); animation:petPeek 2.6s ease-in-out infinite; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -1503,7 +1519,11 @@ function rPractica() {
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
   h = '<button class="card les spk-entry" id="p-match"><span class="les-n" style="background:#E8F8DD;color:#58CC02">🧩</span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="les-n" style="background:#DDF4FF;color:#1CB0F6">🎤</span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' + h;
-  el("practica").innerHTML = h;
+  var head = '<div class="rt-stats"><button class="rt-ava" id="rt-ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button>' +
+    '<span class="rt-pill rt-fire">🔥 <b>' + racha(allDays(s)) + '</b></span><button class="rt-pill rt-gem gem-chip" aria-label="Diamantes: abrir tienda">💎 <b class="gem-n">' + s.gems + '</b></button></div>' +
+    '<div class="rt-head"><div><div class="rt-eye">APRENDE JUGANDO</div><h1 class="rt-ttl">Retos</h1></div><img class="rt-pet" src="img/char/poodle_lentes.webp" alt=""></div>';
+  el("practica").innerHTML = head + h;
+  el("rt-ava").onclick = function () { tab("logros"); };
   el("p-spk").onclick = function () { startSpeak(nextLesson(load()).id); };
   el("p-match").onclick = function () { startMatch(nextLesson(load()).id); };
   el("practica").querySelectorAll("button.les[data-id]").forEach(function (b) { b.onclick = function () { startQuiz(b.dataset.id, "practica"); }; });
