@@ -723,6 +723,8 @@
   .hm-crown { position:absolute; top:-12px; right:-6px; z-index:10; width:34px; height:34px; border-radius:50%; background:#FFC800; box-shadow:0 3px 0 #E0A800; display:flex; align-items:center; justify-content:center; font-size:18px; transform:rotate(12deg); }
   .rw-c.fz::before { background:#CFEAFF !important; }
   .rw-c.fz { font-size:16px; }
+  .ex-in.shake { animation:inShake .35s ease; border-color:#E2504F !important; }
+  @keyframes inShake { 0%,100% { transform:none; } 25% { transform:translateX(-6px); } 50% { transform:translateX(5px); } 75% { transform:translateX(-3px); } }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -1190,7 +1192,7 @@ function rEx() {
   el("ex-bub").classList.toggle("es", dir !== "en");
   el("ex-bub").classList.toggle("lg", it.q.length > 12 && it.q.length <= 24); el("ex-bub").classList.toggle("xl", it.q.length > 24);
   el("ex-scene").classList.remove("pop"); void el("ex-scene").offsetWidth; el("ex-scene").classList.add("pop");
-  el("ex-in").value = ""; el("ex-in").placeholder = (it.kw || it.kwAny || it.kwAll) ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
+  el("ex-in").value = ""; el("ex-in").classList.remove("shake"); el("ex-in").placeholder = (it.kw || it.kwAny || it.kwAll) ? "Escribe tu respuesta…" : dir === "en" ? "Escribe en castellano…" : "Write in English…";
   el("ex-in").classList.remove("hidden"); el("ex-msg").textContent = ""; el("ex-msg").className = "ex-msg"; el("ex-opts").innerHTML = ""; el("ex-opts").classList.add("hidden");
   el("ex-check").classList.remove("hidden"); el("ex-check").disabled = true; el("sheet").classList.remove("show"); el("ex-foot").classList.remove("hidden-foot"); el("ex-scroll").scrollTop = 0;
   if (dir === "en") setTimeout(function () { speak(it.q); }, 250);
@@ -1218,9 +1220,15 @@ el("ex-check") && (el("ex-check").onclick = function () {
   if (j) { exResolve(true, u, false, j === 1); return; }
   EX.tries++; EX.lastU = u;
   playSfx(false);
-  if (EX.tries < 2) { el("ex-msg").textContent = "No es correcta. Inténtalo otra vez (te queda 1 intento)."; el("ex-msg").className = "ex-msg bad"; el("ex-in").select(); }
+  if (EX.tries < 2) { el("ex-msg").textContent = "No es correcta. Inténtalo otra vez (te queda 1 intento)."; el("ex-msg").className = "ex-msg bad"; keepAnswer(); }
   else exOptions();
 });
+function keepAnswer() {   // respuesta incorrecta: se conserva lo escrito y el cursor vuelve al final para corregir
+  var inp = el("ex-in"), v = inp.value; inp.value = v;
+  try { inp.focus({ preventScroll: true }); } catch (e) { inp.focus(); }
+  try { inp.setSelectionRange(v.length, v.length); } catch (e) {}
+  inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+}
 function exResolve(ok, u, viaOpts, typo) {
   EX.done = true; var x = EX.items[EX.i], s = load(), en = (x.it.dir || x.p.dir) === "en" ? x.it.q : x.it.ans;
   if (ok) { EX.ok++; s.correct++; } var k = wkey(en), r = s.w[k] || {}; if (ok) r.ok = (r.ok || 0) + 1; else r.bad = (r.bad || 0) + 1; s.w[k] = r; markDay(s); save(s);
