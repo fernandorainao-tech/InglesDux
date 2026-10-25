@@ -725,6 +725,27 @@
   .rw-c.fz { font-size:16px; }
   .ex-in.shake { animation:inShake .35s ease; border-color:#E2504F !important; }
   @keyframes inShake { 0%,100% { transform:none; } 25% { transform:translateX(-6px); } 50% { transform:translateX(5px); } 75% { transform:translateX(-3px); } }
+
+  /* ===== tarjeta de logros para compartir ===== */
+  #sc-full { position:fixed; left:-12000px; top:0; width:1080px; height:1080px; pointer-events:none; }
+  .sc-box { max-height:96dvh; overflow:auto; }
+  .sc-prev { width:100%; overflow:hidden; border-radius:18px; margin:6px 0 14px; position:relative; }
+  .sc-prev .sc-card { transform-origin:top left; }
+  .sc-card { position:relative; width:1080px; height:1080px; background:#2B5BCC; background-image:radial-gradient(circle at 85% 20%, rgba(255,255,255,.18), transparent 45%); color:#FFFFFF; font-family:'Nunito',system-ui,sans-serif; overflow:hidden; box-sizing:border-box; padding:80px 84px; text-align:left; }
+  .sc-date { font-size:34px; font-weight:800; opacity:.85; letter-spacing:.04em; text-transform:uppercase; }
+  .sc-title { font-size:68px; font-weight:900; line-height:1.05; margin-top:16px; max-width:600px; }
+  .sc-sub { font-size:30px; font-weight:800; opacity:.85; margin-top:12px; max-width:560px; }
+  .sc-pct { font-size:190px; font-weight:900; line-height:1; margin-top:10px; color:#FFD13B; text-shadow:0 10px 0 #C79A0A, 0 18px 30px rgba(0,0,0,.25); }
+  .sc-prec { font-size:44px; font-weight:900; margin-top:4px; }
+  .scard-av { position:absolute; right:30px; top:200px; width:460px; height:460px; filter:drop-shadow(-12px 24px 18px rgba(0,0,0,.35)); }
+  .sc-bot { position:absolute; left:84px; right:84px; bottom:126px; }
+  .sc-lw { font-size:30px; font-weight:900; letter-spacing:.12em; opacity:.9; margin-bottom:18px; }
+  .sc-pills { display:flex; flex-wrap:wrap; gap:18px; }
+  .sc-pill { display:inline-block; background:#FFFFFF; color:#1A1D4E; font-size:36px; font-weight:900; line-height:1.2; padding:10px 28px 8px; border-radius:40px; border-bottom:7px solid #B9C7F2; }
+  .sc-brand { position:absolute; left:0; right:0; bottom:0; height:96px; background:rgba(0,0,0,.18); display:flex; align-items:center; gap:18px; padding:0 84px; font-size:44px; }
+  .sc-brand img { width:62px; height:62px; object-fit:contain; } .sc-brand b { color:#FFD13B; font-weight:900; } .sc-brand span { font-weight:900; }
+  .sc-brand em { margin-left:auto; font-style:normal; font-size:34px; font-weight:800; opacity:.9; }
+  .share-btn { background:#FFC800 !important; color:#5A3B00 !important; box-shadow:0 5px 0 #E0A800 !important; }
   /* resultado */
   .res { text-align:center; padding:40px 0 20px; }
   .res .ring { width:150px; height:150px; margin:0 auto 18px; position:relative; }
@@ -748,6 +769,7 @@
   @keyframes dlPop { 0% { transform:scale(.6) rotate(-8deg); opacity:0; } 100% { transform:none; opacity:1; } }
   @media (prefers-reduced-motion: reduce) { #dl-splash * { transition:none !important; animation:none !important; } }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 </head>
 <body><div id="dl-splash" aria-hidden="true"><div class="row"><img src="icons/logo.png" alt=""><div class="spl-nm"><span class="gap"></span><span style="color:#3D5AFE;transition-delay:250ms">D</span><span style="color:#3D5AFE;transition-delay:360ms">u</span><span style="color:#3D5AFE;transition-delay:470ms">x</span><span style="color:#1B2142;transition-delay:580ms">l</span><span style="color:#1B2142;transition-delay:690ms">i</span><span style="color:#1B2142;transition-delay:800ms">n</span><span style="color:#1B2142;transition-delay:910ms">g</span><span style="color:#1B2142;transition-delay:1020ms">o</span></div></div></div><script>(function(){var sp=document.getElementById("dl-splash"),t0=Date.now(),ended=false;
 requestAnimationFrame(function(){setTimeout(function(){sp.classList.add("go");},500);});
@@ -820,6 +842,10 @@ if(document.readyState==="complete")done();else window.addEventListener("load",d
   <div class="shop-grip"></div><h3 id="nmed-t">Cambiar nombre</h3>
   <input id="nmed-in" class="nm-in" type="text" maxlength="24" placeholder="Tu nombre" enterkeyhint="done">
   <button class="nm-save" id="nmed-save">Guardar</button><button class="shop-close" id="nmed-x">Cancelar</button></div></div>
+<div class="shop hidden" id="share-m" role="dialog" aria-modal="true" aria-label="Compartir logro"><div class="shop-box sc-box"><div class="shop-grip"></div>
+  <h3>¡Comparte tu logro!</h3><div class="sc-prev" id="sc-prev"></div>
+  <button class="nm-save" id="sc-go">📤 Compartir</button><button class="shop-close" id="sc-x">Cerrar</button></div></div>
+<div id="sc-full" aria-hidden="true"></div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
 <div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
 <nav class="nav" id="nav" aria-label="Navegación principal">
@@ -1243,8 +1269,9 @@ function exResolve(ok, u, viaOpts, typo) {
 function finishBlock() {
   if (EX.practice) { var sx = load(), stx = sx.les[EX.L.id] || {}, pc = Math.round(EX.ok * 100 / EX.items.length); stx.ex = stx.ex || {}; stx.ex[EX.practice] = pc; sx.les[EX.L.id] = stx; sx.gems += 10; save(sx); gemFx(10);
     el("exam").classList.add("hidden");
-    el("result").innerHTML = '<div class="res"><div class="blk-done">' + IC.check + '</div><h2>¡Ejercicio terminado!</h2><p><b>' + EX.ok + ' de ' + EX.items.length + '</b> correctas (' + pc + '%). +10 💎</p><div class="stack"><button class="btn" id="b-hub">Volver a la lección</button></div></div><h3 class="bh">Comprobación</h3>' + compPart(EX.p, EX.res);
+    el("result").innerHTML = '<div class="res"><div class="blk-done">' + IC.check + '</div><h2>¡Ejercicio terminado!</h2><p><b>' + EX.ok + ' de ' + EX.items.length + '</b> correctas (' + pc + '%). +10 💎</p><div class="stack"><button class="btn share-btn" id="b-share">📸 Compartir mi logro</button><button class="btn ghost" id="b-hub">Volver a la lección</button></div></div><h3 class="bh">Comprobación</h3>' + compPart(EX.p, EX.res);
     el("result").classList.remove("hidden"); window.scrollTo(0, 0); history.replaceState({ v: "blockres", id: EX.L.id }, "");
+    var _L = EX.L, _pc = pc; el("b-share").onclick = function () { openShareCard(_L, _pc); };
     el("b-hub").onclick = function () { history.back(); }; return; }
   var L = EX.L, att = getAtt(L); att[EX.k] = { ok: EX.ok, res: EX.res }; setAtt(L, att); (function () { var s9 = load(); s9.gems += 10; save(s9); gemFx(10); })();
   var parts = L.examen.partes, idx = parts.indexOf(EX.p), nx = parts[idx + 1];
@@ -1272,11 +1299,12 @@ function finishExam() {
   var C = 2 * Math.PI * 64, d = Math.round(C * pct / 100), pass = pct >= 80;
   el("result").innerHTML = '<div class="res"><div class="ring"><svg viewBox="0 0 150 150" width="150" height="150"><circle cx="75" cy="75" r="64" fill="none" stroke="#DDE3FF" stroke-width="14"/><circle cx="75" cy="75" r="64" fill="none" stroke="' + (pass ? '#1FAE6B' : '#3D5AFE') + '" stroke-width="14" stroke-linecap="round" stroke-dasharray="' + d + ' ' + C + '" transform="rotate(-90 75 75)"/></svg><b>' + pct + '%</b></div>' +
     '<h2>' + ok + ' de ' + tot + ' correctas</h2><p>' + (pass ? (wasDone ? '¡Examen aprobado otra vez!' : '¡Lección aprobada! Ya puedes ver los ejercicios de perfeccionamiento y avanzar.') : esc(L.examen.cierre)) + '</p>' +
-    '<div class="stack"><button class="btn" id="r-back">Volver a la lección</button></div></div>' +
+    '<div class="stack"><button class="btn share-btn" id="r-share">📸 Compartir mi logro</button><button class="btn ghost" id="r-back">Volver a la lección</button></div></div>' +
     '<h3 class="bh">Comprobación del examen</h3>' + compHTML(L, res);
   el("result").classList.remove("hidden"); window.scrollTo(0, 0);
   history.replaceState({ v: "finalres", id: L.id }, "");
   el("r-back").onclick = function () { history.back(); };
+  el("r-share").onclick = function () { openShareCard(L, pct); };
   checkPrizes();
 }
 // ---------- práctica (pestaña) ----------
@@ -1562,6 +1590,41 @@ function openNameEdit() {
   m.classList.remove("hidden"); setTimeout(function () { inp.focus(); inp.select(); }, 250);
 }
 el("nmed").addEventListener("click", function (e) { if (e.target.id === "nmed") el("nmed").classList.add("hidden"); });
+
+// ---------- tarjeta de logros para compartir (html2canvas + Web Share API) ----------
+function shareCardHTML(L, pct) {
+  var ws = lessonWords(L).filter(function (w) { return w.en.length <= 9 && w.en.indexOf(" ") === -1; });
+  for (var i = ws.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = ws[i]; ws[i] = ws[j]; ws[j] = t; }
+  var pills = ws.slice(0, 5).map(function (w) { return '<span class="sc-pill">' + esc(w.en) + '</span>'; }).join("");
+  return '<div class="sc-card"><div class="sc-date">' + fFecha(hoyStr()) + '</div><div class="sc-title">¡Estoy dominando<br>mis lecciones!</div>' +
+    '<div class="sc-sub">Lección ' + L.n + ' · ' + esc(L.titulo) + '</div><div class="sc-pct">' + pct + '%</div><div class="sc-prec">de precisión</div>' +
+    '<img class="scard-av" src="img/char/' + LESSON_CHAR[L.n - 1] + '.webp" width="460" height="460" alt="">' +
+    '<div class="sc-bot"><div class="sc-lw">PALABRAS QUE APRENDÍ</div><div class="sc-pills">' + pills + '</div></div>' +
+    '<div class="sc-brand"><img src="icons/logo.png" alt=""><span><b>Ingles</b>dux</span><em>' + esc(userName() || '') + '</em></div></div>';
+}
+function openShareCard(L, pct) {
+  var m = el("share-m"), html = shareCardHTML(L, pct);
+  el("sc-prev").innerHTML = html; el("sc-full").innerHTML = html;
+  m.classList.remove("hidden");
+  var box = el("sc-prev"), sc = Math.min(1, (box.clientWidth || 320) / 1080); box.style.height = Math.round(1080 * sc) + "px"; box.firstChild.style.transform = "scale(" + sc + ")";
+  el("sc-go").disabled = false; el("sc-go").textContent = "📤 Compartir";
+}
+function shareCardNow() {
+  var btn = el("sc-go"); if (typeof html2canvas !== "function") { alert("Necesitas conexión a internet para crear la imagen."); return; }
+  btn.disabled = true; btn.textContent = "Creando imagen…";
+  html2canvas(el("sc-full").firstChild, { scale: 1, width: 1080, height: 1080, backgroundColor: null, useCORS: true }).then(function (canvas) {
+    var url = canvas.toDataURL("image/png");
+    canvas.toBlob(function (blob) {
+      var file = new File([blob], "inglesdux-logro.png", { type: "image/png" }), done = function () { btn.disabled = false; btn.textContent = "📤 Compartir"; };
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        navigator.share({ files: [file], title: "Inglesdux", text: "¡Estoy aprendiendo inglés con Inglesdux! 🇬🇧" }).then(done).catch(function () { done(); });
+      } else { var a = document.createElement("a"); a.href = url; a.download = "inglesdux-logro.png"; document.body.appendChild(a); a.click(); a.remove(); done(); }
+    }, "image/png");
+  }).catch(function () { btn.disabled = false; btn.textContent = "📤 Compartir"; alert("No se pudo crear la imagen. Inténtalo de nuevo."); });
+}
+el("sc-go").onclick = shareCardNow;
+el("sc-x").onclick = function () { el("share-m").classList.add("hidden"); };
+el("share-m").addEventListener("click", function (e) { if (e.target.id === "share-m") el("share-m").classList.add("hidden"); });
 // ---------- bienvenida (solo la primera vez) ----------
 (function () {
   var KEYOB = "duxlingo_ob_v1"; try { if (localStorage.getItem(KEYOB)) { if (!userName()) askName(); return; } } catch (e) { return; }
