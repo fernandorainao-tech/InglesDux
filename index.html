@@ -951,19 +951,19 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-g:active { transform:translateY(2px); box-shadow:0px 2px 0px #1A3E92 !important; }
   @media (max-width:375px) { #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .ava { display:none; } }  /* pantallas angostas: el perfil sigue en la barra inferior */
   #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .ava { width:42px; height:42px; flex-shrink:0; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); }
-  /* ===== Video de apoyo (Drive, <video> HTML5) ===== */
+  /* ===== Video de apoyo (Drive, visor /preview) ===== */
   .dv { margin:4px 0; padding:10px; background:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 6px 0px var(--shadow-color); }
   body.dark-mode .dv { border-color:#37464F; box-shadow:0px 6px 0px #0A1114; }
-  /* Contenedor estricto: nada del reproductor puede cambiar su tamaño */
-  .video-container { position:relative; width:100%; aspect-ratio:16 / 9; max-height:220px; background-color:#000000; border-radius:16px; overflow:hidden; box-shadow:0px 4px 0px #0A1114;
-    contain:layout paint; isolation:isolate; -webkit-mask-image:-webkit-radial-gradient(white, black); }   /* iOS: sin esto el video ignora el border-radius al reproducir */
+  .video-container { position:relative; width:100%; aspect-ratio:16 / 9; max-height:210px; background-color:#000000; border-radius:16px; overflow:hidden; box-shadow:0px 4px 0px #0A1114; contain:layout paint; isolation:isolate; }
   @supports not (aspect-ratio: 1 / 1) { .video-container { height:0; padding-top:56.25%; } }   /* WebView Android antiguos */
   .dv.vert .video-container { max-height:70vh; max-height:70dvh; }
-  .video-container video { position:absolute; inset:0; width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block; background:#000; accent-color:#1CB0F6; }
-  .dv-err { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:16px; text-align:center; background:rgba(10,17,20,.94); color:#FFFFFF; }
-  .dv-err b { font-size:15px; font-weight:900; } .dv-err span { font-size:12.5px; color:#C2CCD1; max-width:260px; }
-  .dv-retry { margin-top:6px; padding:8px 16px; border-radius:14px; background:#1CB0F6; border:2px solid #0093D6; box-shadow:0px 4px 0px #0076AB; color:#FFFFFF; font-family:inherit; font-weight:900; font-size:14px; cursor:pointer; }
-  .dv-retry:active { transform:translateY(2px); box-shadow:0px 2px 0px #0076AB; }
+  .video-container iframe { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; border:none; display:block; }
+  .dv-shield { position:absolute; top:0; right:0; width:60px; height:60px; z-index:2; }
+  .dv-load { position:absolute; inset:0; width:100%; height:100%; padding:0; border:0; background:#000; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .dv-thumb { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.75; }
+  .dv-play { position:relative; z-index:1; width:68px; height:68px; border-radius:50%; background:#1CB0F6; border:3px solid #0093D6; box-shadow:0px 6px 0px #0076AB; display:flex; align-items:center; justify-content:center; padding-left:4px; transition:transform .06s, box-shadow .06s; }
+  .dv-play svg { width:32px; height:32px; fill:#FFFFFF; }
+  .dv-load:active .dv-play { transform:translateY(4px); box-shadow:0px 2px 0px #0076AB; }
   .dv figcaption { margin:10px 4px 2px; font-weight:800; font-size:14.5px; color:var(--text-main); }
   /* ===== Sección Videos ===== */
   .vd-entry, .vd-head { width:100%; display:flex; align-items:center; gap:12px; text-align:left; font-family:inherit; color:var(--text-main); cursor:pointer; }
@@ -1329,39 +1329,30 @@ function vdSeen(f) {
   if (sub) { var tot = blk.querySelectorAll(".vd-item").length, ok = [].filter.call(blk.querySelectorAll(".vd-item"), function (x) { return s.vid[x.dataset.n]; }).length; sub.textContent = sub.textContent.replace(/\d+\/\d+/, ok + "/" + tot); }
 }
 
-// ---------- video de apoyo desde Google Drive (HTML5 <video> con enlace de descarga directa) ----------
+// ---------- video de apoyo desde Google Drive (visor incrustado /preview) ----------
 // Bloque de datos: { t:"vid", id:"<ID o enlace de Drive>", cap:"Título opcional", ratio:"16/9" | "9/16" }
-var DRIVE_DL = "https://drive.google.com/uc?export=download&id=";
+// Se muestra una portada liviana y el iframe de Drive se crea solo al tocar ▶, con un único visor activo a la vez:
+// tener 10 visores de Drive cargados juntos era lo que dejaba la pantalla cargando o congelada.
 function driveId(x) { var m = String(x || "").match(/[-\w]{25,}/); return m ? m[0] : ""; }   // acepta ID suelto o cualquier enlace de Drive
+function dvCover(id) {
+  return '<button class="dv-load" aria-label="Reproducir video"><img class="dv-thumb" src="https://drive.google.com/thumbnail?id=' + id + '&sz=w640" alt="" loading="lazy" onerror="this.remove()">' +
+    '<span class="dv-play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span></button>';
+}
 function videoHTML(b) {
   var id = driveId(b.id); if (!id) return "";
   var ratio = /^\d+\/\d+$/.test(b.ratio || "") ? b.ratio : "16/9";
   return '<figure class="dv' + (ratio === "9/16" ? ' vert' : '') + '" data-id="' + id + '">' +
-    '<div class="dv-frame video-container" style="aspect-ratio:' + ratio.replace("/", " / ") + '">' +
-      '<video class="dv-v" controls playsinline preload="metadata" controlslist="nodownload">' +
-        '<source src="' + DRIVE_DL + id + '" type="video/mp4">Tu navegador no soporta la reproducción de video.</video>' +
-    '</div><figcaption>🎬 ' + esc(b.cap || "Video de apoyo") + '</figcaption></figure>';
+    '<div class="video-container" style="aspect-ratio:' + ratio.replace("/", " / ") + '">' + dvCover(id) + '</div>' +
+    '<figcaption>🎬 ' + esc(b.cap || "Video de apoyo") + '</figcaption></figure>';
 }
-// Si Drive no entrega el MP4 (archivo >100 MB, límite de descargas, permisos), se muestra un aviso en la tarjeta.
-function dvError(f) {
-  if (!f || f.classList.contains("err")) return; f.classList.add("err");
-  var fr = f.querySelector(".dv-frame");
-  fr.insertAdjacentHTML("beforeend", '<div class="dv-err"><b>No se pudo cargar el video</b><span>Drive no lo entregó directo. Revisa tu conexión o inténtalo más tarde.</span><button class="dv-retry">Reintentar</button></div>');
+function dvStart(f) {
+  document.querySelectorAll(".dv.live").forEach(function (o) { if (o !== f) { o.classList.remove("live"); o.querySelector(".video-container").innerHTML = dvCover(o.dataset.id); } });   // descarga el visor anterior
+  f.classList.add("live"); stopAudio(); vdSeen(f);
+  f.querySelector(".video-container").innerHTML =
+    '<iframe src="https://drive.google.com/file/d/' + f.dataset.id + '/preview" width="100%" height="100%" style="border: none;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Video de apoyo"></iframe>' +
+    '<div class="dv-shield" aria-hidden="true"></div>';   // tapa el botón "abrir en otra ventana" de Drive, que sacaba de la app
 }
-// "error" y "play" no burbujean: se escuchan en fase de captura. El error del MP4 llega al <source>.
-document.addEventListener("error", function (e) {
-  var t = e.target; if (!t || !t.closest) return;
-  if ((t.tagName === "SOURCE" || t.tagName === "VIDEO") && t.closest(".dv")) dvError(t.closest(".dv"));
-}, true);
-document.addEventListener("play", function (e) {
-  var t = e.target; if (!t || !t.classList || !t.classList.contains("dv-v")) return;
-  stopAudio(); vdSeen(t.closest(".dv"));
-  document.querySelectorAll(".dv-v").forEach(function (v) { if (v !== t) v.pause(); });   // un solo video a la vez
-}, true);
-document.addEventListener("click", function (e) {
-  var r = e.target.closest && e.target.closest(".dv-retry"); if (!r) return;
-  var f = r.closest(".dv"), v = f.querySelector("video"); f.classList.remove("err"); r.parentNode.remove(); v.load();
-});
+document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".dv-load"); if (b) dvStart(b.closest(".dv")); });
 function wordRow(w) { var ph = w.en.split(" ").length > 2;
   return '<div class="wr' + (ph ? ' fr' : '') + '">' + (w.n ? '<span class="wn">' + w.n + '</span>' : '') + '<div class="t"><b>' + esc(w.en) + '</b>' + (w.pr ? ' <span class="p">(' + esc(w.pr) + ')</span>' : '') + '<span class="e">' + esc(w.es) + '</span></div><button class="spk sm" data-say="' + esc(w.en) + '" aria-label="Escuchar ' + esc(w.en) + '">' + IC.spk + '</button></div>'; }
 function rLesson() {
