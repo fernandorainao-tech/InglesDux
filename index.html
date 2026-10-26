@@ -935,22 +935,22 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   /* Avatares 3D de las tarjetas rápidas del Inicio */
   .avatar-icon-3d { width:65px; height:65px; object-fit:contain; flex-shrink:0; margin-bottom:2px; filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); pointer-events:none; }
   /* ===== Cabecera de Lecciones: tarjeta flotante 3D (.wrap aporta 18px: margin -2px = 16px del borde) ===== */
-  #app:has(#p-lecciones.on) .top, body.dark-mode #app:has(#p-lecciones.on) .top { margin:calc(12px + env(safe-area-inset-top,0px)) -2px 14px; padding:20px 14px 20px 18px; display:flex; align-items:center; justify-content:space-between; gap:10px !important; background:var(--card-bg); border:2px solid var(--border-color); border-radius:24px; box-shadow:0px 6px 0px var(--shadow-color); }
-  body.dark-mode #app:has(#p-lecciones.on) .top { border-color:#2B3D46; box-shadow:0px 6px 0px #0A1114; }
-  #app:has(#p-lecciones.on) .top .eye { margin-bottom:4px; color:#1CB0F6; font-weight:900; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top, body.dark-mode #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top { margin:calc(12px + env(safe-area-inset-top,0px)) -2px 14px; padding:20px 14px 20px 18px; display:flex; align-items:center; justify-content:space-between; gap:10px !important; background:var(--card-bg); border:2px solid var(--border-color); border-radius:24px; box-shadow:0px 6px 0px var(--shadow-color); }
+  body.dark-mode #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top { border-color:#2B3D46; box-shadow:0px 6px 0px #0A1114; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .eye { margin-bottom:4px; color:#1CB0F6; font-weight:900; }
   /* Título completo: sin elipsis; si no cabe, baja de tamaño en vez de cortarse */
-  #app:has(#p-lecciones.on) .top .ttl { white-space:normal; overflow:visible; text-overflow:clip; font-size:clamp(22px, 6.4vw, 26px); font-weight:900; line-height:1.1; }
-  #app:has(#p-lecciones.on) .top-tit { flex:0 0 auto; }   /* el título nunca se encoge */
-  #app:has(#p-lecciones.on) .top .acts { flex:0 1 auto; min-width:0; justify-content:flex-end; }
-  #app:has(#p-lecciones.on) .top .acts { gap:6px; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .ttl { white-space:normal; overflow:visible; text-overflow:clip; font-size:clamp(22px, 6.4vw, 26px); font-weight:900; line-height:1.1; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top-tit { flex:0 0 auto; }   /* el título nunca se encoge */
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .acts { flex:0 1 auto; min-width:0; justify-content:flex-end; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .acts { gap:6px; }
   /* Pastillas chunky iguales a las de Retos */
-  #app:has(#p-lecciones.on) .chip-r, #app:has(#p-lecciones.on) .chip-g { height:38px !important; padding:0 9px !important; gap:4px; border-radius:14px !important; font-size:15px !important; font-weight:900; color:#FFFFFF !important; }
-  #app:has(#p-lecciones.on) .chip-r { background:#FFC800 !important; border:2px solid #E2A100; box-shadow:0px 4px 0px #C88F00 !important; }
-  #app:has(#p-lecciones.on) .chip-r svg { width:18px; height:18px; fill:#FF6B00; }
-  #app:has(#p-lecciones.on) .chip-g { background:#3A73E2 !important; border:2px solid #204EB2; box-shadow:0px 4px 0px #1A3E92 !important; }
-  #app:has(#p-lecciones.on) .chip-g:active { transform:translateY(2px); box-shadow:0px 2px 0px #1A3E92 !important; }
-  @media (max-width:375px) { #app:has(#p-lecciones.on) .top .ava { display:none; } }  /* pantallas angostas: el perfil sigue en la barra inferior */
-  #app:has(#p-lecciones.on) .top .ava { width:42px; height:42px; flex-shrink:0; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-r, #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-g { height:38px !important; padding:0 9px !important; gap:4px; border-radius:14px !important; font-size:15px !important; font-weight:900; color:#FFFFFF !important; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-r { background:#FFC800 !important; border:2px solid #E2A100; box-shadow:0px 4px 0px #C88F00 !important; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-r svg { width:18px; height:18px; fill:#FF6B00; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-g { background:#3A73E2 !important; border:2px solid #204EB2; box-shadow:0px 4px 0px #1A3E92 !important; }
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .chip-g:active { transform:translateY(2px); box-shadow:0px 2px 0px #1A3E92 !important; }
+  @media (max-width:375px) { #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .ava { display:none; } }  /* pantallas angostas: el perfil sigue en la barra inferior */
+  #app:is(:has(#p-lecciones.on),:has(#p-videos.on)) .top .ava { width:42px; height:42px; flex-shrink:0; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); }
   /* ===== Video de apoyo (Drive) ===== */
   .dv { margin:4px 0; padding:10px; background:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 6px 0px var(--shadow-color); }
   body.dark-mode .dv { border-color:#37464F; box-shadow:0px 6px 0px #0A1114; }
@@ -962,6 +962,23 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .dv-play:active { transform:translateY(4px); box-shadow:0px 2px 0px #0076AB; }
   .dv.on .dv-play { display:none; }
   .dv figcaption { margin:10px 4px 2px; font-weight:800; font-size:14.5px; color:var(--text-main); }
+  /* ===== Sección Videos ===== */
+  .vd-entry, .vd-head { width:100%; display:flex; align-items:center; gap:12px; text-align:left; font-family:inherit; color:var(--text-main); cursor:pointer; }
+  .vd-entry { padding:14px 16px; background:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 6px 0px var(--shadow-color); transition:transform .06s, box-shadow .06s; }
+  .vd-entry:active { transform:translateY(4px); box-shadow:0px 2px 0px var(--shadow-color); }
+  .vd-ic { width:52px; height:52px; flex-shrink:0; border-radius:16px; background:#1CB0F6; box-shadow:0px 4px 0px #0076AB; display:flex; align-items:center; justify-content:center; font-size:28px; }
+  .vd-tx { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .vd-tx b { font-size:17px; font-weight:900; } .vd-tx span { font-size:13.5px; color:var(--text-secondary); font-weight:700; }
+  .vd-blk { background:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 6px 0px var(--shadow-color); overflow:hidden; }
+  .vd-head { padding:14px 16px; background:none; border:0; }
+  .vd-head:active { opacity:.85; }
+  .vd-n { width:44px; height:44px; flex-shrink:0; border-radius:14px; background:#3A73E2; border:2px solid #204EB2; box-shadow:0px 4px 0px #1A3E92; color:#FFFFFF; font-weight:900; font-size:19px; display:flex; align-items:center; justify-content:center; }
+  .vd-ch { font-size:13px; color:var(--text-secondary); }
+  .vd-blk.done { border-color:#58CC02; } .vd-blk.done .vd-n { background:#58CC02; border-color:#4DB302; box-shadow:0px 4px 0px #46A302; }
+  .vd-list { display:flex; flex-direction:column; gap:14px; padding:4px 12px 16px; }
+  .vd-list .dv { box-shadow:none; border-width:1.5px; margin:0; }
+  body.dark-mode .vd-entry, body.dark-mode .vd-blk { border-color:#37464F; box-shadow:0px 6px 0px #0A1114; }
+  body.dark-mode .vd-blk.done { border-color:#2F7A3F; }
   body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -1026,6 +1043,7 @@ setTimeout(out,6000);})();</script>
     <div class="panel" id="p-lecciones"><div class="stack" id="lecciones"></div></div>
     <div class="panel" id="p-practica"><div class="stack" id="practica"></div></div>
     <div class="panel" id="p-vocab"><div class="stack" id="vocab"></div></div>
+    <div class="panel" id="p-videos"><div class="stack" id="videos"></div></div>
     <div class="panel" id="p-logros"><div class="stack" id="logros"></div></div>
   </div>
   <!-- ===== LECCIÓN ===== -->
@@ -1188,7 +1206,7 @@ function allWords() { var out = []; DATA.lecciones.forEach(function (L) { out = 
 function findLesson(id) { return DATA.lecciones.filter(function (L) { return L.id === id; })[0]; }
 var TITULOS = ["Primeros pasos", "Los 16 verbos y el presente", "The, would, may y números", "Pasado, do/make y to have", "To be y plurales", "Imperativo, la hora y this/that", "Pronombres y posesión", "Comparativos y negación", "Preguntas en inglés", "Más verbos y preposiciones", "Pronunciación y vocabulario"];
 // ---------- cabecera / pestañas ----------
-var HEAD = { inicio: ["Inglés básico", "Hello!"], lecciones: ["11 lecciones", "Lecciones"], practica: ["Aprende jugando", "Retos"], vocab: ["Tus tarjetas", "Vocabulario"], logros: ["Tu perfil", "Perfil"] };
+var HEAD = { inicio: ["Inglés básico", "Hello!"], lecciones: ["11 lecciones", "Lecciones"], practica: ["Aprende jugando", "Retos"], vocab: ["Tus tarjetas", "Vocabulario"], videos: ["Videos de apoyo", "Videos"], logros: ["Tu perfil", "Perfil"] };
 var curTab = "inicio";
 function tab(t, fromPop) {
   curTab = t;
@@ -1205,7 +1223,7 @@ function tab(t, fromPop) {
 }
 document.querySelectorAll("#nav button").forEach(function (b) { b.onclick = function () { tab(b.dataset.tab); }; });
 el("ava").onclick = function () { tab("logros"); };
-function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, logros: rLogros })[t](); el("racha").textContent = racha(allDays(load())); updGems(); }
+function render(t) { ({ inicio: rInicio, lecciones: rLecciones, practica: rPractica, vocab: rVocab, videos: rVideos, logros: rLogros })[t](); el("racha").textContent = racha(allDays(load())); updGems(); }
 // ---------- inicio ----------
 function nextLesson(s) { for (var i = 0; i < DATA.lecciones.length; i++) { var L = DATA.lecciones[i]; if (!(s.les[L.id] && s.les[L.id].done)) return L; } return DATA.lecciones[DATA.lecciones.length - 1]; }
 function fitHi() {   // agranda el saludo todo lo posible sin salir de su fila
@@ -1268,7 +1286,10 @@ function rLecciones() {
       h += '<div class="lc lock"><span class="lc-n">' + (i + 1) + '</span><span class="lc-t"><b>' + (L ? esc(L.titulo) : 'Lección ' + (i + 1)) + '</b><span>' + (L ? 'Aprueba el examen anterior para desbloquearla' : TITULOS[i] + ' · Próximamente') + '</span></span><span class="lc-lock">' + LOCK_SVG + '</span></div>';
     }
   }
+  var vs = (load().vid || {}), vn = VIDEOS.filter(function (v) { return vs[v[0]]; }).length;
+  h = '<button class="vd-entry" id="vd-open"><span class="vd-ic">🎬</span><span class="vd-tx"><b>Videos de apoyo</b><span>' + VIDEOS.length + ' videos en ' + Math.ceil(78 / 10) + ' bloques · ' + vn + ' vistos</span></span><span class="go-btn' + (vn === VIDEOS.length ? ' g' : '') + '">VER</span></button>' + h;
   el("lecciones").innerHTML = h;
+  el("vd-open").onclick = function () { tab("videos"); };
   el("lecciones").querySelectorAll("button.lc").forEach(function (b) { b.onclick = function () { openLesson(b.dataset.id); }; });
 }
 var curLesson = null, curSeg = "leccion";
@@ -1279,6 +1300,35 @@ function openLesson(id, seg, fromPop) {
   if (!fromPop) history.pushState({ v: "les", id: id }, "");
 }
 function closeLesson() { el("leccion").classList.add("hidden"); el("app").classList.remove("hidden"); el("nav").classList.remove("hidden"); render(curTab); }
+// ---------- sección Videos: [número del archivo AI_1_NNN, ID de Drive] (falta el 075 en Drive) ----------
+var VIDEOS = [[1,"1pu02RSaiotgAz3OEgNOLAYzeO4amor0j"],[2,"1D7mCpXht7l0Lpg3u5uAfGsP4AGXLRBBt"],[3,"1IotDdMFzFPOzefTvCPfUk9Ef6olzmHZf"],[4,"1ju0sryVgEYKyZLSgb-RXuBaweV_fLDR3"],[5,"1-xwZDDCfZlV6400K6TXzoMCBPR6zJd_F"],[6,"1jvJlDaUW0e0ZUhJalNvrjfpaW9NYHnvz"],[7,"16KXjC3kw7lSI17EaOXC47DvtFhtSU60a"],[8,"12WDjmBE3dubFIyOTgWGSHFbso0NJIZ_2"],[9,"1QudI2B8lVA2os6Dz6Zl622AF_Hn_GdNn"],[10,"1JRfUDpDpbJvtJzVV0A6TOqKgS5-PElAP"],[11,"1h6a5T5HugQlPohgWkA-Q6b2u3GEc77DR"],[12,"1QPUzdbPkh1xVR0eF4xWoONYnoB4lktS0"],[13,"1lNKYvNSpaDJzjwfHXI6ZPfPDsH1ZHRet"],[14,"1p2mw3VNhgUv-VB9xzOAnVW8IYXMXs9wy"],[15,"1TYrZZdDKu8c3r51Z7VqDWatPoAiYnQo6"],[16,"15C6QLnfJRbo5EDEZDDvGUncTIJcGYLRD"],[17,"1bV5S-9nLJs2a5m4XEn06iQ4W5HteagNA"],[18,"19p5i6sev1wJBr260j40NQ_ejy9GnXWtz"],[19,"1Eg5ckLVYdEjOjJpGVIcGf-OdkG9W_pps"],[20,"1PaFsZrH7GJXm1L7U3m0HS4FSPIP1TErr"],[21,"1PQu8Lp561lWpUB6D8gukwocvmmg-ytps"],[22,"1OXUPYNMPTrMga67hwntHLbMKvS1DGXYN"],[23,"1EON6W7AAxvOe01iZztVVSH9IjvGYg4LP"],[24,"11nuDfO43z9rx1cyE1_H7gBw5xwfbHQYH"],[25,"1GhSd6GR99OYoOEFwuoMsG3pnFeEd6fmb"],[26,"1ALwGM1lrE_bTPJ9Q3QdB6c7-PR0uM60O"],[27,"19KDftnAMi7SgtPw4Szgqh61i44ommCEy"],[28,"1C-3pzCuWZLpfSMb9JSXwmAqjaNjPklkB"],[29,"16ioeh8FAvyhjgmppVhXinnTf-7psei1X"],[30,"1sW2MwYkaS7VGoYYvuphN6Rl3EykItDyb"],[31,"1ndGplKAlXTfV6FFIaiX0o-URmVbLxpBy"],[32,"1U8dZChb3LTLuCZajhZdhymetydGlDMEa"],[33,"1dgjYIT4C0gOXEJQdFJlr-N9D7ewMZ-oZ"],[34,"1E78N_gyQxh_FH6PI51HlQLoDNqq1wL0j"],[35,"1Dz-zn_ELgvBdWFkFFTKTAc88lUE4oc1J"],[36,"1u3xtVwh3618Mjy3-vYabzLLV-aCDvPnh"],[37,"1el-jyn1VT76z7q6V6S8CReKoiXBTddXR"],[38,"1_cX_cbBGAoAA6904_U39hFELPNQjPoF_"],[39,"1qkmIMU35NmxDiw6kOQnG_OKgFpQBp3b_"],[40,"1vVFFnpLq98TdIcp443Nu0PaUJ2VaBpTF"],[41,"1mBf_Izck7XdJySF3RI63CcMfFi3cpLPs"],[42,"1kPiz5JP25Csmgar2wbP7qBtEdhdi9zqQ"],[43,"1hnpFLq9nAfgO0k8HHwutJM3e_1686J_j"],[44,"1V3BdXP8uF2LrgWLL0x4FTIvPTadFeULk"],[45,"10o7a-ywan2CWMR2kAO3nadF3yial6_Sm"],[46,"1Rsxe-AxEzSVPij2MvrHjZMiQePrdfy01"],[47,"1FsbwCdU8cc4jhczkujKUdDSqB4FZDDjm"],[48,"1gcfRL1EfN3zBBC2kcx4pzue3KeETTyf_"],[49,"1GZ_TTD3PxegrALSV6rU_bRwiJEF3cy3K"],[50,"18Xg7a5okYOJ8wXpbM-tBDZr1don5Dc_5"],[51,"1KfMM97y4DiJivgT1k5_OGC9nw1qL1zzf"],[52,"1rRgFspQCpUbV1nJCQUtrs0ZehYuv1pQQ"],[53,"1Cfrk7J3IZJmZrtbHn_urcMNtqhnmLZnE"],[54,"16lNdZ21D-i31q0brogYbvEEiG-eW_7Y1"],[55,"1hcmLyM1TUsDPd9W_j1hoAWVF8KjVCNpH"],[56,"12wM0wWNBsPXXkYdyFBnN4cs0zLwrAqCl"],[57,"114dobQ9W7eCm5vk7YiVgAFjU8oRcEfer"],[58,"1w1oQqM_Br0j_yLMEdtC-Gl82Aeqa-fV3"],[59,"10wDRJBwP_wjbXuWxGDW10dqyYitP1qRX"],[60,"1C5lrU9DF0A7UE8_qPh_lOJrgDog4T9tE"],[61,"1WltpAqRtfv-jsShGidAvKzVe1oG6x75w"],[62,"1wsQm8zlCepLyRQ-jo9H55V-StFrfiH8l"],[63,"1KRZ7sPnNkttNMEDLe__cIjD5UVOG7QTd"],[64,"1rcvbJSRGlf55ORhq8kGNvqxX2NEbdHad"],[65,"10U5bRAN9N6Id6DOQ1Kc36hgksdYHDcze"],[66,"1Rf_d9O8aX6gMvfBaC-J8hdm0aNzdthMK"],[67,"1PApaFXTO-46sjDWDQ9AMBw-29a2ZfDVV"],[68,"1CIYy1XihvOeBcp4UvpUidYDSjk8A_C9Y"],[69,"1GPbwmlYsB1s20cecNToZVbnFL616Yjuy"],[70,"1dtJ-5gH1EGlOb_lM53zhb7NZmBBpIBb8"],[71,"1VKAiQL2Jy7f75r3QOu2auBmWfoAAj-0I"],[72,"1MDH5m1QuDUO_fOCh7gwEbiy_L4ya2RzZ"],[73,"1vN4mXSa75Yoseq9Qjzm_SNVoe79wE0AN"],[74,"1PrZE7FyabLzKeT2chE8jkChhgqKaSGYv"],[76,"1QsvicsL_K9I9c-2x8K73FIXdPBbCB1vj"],[77,"1IQPk1kd67g85ewYI4Ou8BLcCJR2f4zM3"],[78,"1bAZDVfNbVSMQqrdI2UTGAHKDChNF5SWc"]];
+var vdOpen = 0;   // bloque abierto (0 = primero)
+function rVideos() {
+  var seen = load().vid || {}, blocks = {};
+  VIDEOS.forEach(function (v) { var k = Math.floor((v[0] - 1) / 10); (blocks[k] = blocks[k] || []).push(v); });   // bloques por número: 1–10, 11–20…
+  var h = Object.keys(blocks).map(function (k) {
+    k = +k; var list = blocks[k], done = list.filter(function (v) { return seen[v[0]]; }).length, all = done === list.length, open = k === vdOpen;
+    return '<div class="vd-blk' + (all ? ' done' : '') + (open ? ' open' : '') + '">' +
+      '<button class="vd-head" data-k="' + k + '"><span class="vd-n">' + (all ? '✓' : k + 1) + '</span><span class="vd-tx"><b>Bloque ' + (k + 1) + '</b><span>Videos ' + (k * 10 + 1) + '–' + Math.min(k * 10 + 10, 78) + ' · ' + done + '/' + list.length + ' vistos</span></span><span class="vd-ch">' + (open ? '▲' : '▼') + '</span></button>' +
+      (open ? '<div class="vd-list">' + list.map(function (v) { return '<div class="vd-item" data-n="' + v[0] + '">' + videoHTML({ id: v[1], cap: (seen[v[0]] ? '✅ ' : '') + 'Video ' + v[0] }) + '</div>'; }).join("") + '</div>' : '') +
+    '</div>';
+  }).join("");
+  el("videos").innerHTML = h;
+  el("videos").querySelectorAll(".vd-head").forEach(function (b) { b.onclick = function () {
+    var k = +b.dataset.k; vdOpen = vdOpen === k ? -1 : k; rVideos();
+    if (vdOpen === k) b = el("videos").querySelector('.vd-head[data-k="' + k + '"]'), b && b.scrollIntoView({ block: "start", behavior: "smooth" });
+  }; });
+}
+// Marca un video como visto al empezar a reproducirlo (también si cae al reproductor embebido de Drive)
+function vdSeen(f) {
+  var it = f && f.closest(".vd-item"); if (!it) return; var n = +it.dataset.n, s = load(); s.vid = s.vid || {};
+  if (s.vid[n]) return; s.vid[n] = 1; markDay(s); save(s);
+  var c = f.querySelector("figcaption"); if (c && c.textContent.indexOf("✅") < 0) c.textContent = c.textContent.replace("🎬 ", "🎬 ✅ ");
+  var blk = it.closest(".vd-blk"), sub = blk && blk.querySelector(".vd-tx span");   // contador del bloque en vivo
+  if (sub) { var tot = blk.querySelectorAll(".vd-item").length, ok = [].filter.call(blk.querySelectorAll(".vd-item"), function (x) { return s.vid[x.dataset.n]; }).length; sub.textContent = sub.textContent.replace(/\d+\/\d+/, ok + "/" + tot); }
+}
+document.addEventListener("click", function (e) { var p = e.target.closest && e.target.closest(".vd-item .dv-play"); if (p) vdSeen(p.closest(".dv")); });
+
 // ---------- video de apoyo desde Google Drive ----------
 // Bloque de datos: { t:"vid", id:"<ID o enlace de Drive>", cap:"Título opcional", ratio:"16/9" | "9/16" }
 var DRIVE_DL = "https://drive.google.com/uc?export=download&id=";
