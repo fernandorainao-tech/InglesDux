@@ -965,14 +965,14 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .dv-play svg { width:32px; height:32px; fill:#FFFFFF; }
   .dv-load:active .dv-play { transform:translateY(4px); box-shadow:0px 2px 0px #0076AB; }
   /* ===== Modal de video: pantalla completa tipo cine ===== */
-  .video-modal { position:fixed; inset:0; background-color:#000000; z-index:9999; display:flex; align-items:center; justify-content:center; padding:0; }
-  .modal-content { position:relative; width:100vw; height:100vh; height:100dvh; background:#000000; border-radius:0; padding:0; box-shadow:none; display:flex; align-items:center; justify-content:center; }
-  .modal-video-container { position:relative; width:100%; height:100%; max-height:100vh; max-height:100dvh; aspect-ratio:16 / 9; border-radius:0; overflow:hidden; background:#000; display:flex; align-items:center; justify-content:center; }
-  .modal-video-container iframe { position:absolute; inset:0; width:100%; height:100%; border:none; display:block; }
-  .modal-video-container .dv-shield { width:72px; height:72px; }
-  /* Botón cerrar flotante: respeta el notch / barra de estado y queda sobre el botón "abrir en otra ventana" de Drive */
-  .close-modal-btn { position:absolute; top:16px; right:16px; top:calc(16px + env(safe-area-inset-top,0px)); right:calc(16px + env(safe-area-inset-right,0px)); background-color:rgba(255, 94, 94, 0.9); color:white; border:none; width:44px; height:44px; border-radius:50%; font-size:26px; font-weight:bold; line-height:1; cursor:pointer; box-shadow:0px 4px 0px rgba(0, 0, 0, 0.5); display:flex; align-items:center; justify-content:center; z-index:10000; padding:0 0 2px; font-family:inherit; }
-  .close-modal-btn:active { transform:translateY(2px); box-shadow:0px 2px 0px rgba(0, 0, 0, 0.5); }
+  .video-modal { position:fixed; inset:0; background-color:#000000; z-index:99999; display:flex; align-items:center; justify-content:center; }
+  /* Botón cerrar independiente del iframe y por encima de todo; respeta notch y barra de estado */
+  .close-modal-btn { position:fixed; top:20px; right:20px; top:calc(20px + env(safe-area-inset-top,0px)); right:calc(20px + env(safe-area-inset-right,0px)); background-color:#FF5E5E; color:white; border:none; width:48px; height:48px; border-radius:50%; font-size:28px; font-weight:bold; line-height:1; cursor:pointer; box-shadow:0px 4px 0px rgba(0, 0, 0, 0.6); display:flex; align-items:center; justify-content:center; z-index:2147483647; padding:0 0 3px; font-family:inherit; }
+  .close-modal-btn:active { transform:translateY(2px); box-shadow:0px 2px 0px rgba(0, 0, 0, 0.6); }
+  .modal-video-container { position:relative; width:100vw; height:100vh; height:100dvh; background:#000000; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .modal-video-container iframe { width:100%; height:100%; border:none; display:block; }
+  /* Parche negro en la esquina: oculta y bloquea el botón "abrir en otra ventana" de Drive, que quedaba encimado bajo la ✕ */
+  .modal-video-container .dv-shield { position:absolute; top:0; right:0; width:88px; height:88px; width:calc(88px + env(safe-area-inset-right,0px)); height:calc(88px + env(safe-area-inset-top,0px)); background:#000000; border-bottom-left-radius:24px; z-index:1; }
   body.dv-lock { overflow:hidden; }
   .dv figcaption { margin:10px 4px 2px; font-weight:800; font-size:14.5px; color:var(--text-main); }
   /* ===== Sección Videos ===== */
@@ -1139,12 +1139,10 @@ setTimeout(out,6000);})();</script>
   <button data-tab="logros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Perfil</button>
 </nav>
 <div id="videoModal" class="video-modal" style="display: none;" role="dialog" aria-label="Video">
-    <div class="modal-content">
-        <button id="closeVideoModal" class="close-modal-btn" aria-label="Cerrar video">&times;</button>
-        <div class="modal-video-container">
-            <iframe id="modalIframe" width="100%" height="100%" style="border: none;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Video de apoyo"></iframe>
-            <div class="dv-shield" aria-hidden="true"></div>
-        </div>
+    <button id="closeVideoModal" class="close-modal-btn" aria-label="Cerrar video">&times;</button>
+    <div class="modal-video-container">
+        <iframe id="modalIframe" width="100%" height="100%" style="border: none;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Video de apoyo"></iframe>
+        <div class="dv-shield" aria-hidden="true"></div>
     </div>
 </div>
 <script>
