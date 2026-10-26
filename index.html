@@ -951,6 +951,17 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   #app:has(#p-lecciones.on) .chip-g:active { transform:translateY(2px); box-shadow:0px 2px 0px #1A3E92 !important; }
   @media (max-width:375px) { #app:has(#p-lecciones.on) .top .ava { display:none; } }  /* pantallas angostas: el perfil sigue en la barra inferior */
   #app:has(#p-lecciones.on) .top .ava { width:42px; height:42px; flex-shrink:0; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); }
+  /* ===== Video de apoyo (Drive) ===== */
+  .dv { margin:4px 0; padding:10px; background:var(--card-bg); border:2px solid var(--border-color); border-radius:20px; box-shadow:0px 6px 0px var(--shadow-color); }
+  body.dark-mode .dv { border-color:#37464F; box-shadow:0px 6px 0px #0A1114; }
+  .dv-frame { position:relative; width:100%; border-radius:14px; overflow:hidden; background:#0A1114; }
+  .dv.vert .dv-frame { max-height:70vh; max-height:70dvh; }
+  .dv-v, .dv-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; object-fit:contain; background:#0A1114; accent-color:#1CB0F6; }
+  .dv-play { position:absolute; inset:0; margin:auto; z-index:2; width:72px; height:72px; border-radius:50%; background:#1CB0F6; border:3px solid #0093D6; box-shadow:0px 6px 0px #0076AB; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0 0 0 4px; transition:transform .06s, box-shadow .06s; }
+  .dv-play svg { width:34px; height:34px; fill:#FFFFFF; }
+  .dv-play:active { transform:translateY(4px); box-shadow:0px 2px 0px #0076AB; }
+  .dv.on .dv-play { display:none; }
+  .dv figcaption { margin:10px 4px 2px; font-weight:800; font-size:14.5px; color:var(--text-main); }
   body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -1268,6 +1279,36 @@ function openLesson(id, seg, fromPop) {
   if (!fromPop) history.pushState({ v: "les", id: id }, "");
 }
 function closeLesson() { el("leccion").classList.add("hidden"); el("app").classList.remove("hidden"); el("nav").classList.remove("hidden"); render(curTab); }
+// ---------- video de apoyo desde Google Drive ----------
+// Bloque de datos: { t:"vid", id:"<ID o enlace de Drive>", cap:"Título opcional", ratio:"16/9" | "9/16" }
+var DRIVE_DL = "https://drive.google.com/uc?export=download&id=";
+function driveId(x) { var m = String(x || "").match(/[-\w]{25,}/); return m ? m[0] : ""; }   // acepta ID suelto o cualquier enlace de Drive
+function videoHTML(b) {
+  var id = driveId(b.id); if (!id) return "";
+  var ratio = /^\d+\/\d+$/.test(b.ratio || "") ? b.ratio : "16/9";
+  return '<figure class="dv' + (ratio === "9/16" ? ' vert' : '') + '" data-id="' + id + '">' +
+    '<div class="dv-frame" style="aspect-ratio:' + ratio + '">' +
+      '<video class="dv-v" playsinline preload="none" controlslist="nodownload" src="' + DRIVE_DL + id + '" type="video/mp4"></video>' +
+      '<button class="dv-play" aria-label="Reproducir video"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>' +
+    '</div><figcaption>🎬 ' + esc(b.cap || "Video de apoyo") + '</figcaption></figure>';
+}
+// Si Drive no entrega el MP4 directo (archivo grande, cuota, permisos), se cambia al reproductor embebido de Drive.
+function dvFallback(f) {
+  if (!f || f.classList.contains("ifr")) return; f.classList.add("ifr", "on");
+  f.querySelector(".dv-frame").innerHTML = '<iframe src="https://drive.google.com/file/d/' + f.dataset.id + '/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy" title="Video de apoyo"></iframe>';
+}
+document.addEventListener("click", function (e) {
+  var p = e.target.closest && e.target.closest(".dv-play"); if (!p) return;
+  var f = p.closest(".dv"), v = f.querySelector("video"); f.classList.add("on"); v.controls = true;   // controles nativos solo tras el primer toque
+  var pr = v.play(); if (pr && pr.catch) pr.catch(function () { if (v.error) dvFallback(f); });
+});
+// "error" y "play" no burbujean: se escuchan en fase de captura
+document.addEventListener("error", function (e) { var t = e.target; if (t && t.classList && t.classList.contains("dv-v")) dvFallback(t.closest(".dv")); }, true);
+document.addEventListener("play", function (e) {
+  var t = e.target; if (!t || !t.classList || !t.classList.contains("dv-v")) return;
+  stopAudio(); t.closest(".dv").classList.add("on");
+  document.querySelectorAll(".dv-v").forEach(function (v) { if (v !== t) v.pause(); });   // un solo video a la vez
+}, true);
 function wordRow(w) { var ph = w.en.split(" ").length > 2;
   return '<div class="wr' + (ph ? ' fr' : '') + '">' + (w.n ? '<span class="wn">' + w.n + '</span>' : '') + '<div class="t"><b>' + esc(w.en) + '</b>' + (w.pr ? ' <span class="p">(' + esc(w.pr) + ')</span>' : '') + '<span class="e">' + esc(w.es) + '</span></div><button class="spk sm" data-say="' + esc(w.en) + '" aria-label="Escuchar ' + esc(w.en) + '">' + IC.spk + '</button></div>'; }
 function rLesson() {
@@ -1280,6 +1321,7 @@ function rLesson() {
       if (b.t === "p") pend.push(b.x);
       else if (b.t === "h") body += '<h3 class="bh">' + esc(b.x) + '</h3>';
       else if (b.t === "n") body += '<div class="tip"><b>Nota:</b> ' + esc(b.x) + '</div>';
+      else if (b.t === "vid") body += videoHTML(b);
       else if (b.t === "w") body += '<div class="wl">' + b.items.map(wordRow).join("") + '</div>';
       else if (b.t === "conj") body += '<div class="cj-grid">' + b.tables.map(function (t) { return '<div class="cj"><div class="cj-h"><b>' + esc(t.t.split("=")[0].trim()) + '</b><span>' + esc((t.t.split("=")[1] || "").replace(/\(\d\)/, "").trim()) + '</span><button class="spk sm" data-say="' + esc(t.t.split("=")[0].trim()) + '" aria-label="Escuchar">' + IC.spk + '</button></div>' +
         t.rows.map(function (r) { return '<div class="cj-r"><button class="cj-say" data-say="' + esc(r.en) + '"><b>' + esc(r.en) + '</b>' + (r.pr ? ' <i>(' + esc(r.pr) + ')</i>' : '') + '</button><span>' + esc(r.es) + '</span></div>'; }).join("") + '</div>'; }).join("") + '</div>';
