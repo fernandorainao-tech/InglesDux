@@ -966,10 +966,6 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .dv-load:active .dv-play { transform:translateY(4px); box-shadow:0px 2px 0px #0076AB; }
   /* ===== Modal de video: pantalla completa tipo cine ===== */
   .video-modal { position:fixed; inset:0; background-color:#000000; z-index:99999; display:flex; align-items:center; justify-content:center; }
-  /* ✕ siempre visible: círculo oscuro translúcido con borde rojo y sombra fuerte; área táctil ampliada a 64px */
-  .close-modal-btn { position:fixed; top:20px; right:20px; top:calc(20px + env(safe-area-inset-top,0px)); right:calc(20px + env(safe-area-inset-right,0px)); width:50px; height:50px; border-radius:50%; background-color:rgba(10, 17, 20, 0.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border:3px solid #FF4B4B; color:#FFFFFF; font-size:30px; font-weight:bold; line-height:1; padding:0 0 3px; font-family:inherit; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2147483647; box-shadow:0px 5px 0px #B32D2D, 0px 8px 18px rgba(0, 0, 0, 0.75); transition:transform .08s ease, box-shadow .08s ease; touch-action:manipulation; }
-  .close-modal-btn::after { content:""; position:absolute; inset:-10px; border-radius:50%; }   /* margen extra invisible para tocar fácil */
-  .close-modal-btn:active { transform:translateY(3px); box-shadow:0px 2px 0px #B32D2D, 0px 4px 10px rgba(0, 0, 0, 0.75); }
   .modal-video-container { position:relative; width:100vw; height:100vh; height:100dvh; background:#000000; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   /* El visor toma exactamente el tamaño 16:9 que cabe en la pantalla (como object-fit: contain, que no aplica a iframes):
      lo que sobra son bandas negras — laterales en horizontal, arriba/abajo en vertical — y la ✕ flota en ellas sin tapar el video */
@@ -1143,7 +1139,6 @@ setTimeout(out,6000);})();</script>
   <button data-tab="logros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Perfil</button>
 </nav>
 <div id="videoModal" class="video-modal" style="display: none;" role="dialog" aria-label="Video">
-    <button id="closeVideoModal" class="close-modal-btn" aria-label="Cerrar video">&times;</button>
     <div class="modal-video-container">
         <div class="modal-frame">
             <iframe id="modalIframe" width="100%" height="100%" style="border: none;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Video de apoyo"></iframe>
@@ -1390,7 +1385,8 @@ function dvModalClose(fromPop) {
   if (!fromPop && history.state && history.state.v === "dvmodal") history.back();
 }
 document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".dv-load"); if (b) dvModalOpen(b.closest(".dv")); });
-el("closeVideoModal").onclick = function () { dvModalClose(); };
+// Sin botón ✕: se cierra con el botón atrás de Android o tocando las bandas negras alrededor del video
+el("videoModal").addEventListener("click", function (e) { if (!e.target.closest(".modal-frame")) dvModalClose(); });
 
 window.addEventListener("popstate", function () { dvModalClose(true); });
 ["fullscreenchange", "webkitfullscreenchange"].forEach(function (ev) { document.addEventListener(ev, function () {
