@@ -296,7 +296,7 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .hm-lc .hm-bar { flex:none; margin-top:6px; } .hm-lc-p { font-size:12px; font-weight:800; color:#3A60BA; }
   .hm-lc.lock { opacity:.6; } .hm-lc.lock .hm-lc-p { color:var(--text-secondary); }
   /* barra inferior */
-  .nav { grid-template-columns:repeat(4,minmax(0,1fr)) !important; border-top:none !important; box-shadow:0 -4px 16px rgba(26,29,78,.06); }
+  .nav { grid-template-columns:repeat(5,minmax(0,1fr)) !important; border-top:none !important; box-shadow:0 -4px 16px rgba(26,29,78,.06); }
   .nav button { color:var(--text-secondary) !important; font-size:11.5px !important; }
   .nav button.on { color:#292D6A !important; }
 
@@ -1122,6 +1122,7 @@ setTimeout(out,6000);})();</script>
   <button class="on" data-tab="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Inicio</button>
   <button data-tab="lecciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>Lecciones</button>
   <button data-tab="practica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8M9 18h6"/></svg>Retos</button>
+  <button data-tab="videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.2v5.6a.4.4 0 0 0 .6.35l4.6-2.8a.4.4 0 0 0 0-.7l-4.6-2.8a.4.4 0 0 0-.6.35z"/></svg>Videos</button>
   <button data-tab="logros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Perfil</button>
 </nav>
 <script>
@@ -1286,10 +1287,7 @@ function rLecciones() {
       h += '<div class="lc lock"><span class="lc-n">' + (i + 1) + '</span><span class="lc-t"><b>' + (L ? esc(L.titulo) : 'Lección ' + (i + 1)) + '</b><span>' + (L ? 'Aprueba el examen anterior para desbloquearla' : TITULOS[i] + ' · Próximamente') + '</span></span><span class="lc-lock">' + LOCK_SVG + '</span></div>';
     }
   }
-  var vs = (load().vid || {}), vn = VIDEOS.filter(function (v) { return vs[v[0]]; }).length;
-  h = '<button class="vd-entry" id="vd-open"><span class="vd-ic">🎬</span><span class="vd-tx"><b>Videos de apoyo</b><span>' + VIDEOS.length + ' videos en ' + Math.ceil(78 / 10) + ' bloques · ' + vn + ' vistos</span></span><span class="go-btn' + (vn === VIDEOS.length ? ' g' : '') + '">VER</span></button>' + h;
   el("lecciones").innerHTML = h;
-  el("vd-open").onclick = function () { tab("videos"); };
   el("lecciones").querySelectorAll("button.lc").forEach(function (b) { b.onclick = function () { openLesson(b.dataset.id); }; });
 }
 var curLesson = null, curSeg = "leccion";
