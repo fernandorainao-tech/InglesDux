@@ -966,13 +966,15 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .dv-load:active .dv-play { transform:translateY(4px); box-shadow:0px 2px 0px #0076AB; }
   /* ===== Modal de video: pantalla completa tipo cine ===== */
   .video-modal { position:fixed; inset:0; background-color:#000000; z-index:99999; display:flex; align-items:center; justify-content:center; }
-  /* Botón cerrar independiente del iframe y por encima de todo; respeta notch y barra de estado */
-  .close-modal-btn { position:fixed; top:20px; right:20px; top:calc(20px + env(safe-area-inset-top,0px)); right:calc(20px + env(safe-area-inset-right,0px)); background-color:#FF5E5E; color:white; border:none; width:48px; height:48px; border-radius:50%; font-size:28px; font-weight:bold; line-height:1; cursor:pointer; box-shadow:0px 4px 0px rgba(0, 0, 0, 0.6); display:flex; align-items:center; justify-content:center; z-index:2147483647; padding:0 0 3px; font-family:inherit; }
-  .close-modal-btn:active { transform:translateY(2px); box-shadow:0px 2px 0px rgba(0, 0, 0, 0.6); }
+  .close-modal-btn { position:fixed; top:16px; right:16px; top:calc(16px + env(safe-area-inset-top,0px)); right:calc(16px + env(safe-area-inset-right,0px)); background-color:rgba(255, 94, 94, 0.95); color:white; border:none; width:44px; height:44px; border-radius:50%; font-size:26px; font-weight:bold; line-height:1; cursor:pointer; box-shadow:0px 4px 0px rgba(0, 0, 0, 0.6); display:flex; align-items:center; justify-content:center; z-index:2147483647; transition:transform 0.1s ease; padding:0 0 2px; font-family:inherit; }
+  .close-modal-btn:active { transform:scale(0.95); }
   .modal-video-container { position:relative; width:100vw; height:100vh; height:100dvh; background:#000000; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-  .modal-video-container iframe { width:100%; height:100%; border:none; display:block; }
-  /* Parche negro en la esquina: oculta y bloquea el botón "abrir en otra ventana" de Drive, que quedaba encimado bajo la ✕ */
-  .modal-video-container .dv-shield { position:absolute; top:0; right:0; width:88px; height:88px; width:calc(88px + env(safe-area-inset-right,0px)); height:calc(88px + env(safe-area-inset-top,0px)); background:#000000; border-bottom-left-radius:24px; z-index:1; }
+  /* El visor toma exactamente el tamaño 16:9 que cabe en la pantalla (como object-fit: contain, que no aplica a iframes):
+     lo que sobra son bandas negras — laterales en horizontal, arriba/abajo en vertical — y la ✕ flota en ellas sin tapar el video */
+  .modal-frame { position:relative; width:min(100vw, 100vh * 16 / 9); height:min(100vh, 100vw * 9 / 16); width:min(100vw, 100dvh * 16 / 9); height:min(100dvh, 100vw * 9 / 16); background:#000000; }
+  .modal-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:none; display:block; object-fit:contain; }
+  /* Bloqueo invisible sobre el botón "abrir en otra ventana" de Drive (esquina del visor): no tapa la imagen pero evita salir de la app */
+  .modal-frame .dv-shield { position:absolute; top:0; right:0; width:64px; height:64px; z-index:1; background:transparent; }
   body.dv-lock { overflow:hidden; }
   .dv figcaption { margin:10px 4px 2px; font-weight:800; font-size:14.5px; color:var(--text-main); }
   /* ===== Sección Videos ===== */
@@ -1141,8 +1143,10 @@ setTimeout(out,6000);})();</script>
 <div id="videoModal" class="video-modal" style="display: none;" role="dialog" aria-label="Video">
     <button id="closeVideoModal" class="close-modal-btn" aria-label="Cerrar video">&times;</button>
     <div class="modal-video-container">
-        <iframe id="modalIframe" width="100%" height="100%" style="border: none;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Video de apoyo"></iframe>
-        <div class="dv-shield" aria-hidden="true"></div>
+        <div class="modal-frame">
+            <iframe id="modalIframe" width="100%" height="100%" style="border: none;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Video de apoyo"></iframe>
+            <div class="dv-shield" aria-hidden="true"></div>
+        </div>
     </div>
 </div>
 <script>
