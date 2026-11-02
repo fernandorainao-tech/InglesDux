@@ -1434,7 +1434,7 @@ function dvModalClose(fromPop) {
 }
 document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".dv-load"); if (b) dvModalOpen(b.closest(".dv")); });
 // ---------- Tutor IA (Google Gemini vía Worker; la API key nunca está en la app) ----------
-var TUTOR_URL = "";   // URL del Cloudflare Worker (worker/tutor-worker.js). Vacía = el globo no se muestra.
+var TUTOR_URL = "https://inglesdux-tutor.fernandorainao.workers.dev";   // URL del Cloudflare Worker (worker/tutor-worker.js). Vacía = el globo no se muestra.
 var TUTOR_KEY = "duxlingo_tutor", TC_BUSY = false;
 function tcHist() { try { return JSON.parse(localStorage.getItem(TUTOR_KEY) || "[]"); } catch (e) { return []; } }
 function tcSave(h) { try { localStorage.setItem(TUTOR_KEY, JSON.stringify(h.slice(-40))); } catch (e) {} }
