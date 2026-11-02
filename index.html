@@ -618,7 +618,7 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   /* ===== ejercicio a pantalla completa: Comprobar siempre sobre el teclado ===== */
   #exam:not(.hidden) { position:fixed; left:0; right:0; top:0; height:100vh; height:100dvh; z-index:45; background:var(--card-bg); display:flex; flex-direction:column; padding:0 !important; }
   #exam .ex-scroll { flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:calc(4px + env(safe-area-inset-top,0px)) 18px 16px; max-width:640px; width:100%; margin:0 auto; }
-  #exam .ex-foot { flex-shrink:0; padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px)); background:var(--card-bg); border-top:1px solid #EEF0F6; max-width:640px; width:100%; margin:0 auto; }
+  #exam .ex-foot { flex-shrink:0; padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px)); background:var(--card-bg); border-top:0; max-width:640px; width:100%; margin:0 auto; }
   #exam .ex-foot .btn.check { width:100% !important; height:56px !important; margin:0 !important; border-radius:16px !important; font-size:17px !important; background:#58CC02; box-shadow:0 5px 0 #46A302; color:#fff; transition:transform .06s, box-shadow .06s; }
   #exam .ex-foot .btn.check:active { transform:translateY(4px); box-shadow:0 1px 0 #46A302; }
   #exam .ex-foot .btn.check:disabled { background:var(--border-color); color:var(--text-secondary); box-shadow:0 5px 0 #CDD1DA; }
@@ -627,6 +627,19 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   #exam .ex-foot.hidden-foot { display:none; }
   #exam #ex-k { display:none !important; }
   #exam .qtop { padding-bottom:10px; }
+  #exam:not(.hidden) { background:var(--card-bg); box-shadow:0 -2px 0 var(--card-bg); }   /* sin franja clara arriba al moverse el visor */
+  #exam .ex-in { scroll-margin-bottom:16px; }
+  @media (max-height:600px) {
+    #exam #ex-intro, #exam .vs-dot { display:none !important; }
+    #exam .scene { min-height:0 !important; margin:2px 0 8px !important; }
+    #exam .sc-av { width:auto !important; height:64px !important; }
+    #exam .bub { padding:8px 14px !important; }
+    #exam .bub-tip { display:none !important; }
+    #exam .qtop { padding-bottom:4px; }
+    #exam .ex-in { margin-top:6px !important; }
+    #exam .ex-foot { padding-top:8px; padding-bottom:8px; }
+  }
+  @media (max-height:440px) { #exam .sc-av { display:none !important; } }
 
   /* ===== examen: mapa de desafíos 3D ===== */
   body:has(#exhub:not(.hidden)) { background:var(--bg-main) !important; }
@@ -2057,7 +2070,17 @@ document.addEventListener("click", function (e) { if (e.target.closest(".gem-chi
 
 // respaldo: si el navegador no achica la pantalla al abrir el teclado, ajustamos el alto a la zona visible
 function fitExam() { var ex = el("exam"); if (!ex || ex.classList.contains("hidden") || !window.visualViewport) return; var vv = window.visualViewport; ex.style.height = vv.height + "px"; ex.style.top = vv.offsetTop + "px"; }
-if (window.visualViewport) { window.visualViewport.addEventListener("resize", fitExam); window.visualViewport.addEventListener("scroll", fitExam); }
+// Mantiene visible la caja de respuesta justo sobre "Comprobar" cuando el teclado cambia el alto disponible
+function exKeepInput() {
+  var inp = el("ex-in"), sc = el("ex-scroll"); if (!inp || !sc || el("exam").classList.contains("hidden") || document.activeElement !== inp) return;
+  var r = inp.getBoundingClientRect(), box = sc.getBoundingClientRect(), pad = 14;
+  if (r.bottom > box.bottom - pad) sc.scrollTop += r.bottom - (box.bottom - pad);
+  else if (r.top < box.top + pad) sc.scrollTop -= (box.top + pad) - r.top;
+}
+function exOnResize() { fitExam(); requestAnimationFrame(exKeepInput); setTimeout(exKeepInput, 250); }   // 2º intento: el teclado termina de animar
+if (window.visualViewport) { window.visualViewport.addEventListener("resize", exOnResize); window.visualViewport.addEventListener("scroll", fitExam); }
+window.addEventListener("resize", exOnResize);
+document.addEventListener("focusin", function (e) { if (e.target && e.target.id === "ex-in") setTimeout(exKeepInput, 300); });
 document.addEventListener("focusin", function (e) { if (e.target && e.target.id === "ex-in") setTimeout(function () { fitExam(); el("ex-in").scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 250); });
 
 // ---------- nombre del usuario (estado global + localStorage) ----------
