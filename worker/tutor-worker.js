@@ -37,6 +37,35 @@ Límites:
 - Contenido siempre apropiado para todas las edades.
 - No inventes reglas: si algo tiene excepciones, dilo.`;
 
+// ---------- Charlas cotidianas (roleplay) ----------
+// Los escenarios viven aquí (no en la app) para que nadie pueda inyectar instrucciones propias.
+const RP_TURNS = 5;   // intercambios por misión: corto = pocos tokens
+const SCENARIOS = {
+  cafe:        { scene: "a small coffee shop called Sunny Café", role: "Sam, a friendly barista", goal: "order a drink (and maybe something to eat) and pay", opening: "Hi there! Welcome to Sunny Café. What can I get for you today?" },
+  vecino:      { scene: "the hallway of an apartment building", role: "Ana, a friendly new neighbor", goal: "greet the neighbor, say their name, say where they live and make small talk", opening: "Oh, hello! I am Ana, your new neighbor. I live in apartment 5. And you?" },
+  tienda:      { scene: "a clothes shop", role: "Leo, a helpful shop assistant", goal: "ask for a shirt, say the size and color, and ask the price", opening: "Good morning! Can I help you find something today?" },
+  indicaciones:{ scene: "a street in a city center", role: "a kind local person walking by", goal: "ask how to get to the train station and understand the directions", opening: "Hello! You look a little lost. Can I help you?" },
+  restaurante: { scene: "a family restaurant", role: "Mia, a friendly waiter", goal: "order food and a drink, and ask for the bill", opening: "Good evening! Here is the menu. Are you ready to order?" },
+  hotel:       { scene: "the front desk of a hotel", role: "Tom, a hotel receptionist", goal: "check in with a reservation: give their name, number of nights and ask about breakfast", opening: "Good afternoon and welcome to the Blue Sea Hotel! Do you have a reservation?" },
+  farmacia:    { scene: "a pharmacy", role: "Dr. Lee, a kind pharmacist", goal: "explain they have a headache and buy medicine, asking how to take it", opening: "Hello! How can I help you today?" },
+  aeropuerto:  { scene: "an airport check-in desk", role: "Kate, an airline agent", goal: "check in for a flight: show the passport, check a bag and ask for a window seat", opening: "Good morning! Where are you flying today? May I see your passport, please?" },
+};
+function rpSystem(sc, name) {
+  return `You are role-playing inside InglesDux, an English practice app for Spanish-speaking beginners from Chile.
+Scene: ${sc.scene}. You are ${sc.role}. The learner${name ? " (" + name + ")" : ""} must: ${sc.goal}.
+Rules:
+- Stay in character at all times. Speak ONLY simple English (beginner level, Basic English words), 1 or 2 short sentences per turn.
+- End each turn with a short question that moves the scene toward the learner's goal.
+- After your English line, write a new line that starts with "ES: " and the Spanish translation of what you said.
+- If the learner writes in Spanish or makes mistakes, stay in character, understand them and naturally use the correct English phrase in your reply.
+- If the learner goes off topic, gently bring them back to the scene. Content must be appropriate for all ages.
+- No markdown, no lists, no emojis.`;
+}
+const RP_FINAL = `[This is the learner's LAST turn of the mission.]
+1) Reply in character with ONE short closing line, then the "ES: " line.
+2) Then write a line that starts with "FEEDBACK:" followed by feedback IN SPANISH for the learner (max 70 words): congratulate them, say 1 or 2 things they did well and 1 or 2 corrections, writing the correct English in *asterisks*.
+3) Finally write a line "ESTRELLAS: n" where n is 1, 2 or 3 depending on how well they communicated and reached the goal.`;
+
 function cors(origin, allowed) {
   return {
     "Access-Control-Allow-Origin": origin === allowed ? origin : allowed,
@@ -70,6 +99,18 @@ export default {
     if (!msgs.length || msgs[msgs.length - 1].role !== "user") return json({ error: "Falta el mensaje del alumno" }, 400, h);
     const contents = msgs.map(m => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content.slice(0, MAX_CHARS) }] }));
 
+    // Charla cotidiana: escenario elegido por id, saludo inicial del personaje y tope de turnos
+    const sc = typeof body.scenario === "string" ? SCENARIOS[body.scenario] : null;
+    if (body.scenario && !sc) return json({ error: "Escenario desconocido" }, 400, h);
+    let rpFinal = false;
+    if (sc) {
+      const turns = msgs.filter(m => m.role === "user").length;
+      if (turns > RP_TURNS) return json({ error: "La misión ya terminó" }, 400, h);
+      rpFinal = turns === RP_TURNS;
+      contents.unshift({ role: "user", parts: [{ text: "(Start the scene.)" }] }, { role: "model", parts: [{ text: sc.opening }] });
+      if (rpFinal) contents[contents.length - 1].parts.push({ text: RP_FINAL });
+    }
+
     // Nota de voz: reemplaza el texto del último mensaje del alumno por el audio + la instrucción
     const audio = body.audio;
     if (audio) {
@@ -80,7 +121,7 @@ export default {
     }
 
     const name = typeof body.name === "string" ? body.name.slice(0, 40).replace(/[^\p{L}\p{N} .'-]/gu, "") : "";
-    const system = name ? `${SYSTEM}\n\nEl alumno se llama ${name}.` : SYSTEM;
+    const system = sc ? null : (name ? `${SYSTEM}\n\nEl alumno se llama ${name}.` : SYSTEM);
 
     let r;
     try {
@@ -88,7 +129,7 @@ export default {
         method: "POST",
         headers: { "x-goog-api-key": env.GEMINI_API_KEY, "Content-Type": "application/json" },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: system }] },
+          system_instruction: { parts: [{ text: system || rpSystem(sc, name) }] },
           contents,
           generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.7 },
         }),
@@ -106,6 +147,15 @@ export default {
     if (audio) {   // separar la transcripción de la respuesta
       const m = text.match(/^\s*\**TRANSCRIPCI[ÓO]N\**\s*:\s*(.*)$/im);
       if (m) { heard = m[1].replace(/^["“”*]+|["“”*]+$/g, "").trim(); text = text.replace(m[0], "").trim(); }
+    }
+    if (sc) {   // separar la línea final, la retroalimentación y las estrellas
+      let feedback = "", stars = 0;
+      if (rpFinal) {
+        const st = text.match(/^\s*\**ESTRELLAS\**\s*:\s*(\d)/im); if (st) { stars = Math.min(3, Math.max(1, +st[1])); text = text.replace(st[0], ""); }
+        const fb = text.search(/^\s*\**FEEDBACK\**\s*:/im);
+        if (fb >= 0) { feedback = text.slice(fb).replace(/^\s*\**FEEDBACK\**\s*:\s*/i, "").trim(); text = text.slice(0, fb).trim(); }
+      }
+      return json({ text: text || "Thank you! Have a nice day.", heard, done: rpFinal, feedback, stars: stars || (rpFinal ? 2 : 0), turnsLeft: RP_TURNS - msgs.filter(m => m.role === "user").length }, 200, h);
     }
     return json({ text: text || "Perdona, no alcancé a responder. ¿Me lo preguntas de nuevo?", heard }, 200, h);
   },

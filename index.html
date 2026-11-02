@@ -1047,6 +1047,35 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .tc-send:active { transform:translateY(3px); box-shadow:0px 1px 0px #46A302; }
   .tc-send:disabled { background:#37464F; border-color:#37464F; box-shadow:0px 4px 0px #0A1114; cursor:default; }
   body.tc-lock { overflow:hidden; }
+  /* ===== Charlas cotidianas ===== */
+  .rp-view { display:flex; flex-direction:column; flex:1; min-height:0; } .rp-view[hidden] { display:none; }
+  .rp form[hidden] { display:none !important; }
+  .rp-end .rp-big .rp-st { font-size:34px; letter-spacing:6px; }
+  .rp-ico { display:flex; align-items:center; justify-content:center; font-size:32px; }
+  .rp-hicon { width:46px; height:46px; flex-shrink:0; border-radius:14px; background:#FFC800; border:2px solid #E2A100; box-shadow:0px 3px 0px #C88F00; display:flex; align-items:center; justify-content:center; font-size:24px; }
+  .rp-back { width:40px; height:40px; flex-shrink:0; border-radius:12px; background:transparent; border:2px solid #37464F; box-shadow:0px 3px 0px #0A1114; color:#FFFFFF; padding:0; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .rp-back svg { width:20px; height:20px; } .rp-back:active { transform:translateY(2px); box-shadow:none; }
+  .rp-grid { gap:14px; padding-bottom:calc(24px + env(safe-area-inset-bottom,0px)); }
+  .rp-card { display:flex; align-items:center; gap:14px; width:100%; text-align:left; padding:14px 14px 14px 12px; border-radius:20px; background:#202F36; border:2px solid #37464F; box-shadow:0px 6px 0px #0A1114; color:#FFFFFF; font-family:inherit; cursor:pointer; transition:transform .06s, box-shadow .06s; }
+  .rp-card:active:not(:disabled) { transform:translateY(4px); box-shadow:0px 2px 0px #0A1114; }
+  .rp-card .rp-em { width:58px; height:58px; flex-shrink:0; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:30px; box-shadow:inset 0 -4px 0 rgba(0,0,0,.12); }
+  .rp-card .rp-tx { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+  .rp-card b { font-size:16.5px; font-weight:900; } .rp-card .rp-d { font-size:13px; color:#C2CCD1; font-weight:700; }
+  .rp-st { font-size:14px; letter-spacing:1px; color:#37464F; } .rp-st i { font-style:normal; color:#FFC800; }
+  .rp-card.done { border-color:#2F7A3F; }
+  .rp-card:disabled { opacity:.5; cursor:default; } .rp-card:disabled .rp-em { filter:grayscale(1); }
+  .rp-lock { font-size:20px; }
+  .rp-dots { display:flex; gap:5px; } .rp-dots i { width:10px; height:10px; border-radius:50%; background:#37464F; } .rp-dots i.on { background:#58CC02; box-shadow:0 2px 0 #46A302; }
+  .rp-tr { display:none; margin-top:6px; font-size:13.5px; color:#C2CCD1; font-style:italic; } .rp-tr.show { display:block; }
+  .rp-acts { display:flex; gap:8px; flex-wrap:wrap; }
+  .rp-end { margin:6px 0 4px; padding:18px 16px; border-radius:22px; background:linear-gradient(160deg,#1D3A22,#202F36); border:2px solid #2F7A3F; box-shadow:0px 6px 0px #0A1114; text-align:center; }
+  .rp-end h3 { font-size:22px; font-weight:900; margin:4px 0; } .rp-end .rp-big { font-size:34px; letter-spacing:4px; }
+  .rp-end .rp-fb { text-align:left; margin:12px 0; font-size:14.5px; line-height:1.45; font-weight:600; background:#131F24; border-radius:14px; padding:12px; }
+  .rp-end .rp-fb i { color:#7FD6FF; } .rp-gem { font-weight:900; color:#7FD6FF; }
+  .rp-end .rp-btns { display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .rp-btn { padding:13px; border-radius:16px; font-family:inherit; font-weight:900; font-size:16px; cursor:pointer; color:#FFFFFF; background:#58CC02; border:2px solid #4DB302; box-shadow:0px 5px 0px #46A302; }
+  .rp-btn.alt { background:transparent; border-color:#37464F; box-shadow:0px 5px 0px #0A1114; color:#1CB0F6; }
+  .rp-btn:active { transform:translateY(3px); box-shadow:0px 2px 0px #46A302; } .rp-btn.alt:active { box-shadow:0px 2px 0px #0A1114; }
   /* Notas de voz */
   .tc-mic { width:48px; height:48px; flex-shrink:0; margin-bottom:4px; border-radius:16px; background:#1CB0F6; border:2px solid #0093D6; box-shadow:0px 4px 0px #0076AB; display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; }
   .tc-mic[hidden] { display:none; }
@@ -1226,6 +1255,17 @@ setTimeout(out,6000);})();</script>
     </div>
 </div>
 <button id="tutorFab" class="tutor-fab" hidden aria-label="Abrir tutor de inglés"><span class="tutor-tip">¡Pregúntame!</span><img src="img/mascota.webp" alt=""></button>
+<div id="rp" class="tutor-chat rp" hidden role="dialog" aria-label="Charlas cotidianas">
+  <div id="rpList" class="rp-view">
+    <header class="tc-head"><div class="rp-hicon">💬</div><div class="tc-ttl"><b>Charlas cotidianas</b><span>Misiones cortas de inglés de la vida real</span></div><button class="tc-x rp-close" aria-label="Cerrar">&times;</button></header>
+    <div class="tc-log rp-grid" id="rpGrid"></div>
+  </div>
+  <div id="rpTalk" class="rp-view" hidden>
+    <header class="tc-head"><button class="rp-back" id="rpBack" aria-label="Volver a las misiones"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="rp-hicon" id="rpIc"></div><div class="tc-ttl"><b id="rpTtl"></b><span id="rpGoal"></span></div><div class="rp-dots" id="rpDots"></div></header>
+    <div class="tc-log" id="rpLog" aria-live="polite"></div>
+    <form id="rpForm" class="tc-bar" autocomplete="off"><textarea id="rpIn" rows="1" maxlength="400" placeholder="Answer in English…"></textarea><button id="rpSend" class="tc-send" aria-label="Enviar"><svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6l.1 6.5L15 12l-11.5 1.9z"/></svg></button></form>
+  </div>
+</div>
 <div id="tutorChat" class="tutor-chat" hidden role="dialog" aria-label="Tutor de inglés">
   <header class="tc-head"><img class="tc-ava" src="img/mascota.webp" alt=""><div class="tc-ttl"><b>Dux</b><span>Tu tutor de inglés · IA</span></div><button id="tutorClose" class="tc-x" aria-label="Cerrar chat">&times;</button></header>
   <div id="tcLog" class="tc-log" aria-live="polite"></div>
@@ -1650,6 +1690,111 @@ el("tcLog").addEventListener("click", function (e) {
 });
 window.addEventListener("popstate", function () { tcClose(true); });
 
+// ---------- Charlas cotidianas (roleplay con la IA, 5 turnos por misión) ----------
+// El personaje, las reglas y el saludo inicial están en el Worker; aquí solo lo visible.
+var RP = [
+  { id: "cafe", em: "☕", bg: "#FFF1D6", t: "En la cafetería", d: "Pide algo para tomar y paga", goal: "Pide una bebida y paga", hi: "Hi there! Welcome to Sunny Café. What can I get for you today?", es: "¡Hola! Bienvenido a Sunny Café. ¿Qué te sirvo hoy?" },
+  { id: "vecino", em: "👋", bg: "#DDF4FF", t: "Saludando a un vecino", d: "Preséntate y conversa un poco", goal: "Saluda, di tu nombre y conversa", hi: "Oh, hello! I am Ana, your new neighbor. I live in apartment 5. And you?", es: "¡Oh, hola! Soy Ana, tu nueva vecina. Vivo en el departamento 5. ¿Y tú?" },
+  { id: "tienda", em: "👕", bg: "#FCE4EC", t: "Comprando ropa", d: "Pide una polera, talla, color y precio", goal: "Pide una polera: talla, color y precio", hi: "Good morning! Can I help you find something today?", es: "¡Buenos días! ¿Te ayudo a encontrar algo hoy?" },
+  { id: "indicaciones", em: "🗺️", bg: "#E8F8DD", t: "Pidiendo indicaciones", d: "Pregunta cómo llegar a la estación", goal: "Pregunta cómo llegar a la estación de tren", hi: "Hello! You look a little lost. Can I help you?", es: "¡Hola! Te ves un poco perdido. ¿Te puedo ayudar?" },
+  { id: "restaurante", em: "🍝", bg: "#FFE8D6", t: "En el restaurante", d: "Pide comida, bebida y la cuenta", goal: "Pide comida, bebida y la cuenta", hi: "Good evening! Here is the menu. Are you ready to order?", es: "¡Buenas noches! Aquí está el menú. ¿Listo para pedir?" },
+  { id: "hotel", em: "🏨", bg: "#EDE7F6", t: "Check-in en el hotel", d: "Tu reserva, noches y desayuno", goal: "Haz check-in: nombre, noches y desayuno", hi: "Good afternoon and welcome to the Blue Sea Hotel! Do you have a reservation?", es: "¡Buenas tardes y bienvenido al Hotel Blue Sea! ¿Tiene una reserva?" },
+  { id: "farmacia", em: "💊", bg: "#E0F7F4", t: "En la farmacia", d: "Explica que te duele la cabeza", goal: "Di que te duele la cabeza y compra algo", hi: "Hello! How can I help you today?", es: "¡Hola! ¿En qué te puedo ayudar hoy?" },
+  { id: "aeropuerto", em: "✈️", bg: "#E3ECFF", t: "En el aeropuerto", d: "Check-in, maleta y asiento en ventana", goal: "Check-in, una maleta y asiento en ventana", hi: "Good morning! Where are you flying today? May I see your passport, please?", es: "¡Buenos días! ¿A dónde vuela hoy? ¿Me muestra su pasaporte, por favor?" }
+];
+var RP_TURNS = 5, RPS = null;   // RPS = misión en curso { sc, msgs, done, busy }
+function rpDoneCount(s) { s = s || load(); var r = s.rp || {}; return RP.filter(function (x) { return r[x.id]; }).length; }
+function rpStars(n) { var h = ""; for (var i = 1; i <= 3; i++) h += i <= n ? "<i>★</i>" : "★"; return '<span class="rp-st">' + h + '</span>'; }
+function rpRenderList() {
+  var r = load().rp || {};
+  el("rpGrid").innerHTML = RP.map(function (x, i) {
+    var done = r[x.id], open = i === 0 || r[RP[i - 1].id];   // se desbloquean en orden, como las lecciones
+    return '<button class="rp-card' + (done ? ' done' : '') + '" data-i="' + i + '"' + (open ? '' : ' disabled') + '><span class="rp-em" style="background:' + x.bg + '">' + x.em + '</span>' +
+      '<span class="rp-tx"><b>' + esc(x.t) + '</b><span class="rp-d">' + (open ? esc(x.d) : 'Completa la misión anterior') + '</span>' + (done ? rpStars(done.stars) : '') + '</span>' +
+      (open ? '<span class="go-btn' + (done ? ' g' : '') + '">' + (done ? 'REPETIR' : '¡IR!') + '</span>' : '<span class="rp-lock">🔒</span>') + '</button>';
+  }).join("");
+}
+function rpOpen() {
+  el("rp").hidden = false; el("rpList").hidden = false; el("rpTalk").hidden = true; document.body.classList.add("tc-lock"); stopAudio();
+  rpRenderList(); history.pushState({ v: "rp" }, "");
+}
+function rpClose(fromPop) {
+  if (el("rp").hidden) return; tcStopSound(); el("rp").hidden = true; RPS = null; document.body.classList.remove("tc-lock");
+  if (tab && curTab === "practica") rPractica();   // refresca el contador de misiones en Retos
+  if (!fromPop && history.state && history.state.v === "rp") history.back();
+}
+function rpStart(i) {
+  var sc = RP[i]; RPS = { i: i, sc: sc, msgs: [], done: false, busy: false };
+  el("rpList").hidden = true; el("rpTalk").hidden = false; el("rpIc").textContent = sc.em; el("rpIc").style.background = sc.bg;
+  el("rpTtl").textContent = sc.t; el("rpGoal").textContent = "🎯 " + sc.goal; el("rpIn").value = ""; el("rpForm").hidden = false;
+  rpRender(); setTimeout(function () { rpSay(sc.hi, el("rpLog").querySelector(".tc-spk")); }, 250);   // el personaje saluda en voz alta
+}
+// Respuesta del personaje: línea en inglés + "ES: traducción" (oculta hasta tocar "Traducción")
+function rpBot(text, k) {
+  var en = String(text).split(/\n?ES:\s*/)[0].trim(), es = (String(text).split(/\n?ES:\s*/)[1] || "").trim();
+  return tcBubble("assistant", esc(en) + (es ? '<div class="rp-tr" id="rptr' + k + '">' + esc(es) + '</div>' : '') +
+    '<div class="rp-acts"><button class="tc-spk" data-say="' + esc(en).replace(/"/g, "&quot;") + '" aria-label="Escuchar">' + SVG_SPK + 'Escuchar</button>' + (es ? '<button class="tc-spk rp-tbtn" data-k="' + k + '">🇪🇸 Traducción</button>' : '') + '</div>');
+}
+function rpRender() {
+  var m = RPS.msgs, log = el("rpLog"), turns = m.filter(function (x) { return x.role === "user"; }).length;
+  var html = rpBot(RPS.sc.hi + "\nES: " + RPS.sc.es, "h");
+  m.forEach(function (x, k) { html += x.role === "user" ? tcBubble("user", esc(x.content)) : rpBot(x.content, k); });
+  if (RPS.end) html += RPS.end;
+  log.innerHTML = html; log.scrollTop = log.scrollHeight;
+  el("rpDots").innerHTML = new Array(RP_TURNS + 1).join("0").split("").map(function (_, k) { return '<i' + (k < turns ? ' class="on"' : '') + '></i>'; }).join("");
+  el("rpIn").placeholder = RPS.done ? "Misión terminada" : "Answer in English… (" + (RP_TURNS - turns) + " turnos)";
+}
+function rpSay(text, btn) {   // solo inglés, voz en-US más lenta
+  if (!window.speechSynthesis) return; var again = btn && btn.classList.contains("on"); tcStopSound(); if (again) return;
+  var u = new SpeechSynthesisUtterance(text); u.lang = "en-US"; u.rate = 0.85; if (btn) btn.classList.add("on");
+  u.onend = function () { if (btn) btn.classList.remove("on"); }; speechSynthesis.speak(u);
+}
+async function rpSend(text) {
+  if (!RPS || RPS.busy || RPS.done || !String(text).trim()) return;
+  RPS.busy = true; el("rpSend").disabled = true; tcStopSound();
+  RPS.msgs.push({ role: "user", content: String(text).trim().slice(0, 400) }); rpRender();
+  var log = el("rpLog"); log.insertAdjacentHTML("beforeend", tcBubble("assistant", '<span class="tc-typing"><i></i><i></i><i></i></span>', ' wait')); log.scrollTop = log.scrollHeight;
+  var ctl = new AbortController(), to = setTimeout(function () { ctl.abort(); }, 30000);
+  try {
+    var r = await fetch(TUTOR_URL, { method: "POST", headers: { "Content-Type": "application/json" }, signal: ctl.signal, body: JSON.stringify({ scenario: RPS.sc.id, name: userName(), messages: RPS.msgs }) });
+    var d = await r.json().catch(function () { return {}; });
+    if (r.status === 429) throw new Error("cuota");
+    if (!r.ok || !d.text) throw new Error(d.error || "Error");
+    RPS.msgs.push({ role: "assistant", content: d.text });
+    if (d.done) rpFinish(d);
+    rpRender(); rpSay(d.text.split(/\n?ES:\s*/)[0], log.querySelectorAll(".tc-msg.bot .tc-spk[data-say]")[log.querySelectorAll(".tc-msg.bot .tc-spk[data-say]").length - 1]);
+  } catch (e) {
+    RPS.msgs.pop(); rpRender(); el("rpIn").value = text;   // se devuelve el texto para reintentar
+    log.insertAdjacentHTML("beforeend", tcBubble("assistant", e.message === "cuota" ? "Estoy descansando un ratito 😴 (límite gratuito). Inténtalo en unos minutos." : "No pude conectarme. Revisa tu internet y vuelve a enviar.", " err")); log.scrollTop = log.scrollHeight;
+  } finally { clearTimeout(to); if (RPS) { RPS.busy = false; el("rpSend").disabled = false; } }
+}
+// Fin de misión: retroalimentación + recompensa (solo la primera vez que mejora las estrellas)
+function rpFinish(d) {
+  RPS.done = true; el("rpForm").hidden = true;
+  var s = load(); s.rp = s.rp || {}; var prev = s.rp[RPS.sc.id], stars = d.stars || 2, gems = 0;
+  if (!prev) gems = 10 + 10 * stars; else if (stars > prev.stars) gems = 10 * (stars - prev.stars);
+  s.rp[RPS.sc.id] = { stars: Math.max(stars, prev ? prev.stars : 0), date: hoyStr() };
+  s.gems += gems; markDay(s); save(s); if (gems) gemFx(gems); checkPrizes();
+  var next = RP[RPS.i + 1];
+  RPS.end = '<div class="rp-end"><div class="rp-big">' + rpStars(stars) + '</div><h3>¡Misión cumplida!</h3>' + (gems ? '<div class="rp-gem">+' + gems + ' 💎</div>' : '') +
+    (d.feedback ? '<div class="rp-fb">' + tcFmt(d.feedback) + '</div>' : '') +
+    '<div class="rp-btns">' + (next ? '<button class="rp-btn" data-go="' + (RPS.i + 1) + '">Siguiente: ' + next.em + ' ' + esc(next.t) + '</button>' : '') +
+    '<button class="rp-btn alt" data-go="again">Repetir esta charla</button><button class="rp-btn alt" data-go="list">Ver todas las charlas</button></div></div>';
+}
+el("rp").addEventListener("click", function (e) {
+  if (e.target.closest(".rp-close")) return rpClose();
+  var c = e.target.closest(".rp-card"); if (c && !c.disabled) return rpStart(+c.dataset.i);
+  var tb = e.target.closest(".rp-tbtn"); if (tb) { var t = el("rptr" + tb.dataset.k); if (t) t.classList.toggle("show"); return; }
+  var sp = e.target.closest(".tc-spk[data-say]"); if (sp) return rpSay(sp.dataset.say, sp);
+  var g = e.target.closest("[data-go]");
+  if (g) { var v = g.dataset.go; if (v === "list") { tcStopSound(); el("rpTalk").hidden = true; el("rpList").hidden = false; rpRenderList(); } else rpStart(v === "again" ? RPS.i : +v); }
+});
+el("rpBack").onclick = function () { tcStopSound(); RPS = null; el("rpTalk").hidden = true; el("rpList").hidden = false; rpRenderList(); };
+el("rpForm").onsubmit = function (e) { e.preventDefault(); var i = el("rpIn"), t = i.value; if (!t.trim()) return; i.value = ""; i.style.height = ""; rpSend(t); };
+el("rpIn").addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); el("rpForm").requestSubmit(); } });
+el("rpIn").addEventListener("input", function () { this.style.height = ""; this.style.height = Math.min(this.scrollHeight, 120) + "px"; });
+window.addEventListener("popstate", function () { rpClose(true); });
+
 // Sin botón ✕: se cierra con el botón atrás de Android o tocando las bandas negras alrededor del video
 el("videoModal").addEventListener("click", function (e) { if (!e.target.closest(".modal-frame")) dvModalClose(); });
 
@@ -1953,13 +2098,15 @@ function rPractica() {
   });
   var pend = Object.keys(s.w).filter(function (k) { return (s.w[k].bad || 0) > (s.w[k].ok || 0); }).length;
   h += '<button class="card les" id="p-err"' + (pend ? '' : ' disabled style="opacity:.55"') + '><span class="les-n" style="background:var(--coral-s);color:var(--coral)">' + IC.x.replace('stroke-width="3"', 'stroke-width="2.6" width="22" height="22"') + '</span><span><h3>Repasar mis errores</h3><p>' + (pend ? pend + ' palabras por reforzar' : 'No tienes errores pendientes') + '</p></span></button>';
-  h = '<button class="card les spk-entry" id="p-match"><span class="challenge-icon"><img src="img/retos/pares.webp" alt="Pares" width="60" height="60"></span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="challenge-icon"><img src="img/retos/habla.webp" alt="Habla" width="60" height="60"></span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' + h;
+  h = '<button class="card les spk-entry" id="p-match"><span class="challenge-icon"><img src="img/retos/pares.webp" alt="Pares" width="60" height="60"></span><span><h3>Selecciona los pares</h3><p>Une cada palabra en inglés con su significado</p></span><span class="go-btn">¡IR!</span></button>' + '<button class="card les spk-entry" id="p-spk"><span class="challenge-icon"><img src="img/retos/habla.webp" alt="Habla" width="60" height="60"></span><span><h3>Habla en inglés</h3><p>Pronuncia las palabras y el micrófono te corrige</p></span><span class="go-btn">¡IR!</span></button>' +
+    (TUTOR_URL ? '<button class="card les spk-entry" id="p-rp"><span class="challenge-icon rp-ico" style="background:#FFF1D6">☕</span><span><h3>Charlas cotidianas</h3><p>' + rpDoneCount(s) + '/' + RP.length + ' misiones · conversa con la IA en situaciones reales</p></span><span class="go-btn' + (rpDoneCount(s) === RP.length ? ' g' : '') + '">¡IR!</span></button>' : '') + h;
   var head = '<div class="top-stats-bar"><button class="rt-ava" id="rt-ava" aria-label="Tu perfil"><img src="img/avatar-nino.jpg" alt=""></button>' +
     '<span class="rt-badge streak-badge">🔥 <b>' + racha(allDays(s)) + '</b></span><button class="rt-badge gems-badge gem-chip" aria-label="Diamantes: abrir tienda">💎 <b class="gem-n">' + s.gems + '</b></button></div>' +
     '<div class="rt-head"><div><div class="rt-eye">APRENDE JUGANDO</div><h1 class="rt-ttl">Retos</h1></div><img class="rt-pet" src="img/char/poodle_lentes.webp" alt=""></div>';
   el("practica").innerHTML = head + h;
   el("rt-ava").onclick = function () { tab("logros"); };
   el("p-spk").onclick = function () { startSpeak(nextLesson(load()).id); };
+  if (el("p-rp")) el("p-rp").onclick = rpOpen;
   el("p-match").onclick = function () { startMatch(nextLesson(load()).id); };
   el("practica").querySelectorAll("button.les[data-id]").forEach(function (b) { b.onclick = function () { startQuiz(b.dataset.id, "practica"); }; });
   if (pend) el("p-err").onclick = function () { startQuiz(null, "errores"); };
