@@ -1433,7 +1433,7 @@ function dvModalClose(fromPop) {
   if (!fromPop && history.state && history.state.v === "dvmodal") history.back();
 }
 document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".dv-load"); if (b) dvModalOpen(b.closest(".dv")); });
-// ---------- Tutor IA (Claude Haiku vía Worker; la API key nunca está en la app) ----------
+// ---------- Tutor IA (Google Gemini vía Worker; la API key nunca está en la app) ----------
 var TUTOR_URL = "";   // URL del Cloudflare Worker (worker/tutor-worker.js). Vacía = el globo no se muestra.
 var TUTOR_KEY = "duxlingo_tutor", TC_BUSY = false;
 function tcHist() { try { return JSON.parse(localStorage.getItem(TUTOR_KEY) || "[]"); } catch (e) { return []; } }
@@ -1470,11 +1470,12 @@ async function tcAsk(text) {
     var r = await fetch(TUTOR_URL, { method: "POST", headers: { "Content-Type": "application/json" }, signal: ctl.signal,
       body: JSON.stringify({ name: userName(), messages: h.slice(-12) }) });
     var d = await r.json().catch(function () { return {}; });
+    if (r.status === 429) throw new Error("cuota");   // capa gratuita de Gemini agotada por el momento
     if (!r.ok || !d.text) throw new Error(d.error || "Error " + r.status);
     h.push({ role: "assistant", content: d.text }); tcSave(h); tcRender();
   } catch (e) {
     var w = log.querySelector(".tc-msg.wait"); if (w) w.remove();
-    log.insertAdjacentHTML("beforeend", tcBubble("assistant", (e.name === "AbortError" ? "Me demoré demasiado en responder." : "No pude conectarme.") + ' Revisa tu internet e inténtalo otra vez.<br><button class="tc-retry">Reintentar</button>', ' err'));
+    log.insertAdjacentHTML("beforeend", tcBubble("assistant", (e.message === "cuota" ? "Estoy descansando un ratito 😴 (se llenó el límite gratuito). Inténtalo en unos minutos." : (e.name === "AbortError" ? "Me demoré demasiado en responder." : "No pude conectarme.") + " Revisa tu internet e inténtalo otra vez.") + '<br><button class="tc-retry">Reintentar</button>', ' err'));
     log.scrollTop = log.scrollHeight;
   } finally { clearTimeout(to); TC_BUSY = false; el("tcSend").disabled = false; }
 }
