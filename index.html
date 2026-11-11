@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" style="background:#131F24">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
@@ -1148,7 +1148,7 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
 <body><script>try{if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark-mode");}catch(e){}</script><div id="dl-splash" aria-hidden="true"><div class="spl-logo"><div class="spl-top"><div class="spl-hi">Hi!<i></i></div><img class="spl-pet" src="img/mascota.webp" alt="" width="321" height="260"></div><div class="spl-nm"><span class="i">Ingles</span><span class="d">Dux</span></div></div></div><script>(function(){
 // Splash: mínimo 2,5 s visible; se oculta al cargar la página (respaldo duro a los 6 s).
 var sp=document.getElementById("dl-splash"),t0=Date.now(),ended=false;
-function out(){if(ended)return;ended=true;sp.classList.add("out");setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);},550);}
+function out(){if(ended)return;ended=true;sp.classList.add("out");document.documentElement.style.background="";setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);},550);}
 function done(){setTimeout(out,Math.max(0,2500-(Date.now()-t0)));}
 if(document.readyState==="complete")done();else window.addEventListener("load",done);
 setTimeout(out,6000);})();</script>
