@@ -1100,6 +1100,23 @@ try{setStatusBar(localStorage.getItem("theme")==="dark");}catch(e){}
   .tc-spk svg { width:16px; height:16px; fill:currentColor; }
   .tc-spk:active { transform:translateY(2px); box-shadow:0px 1px 0px #0A1114; }
   .tc-spk.on { color:#FFD13B; border-color:#FFD13B; }
+  /* ===== Barra inferior flotante tipo píldora con foco de luz ===== */
+  .nav, body.dark-mode .nav { left:50% !important; right:auto !important; bottom:calc(14px + env(safe-area-inset-bottom,0px)) !important; transform:translateX(-50%); width:min(calc(100% - 28px), 420px) !important; height:64px; padding:0 6px !important; border:none !important; border-radius:999px; background:#0B0F12 !important; background-color:#0B0F12 !important; box-shadow:0 14px 30px rgba(0,0,0,.45), 0 4px 10px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06) !important; overflow:hidden; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); align-items:stretch; }
+  /* solo íconos: el texto queda para lectores de pantalla (font-size 0) */
+  .nav button, body.dark-mode .nav button { position:relative; font-size:0 !important; gap:0; padding:0; min-height:0; height:64px; justify-content:center; color:#7D878E !important; transition:color .25s; -webkit-tap-highlight-color:transparent; }
+  .nav button svg { width:26px; height:26px; stroke-width:1.6; position:relative; z-index:1; transition:transform .25s, filter .25s; }
+  .nav button.on, body.dark-mode .nav button.on { color:#FF4B4B !important; }
+  .nav button.on svg { filter:drop-shadow(0 0 6px rgba(255,75,75,.65)); transform:translateY(2px); }
+  .nav button.on svg path, .nav button.on svg rect, .nav button.on svg circle { fill:none; }
+  /* indicador rojo brillante arriba del ícono activo */
+  .nav button.on::before, body.dark-mode .nav button.on::before { content:""; position:absolute; top:0; left:50%; right:auto; width:26px; height:3px; transform:translateX(-50%); border-radius:0 0 4px 4px; background:#FF4B4B; box-shadow:0 0 10px 2px rgba(255,75,75,.75), 0 0 22px 4px rgba(255,75,75,.35); z-index:2; }
+  /* haz de luz cónico que baja desde el indicador e ilumina el ícono */
+  .nav button::after { content:""; position:absolute; top:0; left:50%; width:64px; height:100%; transform:translateX(-50%); background:linear-gradient(180deg, rgba(255,75,75,.42) 0%, rgba(255,75,75,.14) 45%, rgba(255,75,75,0) 85%); clip-path:polygon(38% 0, 62% 0, 100% 100%, 0 100%); opacity:0; transition:opacity .25s; pointer-events:none; }
+  .nav button.on::after { opacity:1; }
+  .nav button:active svg { transform:scale(.9); }
+  /* el contenido no queda tapado por la barra flotante */
+  .wrap { padding-bottom:calc(100px + env(safe-area-inset-bottom,0px)) !important; }
+  .tutor-fab { bottom:calc(92px + env(safe-area-inset-bottom,0px)) !important; }
   body.dark-mode .top-stats-bar { border-color:#2B3D46; }
   .rt-ava { width:48px; height:48px; flex-shrink:0; border-radius:50%; padding:0; overflow:hidden; border:2px solid var(--border-color); box-shadow:0px 3px 0px var(--shadow-color); background:var(--card-bg); }
   .rt-ava img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -1238,13 +1255,13 @@ setTimeout(out,6000);})();</script>
   <div class="spk-foot"><button class="mt-go" id="mt-go" disabled>Continuar</button></div>
 </div>
 <div class="sheet" id="sheet"><div class="sh-h"><span class="sh-ic" id="sh-ic"></span><span class="sh-t" id="sh-t"></span></div><p class="sh-p" id="sh-p"></p><button class="btn" id="sh-btn">Continuar</button></div>
-<div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
+<div class="toast hidden" id="toast" role="status"><span class="qi" style="background:var(--sun);color:#6B4A00;width:40px;height:40px;border-radius:50%"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span><div><b id="toast-t"></b><br><span id="toast-s"></span></div></div>
 <nav class="nav" id="nav" aria-label="Navegación principal">
-  <button class="on" data-tab="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Inicio</button>
-  <button data-tab="lecciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>Lecciones</button>
-  <button data-tab="practica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8M9 18h6"/></svg>Retos</button>
-  <button data-tab="videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.2v5.6a.4.4 0 0 0 .6.35l4.6-2.8a.4.4 0 0 0 0-.7l-4.6-2.8a.4.4 0 0 0-.6.35z"/></svg>Videos</button>
-  <button data-tab="logros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Perfil</button>
+  <button class="on" data-tab="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Inicio</button>
+  <button data-tab="lecciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>Lecciones</button>
+  <button data-tab="practica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8M9 18h6"/></svg>Retos</button>
+  <button data-tab="videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.2v5.6a.4.4 0 0 0 .6.35l4.6-2.8a.4.4 0 0 0 0-.7l-4.6-2.8a.4.4 0 0 0-.6.35z"/></svg>Videos</button>
+  <button data-tab="logros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Perfil</button>
 </nav>
 <div id="videoModal" class="video-modal" style="display: none;" role="dialog" aria-label="Video">
     <div class="modal-video-container">
@@ -1281,18 +1298,18 @@ var TOTAL_WORDS = 850, NUM_LESSONS = 11;
 // lecciones abiertas temporalmente para revisión (se quitan cuando estén aprobadas por Pabloko)
 var REVISION = {};
 var IC = {
-  spk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>',
+  spk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>',
   arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
-  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg>',
-  quiz:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>',
-  cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>',
-  trophy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg>',
+  quiz:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>',
+  cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>',
+  trophy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>',
   flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.5 3.5 6 5.3 6 10.3a6 6 0 0 1-12 0c0-3 1.8-4.8 3-6.5.6 2.3 1.8 3.5 3 3.5 0-2.3-1.2-4.7 0-7.3z"/></svg>',
   star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6L12 16.9 6.1 20.2l1.3-6.6L2.5 9l6.6-.8z"/></svg>',
-  ear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6 6 0 0 1 12 0c0 3.5-3 4.5-3 7.5a3 3 0 0 1-6 0"/><path d="M10 9a2 2 0 0 1 4 0c0 1.5-1.5 2-1.5 3.5"/></svg>'
+  ear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6 6 0 0 1 12 0c0 3.5-3 4.5-3 7.5a3 3 0 0 1-6 0"/><path d="M10 9a2 2 0 0 1 4 0c0 1.5-1.5 2-1.5 3.5"/></svg>'
 };
 function el(id) { return document.getElementById(id); }
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
@@ -1399,7 +1416,7 @@ function rInicio() {
   el("inicio").innerHTML =
     '<div class="hm-head"><div class="hm-row"><div class="hm-prof"><img src="img/avatar-nino.jpg" alt="" width="44" height="44"><h1 class="hm-hi2"><span class="hi-l1">Hola! <span class="wave" aria-hidden="true">👋</span></span><span class="hi-l2">' + esc(userName() || 'amiga') + '</span></h1></div>' +
       '<div class="hm-chips"><span class="hm-streak">🔥 ' + racha(allDays(s)) + '</span><button class="hm-streak gem-chip" aria-label="Diamantes: abrir tienda">💎 <span class="gem-n">' + s.gems + '</span></button></div></div>' +
-      '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
+      '<label class="hm-search"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hm-q" type="search" placeholder="Buscar lección o palabra..." autocomplete="off" aria-label="Buscar lección o palabra"></label>' +
       '<div class="hm-res hidden" id="hm-res"></div></div>' +
     '<div class="hm-card"><div class="hm-card-top"><div><span class="hm-k">Continuar</span><h3>Lección ' + L.n + ': ' + esc(L.titulo) + '</h3></div></div><img class="hm-pop" src="img/char/nina_libro.webp" alt="">' +
       '<div class="hm-prog hm-txtwrap"><span class="hm-bar"><i style="width:' + Math.max(pct, 20) + '%"><em>' + pct + '%</em></i></span></div>' +
@@ -1885,7 +1902,7 @@ function rHub() {
     var allW = p.items.every(function (x) { return x.q.split(" ").length <= 2; }), unit = allW ? (p.items.length === 1 ? "palabra" : "palabras") : (p.items.length === 1 ? "pregunta" : "preguntas");
     var sub = a ? p.items.length + ' ' + unit + ' · ' + a.ok + '/' + a.res.length + ' correctas' : st === "lock" ? p.items.length + ' ' + unit + ' · Completa el bloque anterior' : p.items.length + ' ' + unit + ' · Toca para comenzar';
     html += '<button class="hb hb-' + st + '" data-k="' + p.k + '"' + (st === "lock" ? ' disabled aria-disabled="true"' : '') + '>' +
-      '<span class="hb-ic">' + (a ? IC.check : st === "lock" ? '<svg viewBox="0 0 24 24" fill="none" stroke="#8A8A8A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>' : '✏️') + '</span>' +
+      '<span class="hb-ic">' + (a ? IC.check : st === "lock" ? '<svg viewBox="0 0 24 24" fill="none" stroke="#8A8A8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>' : '✏️') + '</span>' +
       '<span class="hb-t"><b>' + p.k + ') ' + esc(p.t) + '</b><span>' + sub + '</span></span>' + (st === "lock" ? '' : '<span class="hb-go">' + chev + '</span>') + '</button>';
   });
   el("exhub").innerHTML = '<img class="hb-pet" src="img/char/' + LESSON_CHAR[L.n - 1] + '.webp" alt=""><div class="hb-head"><button class="hb-back" id="hub-back" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
@@ -2171,7 +2188,7 @@ function rachaHTML(s) {
     '<path d="M60 58 C66 72 82 80 82 100 A22 22 0 0 1 38 100 C38 88 46 82 50 74 C54 82 58 84 60 84 C58 76 58 66 60 58 Z" fill="#FFD34D"/></svg>';
   return '<section class="rw"><div class="rw-top">' + flame + '<div class="rw-num">' + r + '</div><div class="rw-lbl">' + (r === 1 ? 'día de racha' : 'días de racha') + '</div></div>' +
     '<div class="rw-cal"><div class="rw-in"><div class="rw-heads">' + heads + '</div><div class="rw-row">' + cells + '</div></div><p>' + msg + '</p></div>' +
-    '<div class="rw-act"><button class="rw-share wide" id="rw-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Compartir mi racha</button></div></section>';
+    '<div class="rw-act"><button class="rw-share wide" id="rw-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Compartir mi racha</button></div></section>';
 }
 function bindRacha() {
   var b = el("rw-buy"), c = el("rw-claim");
